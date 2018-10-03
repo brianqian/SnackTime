@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "bcrypt": "^3.0.1",
+    "express": "^4.16.3",
+    "express-router": "^0.0.1",
+    "express-session": "^1.15.6",
+    "moment": "^2.22.2",
+    "mysql2": "^1.6.1",
+    "nodemailer": "^4.6.8",
+    "passport": "^0.4.0",
+    "sequelize": "^4.39.0"
+  }
+}
