@@ -11,8 +11,8 @@ class App extends Component {
       <div className="App">
         <Router>
           <Switch>
-            <Route path="/" component={MainAdmin} />
-            <Route path="/parents" component={MainParent} />
+            <Route exact path="/" component={MainAdmin} />
+            <Route exact path="/parents" component={MainParent} />
             <Route component={notFound} />
           </Switch>
         </Router>

@@ -2,11 +2,7 @@ import React, { Component } from 'react';
 
 class MainParent extends Component {
   render() {
-    return (
-      <div>
-        
-      </div>
-    );
+    return <div>hello</div>;
   }
 }
 

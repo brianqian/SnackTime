@@ -47,6 +47,9 @@ module.exports = function(sequelize, DataTypes) {
     models.Child.hasMany(models.Report, {
       onDelete: 'cascade',
     });
+    models.Child.hasMany(models.Diapering, {
+      onDelete: 'cascade',
+    });
   };
 
   return Child;

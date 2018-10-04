@@ -1,5 +1,6 @@
 const router = require('express').Router();
-var staff = require('./models/staff');
+// var staff = require('./models/staff');
+var db = require("./models");
 
 var sessionChecker = (req, res, next) => {
   if (req.session.staff && req.cookies.staff_sid) {
@@ -14,14 +15,24 @@ router.get('/', sessionChecker, (req, res) => {
   res.redirect('/login');
 });
 
+router.route("/organization")
+  .post((req, res) => {
+    db.organization.create({
+      name: req.body.name
+    }).then(org => {
+      res.json(org.id)
+    })
+  })
+
 // route for staff signup
 router
   .route('/signup')
   .post((req, res) => {
-    staff
+    db.staff
       .create({
         email: req.body.email,
         password: req.body.password,
+        OrganzationID: req.body.org
       })
       .then(staff => {
         req.session.staff = staff.dataValues;

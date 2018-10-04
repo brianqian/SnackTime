@@ -45,16 +45,15 @@ class About extends React.Component {
         >
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>
-              General settings
+              Administrators Love Snack Time!
             </Typography>
             <Typography className={classes.secondaryHeading}>
-              I am an expansion panel
+              Leveraging the latest technologies...
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Typography>
-              Nulla facilisi. Phasellus sollicitudin nulla et quam mattis
-              feugiat. Aliquam eget maximus est, id dignissim quam.
+            Leveraging the latest technologies... to provide an easy-to-use application that simplifies tracking your class and sharing information with parents.
             </Typography>
           </ExpansionPanelDetails>
         </ExpansionPanel>
@@ -63,9 +62,9 @@ class About extends React.Component {
           onChange={this.handleChange('panel2')}
         >
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Users</Typography>
+            <Typography className={classes.heading}>Parents</Typography>
             <Typography className={classes.secondaryHeading}>
-              You are currently not an owner
+              View live updates about your child!
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
