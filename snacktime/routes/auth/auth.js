@@ -1,6 +1,6 @@
 const router = require('express').Router();
 // var staff = require('./models/staff');
-var db = require("./models");
+var db = require('./models');
 
 var sessionChecker = (req, res, next) => {
   if (req.session.staff && req.cookies.staff_sid) {
@@ -15,33 +15,32 @@ router.get('/', sessionChecker, (req, res) => {
   res.redirect('/login');
 });
 
-router.route("/organization")
-  .post((req, res) => {
-    db.organization.create({
-      name: req.body.name
-    }).then(org => {
-      res.json(org.id)
+router.route('/organization').post((req, res) => {
+  db.organization
+    .create({
+      name: req.body.name,
     })
-  })
+    .then(org => {
+      res.json(org.id);
+    });
+});
 
 // route for staff signup
-router
-  .route('/signup')
-  .post((req, res) => {
-    db.staff
-      .create({
-        email: req.body.email,
-        password: req.body.password,
-        OrganzationID: req.body.org
-      })
-      .then(staff => {
-        req.session.staff = staff.dataValues;
-        res.redirect('/');
-      })
-      .catch(error => {
-        res.redirect('/');
-      });
-  });
+router.route('/signup').post((req, res) => {
+  db.staff
+    .create({
+      email: req.body.email,
+      password: req.body.password,
+      OrganzationID: req.body.org,
+    })
+    .then(staff => {
+      req.session.staff = staff.dataValues;
+      res.redirect('/');
+    })
+    .catch(error => {
+      res.redirect('/');
+    });
+});
 
 // route for staff Login
 router
@@ -53,7 +52,7 @@ router
     var email = req.body.email,
       password = req.body.password;
 
-    staff.findOne({ where: { email: email } }).then(function(staff) {
+    db.staff.findOne({ where: { email: email } }).then(function(staff) {
       if (!staff) {
         res.redirect('/login');
       } else if (!staff.validPassword(password)) {

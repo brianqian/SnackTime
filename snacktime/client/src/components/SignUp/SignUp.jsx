@@ -43,40 +43,42 @@ export default class SignUp extends Component {
   render() {
     return (
       <div>
-        <label htmlFor="signup-name">Name: </label>
-        <input
-          onChange={this.handleChange}
-          value={this.state.name}
-          id="signup-name"
-          name="name"
-          type="text"
-        />
-        <label htmlFor="signup-email">Email: </label>
-        <input
-          onChange={this.handleChange}
-          value={this.state.email}
-          id="signup-email"
-          name="email"
-          type="text"
-        />
-        <label htmlFor="signup-password">Password: </label>
-        <input
-          onChange={this.handleChange}
-          value={this.state.password}
-          id="signup-password"
-          name="password"
-          type="password"
-        />
+        <form>
+          <label htmlFor="signup-name">Name: </label>
+          <input
+            onChange={this.handleChange}
+            value={this.state.name}
+            id="signup-name"
+            name="name"
+            type="text"
+          />
+          <label htmlFor="signup-email">Email: </label>
+          <input
+            onChange={this.handleChange}
+            value={this.state.email}
+            id="signup-email"
+            name="email"
+            type="text"
+          />
+          <label htmlFor="signup-password">Password: </label>
+          <input
+            onChange={this.handleChange}
+            value={this.state.password}
+            id="signup-password"
+            name="password"
+            type="password"
+          />
 
-        <label htmlFor="signup-orgName">Organization Name: </label>
-        <input
-          onChange={this.handleChange}
-          value={this.state.orgName}
-          id="signup-orgName"
-          name="orgName"
-          type="text"
-        />
-        <input onClick={this.handleSubmit} id="signup-submit" type="submit" />
+          <label htmlFor="signup-orgName">Organization Name: </label>
+          <input
+            onChange={this.handleChange}
+            value={this.state.orgName}
+            id="signup-orgName"
+            name="orgName"
+            type="text"
+          />
+          <input onClick={this.handleSubmit} id="signup-submit" type="submit" />
+        </form>
       </div>
     );
   }

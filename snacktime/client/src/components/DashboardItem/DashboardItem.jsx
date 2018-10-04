@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const DashboardItem = props => {
   if (props.notifications) {
@@ -6,7 +7,11 @@ const DashboardItem = props => {
       <div className="dashboard__item">
         <div className="dashboard__notifications">{props.notifications}</div>
         <Link to={props.destination}>
-          <img className="dashboard__picture" src={props.image} />
+          <img
+            alt={props.title}
+            className="dashboard__picture"
+            src={props.image}
+          />
         </Link>
         <div className="dashboard__title">
           <Link to={props.destination}>{props.title}</Link>
@@ -17,7 +22,11 @@ const DashboardItem = props => {
     return (
       <div className="dashboard__item">
         <Link to={props.destination}>
-          <img className="dashboard__picture" src={props.image} />
+          <img
+            alt={props.title}
+            className="dashboard__picture"
+            src={props.image}
+          />
         </Link>
         <div className="dashboard__title">
           <Link to={props.destination}>{props.title}</Link>

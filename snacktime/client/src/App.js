@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
-import MainParent from './pages/MainParent';
-import MainAdmin from './pages/MainAdmin';
+import WelcomePage from './pages/WelcomePage';
 import notFound from './pages/notFound';
+import AdminHome from './pages/AdminHome';
 
 class App extends Component {
   render() {
@@ -11,8 +11,8 @@ class App extends Component {
       <div className="App">
         <Router>
           <Switch>
-            <Route exact path="/" component={MainAdmin} />
-            <Route exact path="/parents" component={MainParent} />
+            <Route exact path="/" component={WelcomePage} />
+            <Route exact path="/adminhome" component={AdminHome} />
             <Route component={notFound} />
           </Switch>
         </Router>

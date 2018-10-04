@@ -5,11 +5,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import LoginBar from "../LoginBar/LoginBar";
-import About from "../About/About";
-import ParentLogIn from '../ParentLogIn/ParentLogIn'
-import AdminLogIn from '../AdminLogIn/AdminLogIn'
-
+import About from '../About/About';
+import Login from '../Login/Login';
+import SignUp from '../SignUp/SignUp';
 
 function TabContainer(props) {
   return (
@@ -59,12 +57,13 @@ class SimpleTabs extends React.Component {
         )}
         {value === 1 && (
           <TabContainer>
-            <ParentLogIn />
+            <Login type="parent" />
           </TabContainer>
         )}
         {value === 2 && (
           <TabContainer>
-            <AdminLogIn />
+            <Login type="admin" />
+            <SignUp />
           </TabContainer>
         )}
       </div>
