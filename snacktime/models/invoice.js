@@ -15,15 +15,15 @@ module.exports = function(sequelize, DataTypes) {
       },
     },
     createDate: {
-        type:DataTypes.DATE,
-        allowNull: false,
-        validate: {
-            notEmpty: true,
-        },
-    }
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
   });
   Invoice.associate = function(models) {
-    models.Invoice.belongsTo(models.Child, {
+    models.Invoice.belongsTo(models.Student, {
       foreignKey: {
         allowNull: false,
       },

@@ -17,6 +17,10 @@ module.exports = function(sequelize, DataTypes) {
           notEmpty: true,
         },
       },
+      staff: {
+        type: DataTypes.STRING,
+        defaultValue: true,
+      },
       name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -32,19 +36,17 @@ module.exports = function(sequelize, DataTypes) {
           Staff.password = bcrypt.hashSync(Staff.password, salt);
         },
       },
-      instanceMethods: {
-        validPassword: function(password) {
-          return bcrypt.compareSync(password, this.password);
-        },
-      },
     }
   );
-  Staff.associate = function (models) {
+  Staff.associate = function(models) {
     models.Staff.belongsTo(models.Organization, {
       foreignKey: {
-        allowNull: false
-      }
+        allowNull: false,
+      },
     });
-  }
+  };
+  Staff.prototype.validPassword = function(password) {
+    return bcrypt.compareSync(password, this.password);
+  };
   return Staff;
 };

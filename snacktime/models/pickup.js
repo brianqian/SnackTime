@@ -29,7 +29,7 @@ module.exports = function(sequelize, DataTypes) {
     },
   });
   Pickup.associate = function(models) {
-    models.Pickup.belongsTo(models.Child, {
+    models.Pickup.belongsTo(models.Student, {
       foreignKey: {
         allowNull: false,
       },

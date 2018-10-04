@@ -1,5 +1,5 @@
 module.exports = function(sequelize, DataTypes) {
-  var Child = sequelize.define('Child', {
+  var Student = sequelize.define('Student', {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -24,33 +24,36 @@ module.exports = function(sequelize, DataTypes) {
         notEmpty: true,
       },
     },
-    allergies : {
-      type: DataTypes.STRING
+    gender: {
+      type: DataTypes.STRING,
+      validate: {
+        isIn: [['Male', 'Female']],
+      },
+    },
+    allergies: {
+      type: DataTypes.STRING,
     },
     medication: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
     },
-    doctor :{
-      type: DataTypes.STRING
-    }
+    doctor: {
+      type: DataTypes.STRING,
+    },
   });
-  Child.associate = function(models) {
-    models.Child.hasMany(models.Parent, {
+  Student.associate = function(models) {
+    models.Student.hasMany(models.Parent, {
       onDelete: 'cascade',
     });
-    models.Child.hasMany(models.Pickup, {
+    models.Student.hasMany(models.Pickup, {
       onDelete: 'cascade',
     });
-    models.Child.hasMany(models.Invoice, {
+    models.Student.hasMany(models.Invoice, {
       onDelete: 'cascade',
     });
-    models.Child.hasMany(models.Report, {
-      onDelete: 'cascade',
-    });
-    models.Child.hasMany(models.Diapering, {
+    models.Student.hasMany(models.Report, {
       onDelete: 'cascade',
     });
   };
 
-  return Child;
+  return Student;
 };

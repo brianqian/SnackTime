@@ -20,14 +20,14 @@ export default class SignUp extends Component {
     console.log(this.state);
     const { name, email, password, orgName } = this.state;
 
-    fetch('/api/new/org', {
+    fetch('/auth/new/org', {
       method: 'POST',
       headers: 'application/json',
       body: JSON.stringify(orgName),
     })
       .then(res => res.json())
       .then(res => {
-        fetch('/auth/signup', {
+        fetch('/auth/new/admin', {
           method: 'POST',
           headers: 'application/json',
           body: JSON.stringify({

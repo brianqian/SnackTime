@@ -2,20 +2,20 @@ import React, { Component } from 'react';
 
 export default class Login extends Component {
   state = {
-    username: '',
+    email: '',
     password: '',
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    fetch(`/auth/signin/${this.props.type === 'admin' ? 'admin' : 'parent'}`, {
+    fetch(`/auth/login/${this.props.type === 'staff' ? 'staff' : 'parent'}`, {
       method: 'POST',
       headers: 'application/json',
       body: JSON.stringify({
-        username: this.state.username,
+        email: this.state.email,
         password: this.state.password,
       }),
-    }).then(res => console.log('logged in'));
+    });
   };
 
   handleChange = e => {
@@ -30,9 +30,9 @@ export default class Login extends Component {
         <form>
           <label htmlFor="login">Email</label>
           <input
-            name="username"
+            name="email"
             onChange={this.handleChange}
-            value={this.state.username}
+            value={this.state.email}
             id="login"
             type="text"
           />

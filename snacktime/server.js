@@ -20,8 +20,8 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(
   session({
-    key: 'staff_sid',
-    secret: 'cookiecutter',
+    key: 'user_sid',
+    secret: 'asgasfhr4xv41zjgjx',
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -32,7 +32,7 @@ app.use(
 
 app.use((req, res, next) => {
   if (req.cookies.user_sid && !req.session.user) {
-    res.clearCookie('staff_sid');
+    res.clearCookie('user_sid');
   }
   next();
 });
