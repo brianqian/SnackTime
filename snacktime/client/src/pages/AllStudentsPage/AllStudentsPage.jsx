@@ -7,6 +7,7 @@ export default class AllStudentsPage extends Component {
     allStudents :[]
   }
 
+
   componentDidMount(){
     this.getAllChildren()
   }
@@ -18,13 +19,17 @@ export default class AllStudentsPage extends Component {
 
   render() {
     return (
-      <div>
+      <div className='students-container'>
+      {this.state.allStudents.map(student=>{
         <DashboardItem
-          title=""
+          className='student__item'
+          title={student.name}
           destination="DailyReportPage"
-          image=""
-          notifications={this.state.studentNotifications}
+          image={student.image}
+          notifications={student.notifications}
         />
+      })}
+        
       </div>
     )
   }

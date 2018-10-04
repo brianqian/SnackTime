@@ -19,26 +19,34 @@ export default class SignUp extends Component {
     e.preventDefault();
     console.log(this.state);
     const { name, email, password, orgName } = this.state;
-
-    fetch('/auth/new/org', {
+    console.log({orgName})
+    fetch('/auth/organization', {
       method: 'POST',
-      headers: 'application/json',
-      body: JSON.stringify(orgName),
+      headers: {
+        "Content-type": 'application/json'
+      },
+      body: JSON.stringify({orgName}),
     })
       .then(res => res.json())
       .then(res => {
-        fetch('/auth/new/admin', {
+        fetch('/auth/signup/staff', {
           method: 'POST',
-          headers: 'application/json',
+          headers: {
+            "Content-type": 'application/json'
+          },
           body: JSON.stringify({
             name,
             email,
             password,
-            orgId: res.orgId,
+            orgId: res.id,
           }),
         });
       })
-      .then(res => console.log('signup success'));
+      .then(res => {
+        console.log('signup success')
+        // window.location.href="/StaffHomePage";
+      })
+      .catch(err=>console.log(err))
   };
   render() {
     return (

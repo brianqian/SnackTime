@@ -2,25 +2,27 @@ const router = require('express').Router();
 var db = require('../../models');
 
 var sessionChecker = (req, res, next) => {
+  console.log('session', req.session.staff, req.cookies.user_sid);
   if (req.session.staff && req.cookies.user_sid) {
-    db.staff
-      .findOne({
-        where: {
-          id: req.session.staff.id,
-        },
-        attributes: { exclude: ['password'] },
-        include: [
-          {
-            model: organization,
-            model: student,
-            model: parent,
-            attributes: { exclude: ['password'] },
-          },
-        ],
-      })
-      .then(staff => {
-        res.json(staff);
-      });
+    db.Staff.findOne({
+      where: {
+        id: req.session.staff.id,
+      },
+      attributes: { exclude: ['password'] },
+      include: [
+        {
+          model: db.Organization,
+        }
+        // { model: db.Student },
+        // {
+        //   model: db.Parent,
+        //   attributes: { exclude: ['password'] },
+        // },
+      ],
+    }).then(staff => {
+      console.log(staff);
+      res.json(staff.dataValues);
+    });
   } else {
     next();
   }
@@ -36,39 +38,40 @@ router.route('/loggedin').get(sessionChecker, (req, res) => {
   res.redirect('/notauthorized');
 });
 
-// route for creating organization
-router.route('/organization').post((req, res) => {
-  db.organization
-    .create({
-      name: req.body.name,
-    })
-    .then(org => {
-      res.json(org.id);
-    });
+// route for creating Organization
+router.route('/Organization').post((req, res) => {
+  console.log(req.body);
+  db.Organization.create({
+    name: req.body.orgName,
+  }).then(org => {
+    res.json(org);
+  });
 });
 
 // route for staff signup
-router.route('/signup').post((req, res) => {
-  db.staff
-    .create({
-      email: req.body.email,
-      password: req.body.password,
-      OrganzationID: req.body.org,
-    })
+router.route('/signup/staff').post((req, res) => {
+  db.Staff.create({
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+    OrganzationID: req.body.orgId,
+  })
     .then(staff => {
       req.session.staff = staff.dataValues;
       let { email, id, name } = req.session.staff;
       let obj = { email, id, name };
+      console.log("sign up", req.session.staff);
       res.json(obj);
     })
     .catch(error => {
-      res.redirect('/');
+      console.log(error);
+      res.send(error);
     });
 });
 
 // route for staff Login
 router
-  .route('/login')
+  .route('/login/staff')
   .get(sessionChecker, (req, res) => {
     res.send('go to staff login');
   })
@@ -76,7 +79,7 @@ router
     var email = req.body.email,
       password = req.body.password;
 
-    db.staff.findOne({ where: { email: email } }).then(function(staff) {
+    db.Staff.findOne({ where: { email: email } }).then(function(staff) {
       if (!staff) {
         res.redirect('/login');
       } else if (!staff.validPassword(password)) {
@@ -89,7 +92,7 @@ router
   });
 
 // route for staff logout
-router.get('/logout', (req, res) => {
+router.get('/logout/staff', (req, res) => {
   if (req.session.staff && req.cookies.user_sid) {
     res.clearCookie('user_sid');
     res.redirect('/');
@@ -99,13 +102,12 @@ router.get('/logout', (req, res) => {
 });
 
 // route for parent signup
-router.route('/signup').post((req, res) => {
-  db.parent
-    .create({
-      email: req.body.email,
-      password: req.body.password,
-      OrganzationID: req.body.org,
-    })
+router.route('/signup/parent').post((req, res) => {
+  db.Parent.create({
+    email: req.body.email,
+    password: req.body.password,
+    OrganzationID: req.body.org,
+  })
     .then(parent => {
       req.session.parent = parent.dataValues;
       let { email, id, name } = req.session.parent;
@@ -119,7 +121,7 @@ router.route('/signup').post((req, res) => {
 
 // route for parent Login
 router
-  .route('/login')
+  .route('/login/parent')
   .get(sessionChecker, (req, res) => {
     res.send('go to parent login');
   })
@@ -127,7 +129,7 @@ router
     var email = req.body.email,
       password = req.body.password;
 
-    db.parent.findOne({ where: { email: email } }).then(function(parent) {
+    db.Parent.findOne({ where: { email: email } }).then(function(parent) {
       if (!parent) {
         res.redirect('/login');
       } else if (!parent.validPassword(password)) {
@@ -140,7 +142,7 @@ router
   });
 
 // route for parent logout
-router.get('/logout', (req, res) => {
+router.get('/logout/parent', (req, res) => {
   if (req.session.parent && req.cookies.user_sid) {
     res.clearCookie('user_sid');
     res.redirect('/');

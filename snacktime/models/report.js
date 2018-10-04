@@ -19,7 +19,7 @@ module.exports = function(sequelize, DataTypes) {
     noteForParents: {
       type: DataTypes.TEXT,
     },
-    noteForAdmin: {
+    noteForStaff: {
       type: DataTypes.TEXT,
     },
     meal1Time: {

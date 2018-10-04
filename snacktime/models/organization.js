@@ -9,31 +9,33 @@ module.exports = function(sequelize, DataTypes) {
     },
     phone: {
       type: DataTypes.BIGINT,
-      allowNull: false,
-      validate: {
-        len: 10,
-      },
+      defaultValue:0000000000
+
+      // validate: {
+      //   len: 10,
+      // },
     },
     address: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
+      defaultValue:""
+
+      // validate: {
+      //   notEmpty: true,
+      // },
     },
     openTime: {
       type: DataTypes.TIME, //hh:mm:ss
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
+      defaultValue:"00:00:00"
+      // validate: {
+      //   notEmpty: true,
+      // },
     },
     closeTime: {
       type: DataTypes.TIME, //hh:mm:ss
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
+      defaultValue:"00:00:00"
+      // validate: {
+      //   notEmpty: true,
+      // },
     },
   });
 

@@ -1,3 +1,4 @@
+var bcrypt = require('bcrypt-nodejs');
 module.exports = function(sequelize, DataTypes) {
   var Parent = sequelize.define(
     'Parent',
@@ -29,6 +30,10 @@ module.exports = function(sequelize, DataTypes) {
           len: 10,
         },
       },
+      role: {
+        type: DataTypes.STRING,
+        defaultValue: "parent"
+      },
       address: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -39,7 +44,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     {
       hooks: {
-        beforeCreate: user => {
+        beforeCreate: Parent => {
           const salt = bcrypt.genSaltSync();
           Parent.password = bcrypt.hashSync(Parent.password, salt);
         },

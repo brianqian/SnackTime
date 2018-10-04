@@ -8,7 +8,7 @@ export default class Login extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    fetch(`/auth/login/${this.props.type === 'staff' ? 'staff' : 'parent'}`, {
+    fetch(`/auth/login/${this.props.type}`, {
       method: 'POST',
       headers: 'application/json',
       body: JSON.stringify({

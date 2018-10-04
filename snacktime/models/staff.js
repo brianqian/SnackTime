@@ -1,4 +1,4 @@
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcrypt-nodejs');
 module.exports = function(sequelize, DataTypes) {
   var Staff = sequelize.define(
     'Staff',
@@ -17,9 +17,9 @@ module.exports = function(sequelize, DataTypes) {
           notEmpty: true,
         },
       },
-      staff: {
+      role: {
         type: DataTypes.STRING,
-        defaultValue: true,
+        defaultValue: "staff",
       },
       name: {
         type: DataTypes.STRING,
@@ -31,7 +31,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     {
       hooks: {
-        beforeCreate: user => {
+        beforeCreate: Staff => {
           const salt = bcrypt.genSaltSync();
           Staff.password = bcrypt.hashSync(Staff.password, salt);
         },

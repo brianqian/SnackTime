@@ -62,7 +62,7 @@ class SimpleTabs extends React.Component {
         )}
         {value === 2 && (
           <TabContainer>
-            <Login type="admin" />
+            <Login type="staff" />
             <SignUp />
           </TabContainer>
         )}
