@@ -11,12 +11,13 @@ class StaffHomePage extends Component {
     loggedIn: false
   };
 
-  componentWillUpdate = () => {
+  componentDidUpdate = () => {
     console.log('mounted');
     this.getUserId();
   };
 
   getUserId = () => {
+    console.log('get request')
     fetch('/auth/loggedin')
       .then(res => res.json())
       .then(res => {
@@ -28,6 +29,7 @@ class StaffHomePage extends Component {
 
   render() {
     console.log('rendering');
+    this.getUserId();
     let allCookies = document.cookie;
     console.log('cookie', allCookies)
     if (this.state.loggedIn) {
@@ -37,13 +39,13 @@ class StaffHomePage extends Component {
             title="Students"
             destination="AllStudentsPage"
             image=""
-            notifications={this.state.studentNotifications}
+            // notifications={this.state.studentNotifications}
           />
           <DashboardItem
             title="Daily Report"
             destination="DailyReportPage"
             image=""
-            notifications={this.state.studentNotifications}
+            // notifications={this.state.studentNotifications}
           />
           <DashboardItem title="Add Staff" destination="" image="" />
           <DashboardItem title="Student Schedule" destination="" image="" />

@@ -24,6 +24,7 @@ app.use(
     secret: 'asgasfhr4xv41zjgjx',
     resave: false,
     saveUninitialized: false,
+    path: '/',
     cookie: {
       expires: 600000,
     },
@@ -37,6 +38,16 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept'
+  );
+  next();
+});
 app.use(routes);
 // router for handling 404 requests(unavailable routes)
 app.use(function(req, res, next) {

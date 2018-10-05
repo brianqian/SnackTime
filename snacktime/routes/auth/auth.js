@@ -2,26 +2,29 @@ const router = require('express').Router();
 var db = require('../../models');
 
 var sessionChecker = (req, res, next) => {
-  console.log('session', req.session.staff, req.cookies.user_sid);
+  console.log('SESSIONS', req.session, 'staff', req.session.staff, 'cookies', req.cookies, 'id', req.cookies.user_sid)
   if (req.session.staff && req.cookies.user_sid) {
     db.Staff.findOne({
       where: {
         id: req.session.staff.id,
       },
-      attributes: { exclude: ['password'] },
       include: [
         {
           model: db.Organization,
-        }
-        // { model: db.Student },
-        // {
-        //   model: db.Parent,
-        //   attributes: { exclude: ['password'] },
-        // },
+        },
       ],
     }).then(staff => {
-      console.log(staff);
-      res.json(staff.dataValues);
+      console.log('session checked')
+      // console.log(staff.dataValues.Organization.dataValues.name);
+      const returnObj = {
+        id: staff.dataValues.id,
+        role: staff.dataValues.role,
+        name: staff.dataValues.role,
+        orgName: staff.dataValues.Organization.dataValues.name
+
+      }
+      console.log(returnObj)
+      res.json(returnObj);
     });
   } else {
     next();
@@ -35,6 +38,7 @@ var sessionChecker = (req, res, next) => {
 
 // route for checking currently logged in user
 router.route('/loggedin').get(sessionChecker, (req, res) => {
+  console.log('not authorized')
   res.redirect('/notauthorized');
 });
 
@@ -48,19 +52,34 @@ router.route('/Organization').post((req, res) => {
   });
 });
 
+router.route('/getallorg').get((req,res)=>{
+  db.Organization.findAll({
+    include: {
+      all: true
+    }
+  }).then(data=> res.send(data))
+})
+router.route('/getallstaff').get((req,res)=>{
+  db.Staff.findAll({
+    include: {
+      all: true
+    }
+  }).then(data=> res.send(data))
+})
+
 // route for staff signup
 router.route('/signup/staff').post((req, res) => {
+  console.log('orgID', req.body.orgId)
   db.Staff.create({
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
-    OrganzationID: req.body.orgId,
+    OrganizationId: req.body.orgId,
   })
     .then(staff => {
       req.session.staff = staff.dataValues;
       let { email, id, name } = req.session.staff;
       let obj = { email, id, name };
-      console.log("sign up", req.session.staff);
       res.json(obj);
     })
     .catch(error => {
@@ -106,7 +125,7 @@ router.route('/signup/parent').post((req, res) => {
   db.Parent.create({
     email: req.body.email,
     password: req.body.password,
-    OrganzationID: req.body.org,
+    OrganizationId: req.body.org,
   })
     .then(parent => {
       req.session.parent = parent.dataValues;
