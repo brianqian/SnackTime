@@ -176,7 +176,4 @@ module.exports = {
     }).then(dbDiapering => res.json(dbDiapering))
     .catch(err => res.status(422).json(err));
   }
-
-
-  
 };

@@ -19,7 +19,7 @@ module.exports = function(sequelize, DataTypes) {
       },
       role: {
         type: DataTypes.STRING,
-        defaultValue: "staff",
+        defaultValue: 'staff',
       },
       name: {
         type: DataTypes.STRING,
@@ -30,6 +30,9 @@ module.exports = function(sequelize, DataTypes) {
       },
     },
     {
+      defaultScope: {
+        attributes: { exclude: ['password'] },
+      },
       hooks: {
         beforeCreate: Staff => {
           const salt = bcrypt.genSaltSync();

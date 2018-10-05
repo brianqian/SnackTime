@@ -25,15 +25,18 @@ export default class SignUp extends Component {
       headers: {
         "Content-type": 'application/json'
       },
+      credentials: 'include',
       body: JSON.stringify({orgName}),
     })
       .then(res => res.json())
       .then(res => {
+        console.log('orgid',res.id);
         fetch('/auth/signup/staff', {
           method: 'POST',
           headers: {
             "Content-type": 'application/json'
           },
+          credentials: 'include',
           body: JSON.stringify({
             name,
             email,
