@@ -5,30 +5,28 @@ import './SingleStudent.css'
 
 export default class SingleStudent extends Component {
   state = {
-    student :[]
+    student :this.props.studentId
   }
 
-  componentDidMount(){
+  componentWillMount(){
     this.getSingleStudent()
   }
 
   getSingleStudent = () =>{
-    fetch('/allinfo/student/:studentId')
+    fetch('/api/allinfo/student/' + this.state.student.id)
     .then(res =>res.json())
-    .then(this.setState({student}))
+    .then(res=>this.setState({student:res}))
   }
 
   render() {
     return (
       <div className='student-container'>
-      {this.state.student.map(student=>{
         <Card
           className='student__item'
-          title={student.name}
+          // title={student.name}
           destination="DailyReportPage"
-          image={student.image}
+          // image={student.image}
         />
-      })}
         
       </div>
     )

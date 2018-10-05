@@ -203,45 +203,69 @@ router.post('/forgot', (req, res) => {
         email: email,
       },
     }
-  ).then(function(staff) {
-    console.log('forgot', staff);
-    if (staff) {
-      console.log('staff found');
-      // configuring smtp transport machanism for password reset email
-      let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'snacktimeemail@gmail.com', // your gmail address
-          pass: '$$SnackTime33', // your gmail password
-        },
-      });
-      let mailOptions = {
-        subject: `Snack Time | Password reset`,
-        to: email,
-        from: `Snack Time <snacktimeemail@gmail.com>`,
-        html: `
-                <h1>Hi,</h1>
-                <h2>Here is your password reset key</h2>
-                <h2><code contenteditable="false" style="font-weight:200;font-size:1.5rem;padding:5px 10px; background: #EEEEEE; border:0">${passResetKey}</code></h4>
-                <p>Please ignore if you didn't try to reset your password on our platform</p>`,
-      };
-      transporter.sendMail(mailOptions, (error, response) => {
-        console.log("email sent");
-        if (error) {
-          console.log('error:\n', error, '\n');
-          res.status(500).send('could not send reset code');
-        } else {
-          console.log('email sent:\n', response);
-          res.status(200).send('Reset Code sent');
-        }
-      });
-    } else {
-      res.status(400).send('email is incorrect');
-    }
+  ).then(() => {
+    console.log('update successful');
+    // console.log('staff found');
+    // configuring smtp transport machanism for password reset email
+    // let transporter = nodemailer.createTransport({
+    //   service: 'gmail',
+    //   auth: {
+    //     user: 'snacktimeemail@gmail.com', // your gmail address
+    //     pass: '$$SnackTime33', // your gmail password
+    //   },
+    // });
+    // console.log(email);
+    // let mailOptions = {
+    //   subject: `Snack Time | Password reset`,
+    //   to: email,
+    //   from: `Snack Time <snacktimeemail@gmail.com>`,
+    //   html: `
+    //             <h1>Hi,</h1>
+    //             <h2>Here is your password reset key</h2>
+    //             <h2><code contenteditable="false" style="font-weight:200;font-size:1.5rem;padding:5px 10px; background: #EEEEEE; border:0">${passResetKey}</code></h4>
+    //             <p>Please ignore if you didn't try to reset your password on our platform</p>`,
+    // };
+    // transporter.sendMail(mailOptions, (error, response) => {
+    //   console.log('email sent');
+    //   if (error) {
+    //     console.log('error:\n', error, '\n');
+    //     res.status(500).send('could not send reset code');
+    //   } else {
+    //     console.log('email sent:\n', response);
+    //     res.status(200).send('Reset Code sent');
+    //   }
+    // });
+    // console.log('update successful');
+    // console.log('staff found');
+    // configuring smtp transport machanism for password reset email
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      type: "SMTP",
+      host: "smtp.gmail.com",
+      secure: true,
+      auth: {
+        user: 'snacktimeemail@gmail.com',
+        pass: '$$SnackTime33',
+      },
+    });
+
+    var mailOptions = {
+      from: 'snacktimeemail@gmail.com',
+      to: email,
+      subject: 'Sending Email using Node.js',
+      text: 'That was easy!',
+    };
+
+    transporter.sendMail(mailOptions, function(error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
   });
 });
 
-//
 router.post('/resetpass', (req, res) => {
   let { resetKey, newPassword } = req.body;
   db.Staff.findOne({

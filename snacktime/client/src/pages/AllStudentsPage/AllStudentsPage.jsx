@@ -31,7 +31,8 @@ class AllStudentsPage extends Component {
                 className="student__item"
                 title={student.name}
                 destination="/singlestudent"
-                // image={student.image}
+                studentId={student.id}
+                image="/img/boy.png"
                 // notifications={student.notifications}
               />
             ))
