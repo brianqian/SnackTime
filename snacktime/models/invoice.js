@@ -13,14 +13,7 @@ module.exports = function(sequelize, DataTypes) {
       validate: {
         notEmpty: true,
       },
-    },
-    createDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
-    },
+    }
   });
   Invoice.associate = function(models) {
     models.Invoice.belongsTo(models.Student, {

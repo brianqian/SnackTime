@@ -54,7 +54,7 @@ router.route('/signup/staff').post((req, res) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
-    OrganzationID: req.body.orgId,
+    OrganizationId: req.body.orgId,
   })
     .then(staff => {
       req.session.staff = staff.dataValues;
