@@ -1,36 +1,44 @@
-import React, { Component } from 'react'
-import './AllStudentsPage.css'
-import DashboardItem from '../../components/DashboardItem/DashboardItem'
+import React, { Component } from 'react';
+import './AllStudentsPage.css';
+import DashboardItem from '../../components/DashboardItem/DashboardItem';
 
-export default class AllStudentsPage extends Component {
+class AllStudentsPage extends Component {
   state = {
-    allStudents :[]
+    allStudents: [],
+  };
+
+  componentWillMount() {
+    this.getAllStudents();
   }
 
-
-  componentDidMount(){
-    this.getAllChildren()
-  }
-  getAllChildren = () =>{
+  getAllStudents = () => {
     fetch('/api/student')
-    .then(res =>res.json())
-    .then(this.setState({allStudents}))
-  }
+      .then(res => res.json())
+      .then(res =>
+        this.setState({ allStudents: res }, function() {
+          console.log(this.state.allStudents);
+        })
+      );
+  };
 
   render() {
+    console.log('Students: ', this.state.allStudents);
     return (
-      <div className='students-container'>
-      {this.state.allStudents.map(student=>{
-        <DashboardItem
-          className='student__item'
-          title={student.name}
-          destination="DailyReportPage"
-          image={student.image}
-          notifications={student.notifications}
-        />
-      })}
-        
+      <div className="students-container">
+        {this.state.allStudents.length > 0
+          ? this.state.allStudents.map(student => (
+              <DashboardItem
+                className="student__item"
+                title={student.name}
+                destination="/singlestudent"
+                // image={student.image}
+                // notifications={student.notifications}
+              />
+            ))
+          : 'No students to display'}
       </div>
-    )
+    );
   }
 }
+//
+export default AllStudentsPage;

@@ -18,16 +18,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TEXT,
     },
     dob: {
-      type: DataTypes.DATE, //YYYY-MM-DD
+      type: DataTypes.STRING, 
       allowNull: false,
       validate: {
         notEmpty: true,
-      },
-    },
-    gender: {
-      type: DataTypes.STRING,
-      validate: {
-        isIn: [['Male', 'Female']],
       },
     },
     allergies: {
@@ -52,6 +46,11 @@ module.exports = function(sequelize, DataTypes) {
     });
     models.Student.hasMany(models.Report, {
       onDelete: 'cascade',
+    });
+    models.Student.belongsTo(models.Organization, {
+      foreignKey: {
+        allowNull: false,
+      },
     });
   };
 

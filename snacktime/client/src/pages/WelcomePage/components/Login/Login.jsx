@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import './Login.css'
 
 export default class Login extends Component {
   state = {
     email: '',
     password: '',
+    statusText: '',
   };
 
   handleSubmit = e => {
@@ -11,12 +13,27 @@ export default class Login extends Component {
     console.log(`${this.props.type}`);
     fetch(`/auth/login/${this.props.type}`, {
       method: 'POST',
-      headers: { 'Content-Type':'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: this.state.email,
         password: this.state.password,
       }),
-    });
+    }).then(res =>
+      res.text().then(res => {
+        console.log(res);
+        if (res === 'Logged In') {
+          window.location.href = `/${this.props.type}HomePage`;
+        }
+        // 'Email does not exist in our database'
+        else if (res === 'Email does not exist in our database') {
+          this.setState({statusText: 'Email does not exist in our database'});
+        }
+        // 'Incorrect Password'
+        else if (res === 'Incorrect Password') {
+          this.setState({statusText: 'Incorrect Password'});
+        }
+      })
+    );
   };
 
   handleChange = e => {
@@ -45,6 +62,7 @@ export default class Login extends Component {
             id="password"
             type="password"
           />
+          <p>{this.state.statusText}</p>
           <input onClick={this.handleSubmit} id="login-submit" type="submit" />
         </form>
       </div>

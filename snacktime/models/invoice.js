@@ -2,10 +2,7 @@ module.exports = function(sequelize, DataTypes) {
   var Invoice = sequelize.define('Invoice', {
     month: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
+      allowNull: false
     },
     amount: {
       type: DataTypes.INTEGER,

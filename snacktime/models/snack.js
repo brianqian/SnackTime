@@ -2,11 +2,7 @@ module.exports = function(sequelize, DataTypes) {
     var Snack = sequelize.define("Snack", {
         day :{
             type: DataTypes.STRING,
-            allowNull :false,
-            validate : 
-                    {
-                        isIn:['Monday', 'Tuesday','Wednesday','Thursday', 'Friday']
-                    }
+            allowNull :false
         },
         morningSnack :{
             type: DataTypes.STRING

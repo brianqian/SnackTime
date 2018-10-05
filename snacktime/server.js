@@ -31,12 +31,12 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
-  if (req.cookies.user_sid && !req.session.user) {
-    res.clearCookie('user_sid');
-  }
-  next();
-});
+// app.use((req, res, next) => {
+//   if (req.cookies.user_sid && !req.session.user) {
+//     res.clearCookie('user_sid');
+//   }
+//   next();
+// });
 
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Credentials', true);

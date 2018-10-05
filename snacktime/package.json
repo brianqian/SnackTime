@@ -30,6 +30,7 @@
     "mysql2": "^1.6.1",
     "nodemailer": "^4.6.8",
     "passport": "^0.4.0",
-    "sequelize": "^4.39.0"
+    "sequelize": "^4.39.0",
+    "shortid": "^2.2.13"
   }
 }

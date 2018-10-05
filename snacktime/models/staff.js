@@ -28,17 +28,23 @@ module.exports = function(sequelize, DataTypes) {
           notEmpty: true,
         },
       },
+      passResetKey: {
+        type: DataTypes.STRING,
+      },
+      passKeyExpires: {
+        type: DataTypes.BIGINT
+      }
     },
     {
-      defaultScope: {
-        attributes: { exclude: ['password'] },
-      },
+      // defaultScope: {
+      //   attributes: { exclude: ['password'] },
+      // },
       hooks: {
-        beforeCreate: Staff => {
-          const salt = bcrypt.genSaltSync();
-          Staff.password = bcrypt.hashSync(Staff.password, salt);
+        beforeCreate: async Staff => {
+          const salt = await bcrypt.genSaltSync();
+          Staff.password = await bcrypt.hashSync(Staff.password, salt);
         },
-      },
+      }
     }
   );
   Staff.associate = function(models) {
@@ -49,6 +55,7 @@ module.exports = function(sequelize, DataTypes) {
     });
   };
   Staff.prototype.validPassword = function(password) {
+    console.log(password, this.password)
     return bcrypt.compareSync(password, this.password);
   };
   return Staff;
