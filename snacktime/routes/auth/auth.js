@@ -54,7 +54,7 @@ router.route('/signup/staff').post((req, res) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
-    OrganzationID: req.body.orgId,
+    OrganizationId: req.body.orgId,
   })
     .then(staff => {
       req.session.staff = staff.dataValues;
@@ -76,6 +76,7 @@ router
     res.send('go to staff login');
   })
   .post((req, res) => {
+    console.log("in the post", req.body);
     var email = req.body.email,
       password = req.body.password;
 
@@ -106,7 +107,7 @@ router.route('/signup/parent').post((req, res) => {
   db.Parent.create({
     email: req.body.email,
     password: req.body.password,
-    OrganzationID: req.body.org,
+    OrganizationId: req.body.org,
   })
     .then(parent => {
       req.session.parent = parent.dataValues;

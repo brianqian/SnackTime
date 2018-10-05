@@ -8,9 +8,10 @@ export default class Login extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    console.log(`${this.props.type}`);
     fetch(`/auth/login/${this.props.type}`, {
       method: 'POST',
-      headers: 'application/json',
+      headers: { 'Content-Type':'application/json'},
       body: JSON.stringify({
         email: this.state.email,
         password: this.state.password,
