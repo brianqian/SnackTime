@@ -17,8 +17,8 @@ module.exports = {
       notes: req.body.notes,
       allergies: req.body.allergies,
       medication: req.body.medication,
-      gender: req.body.gender,
       doctor: req.body.doctor,
+      OrganizationId: req.body.organizationId
     })
       .then(dbStudent => res.json(dbStudent))
       .catch(err => res.status(422).json(err));
@@ -35,7 +35,23 @@ module.exports = {
   },
 
   updateStudent: function(req,res){
-    //to-do
+    db.Student.update({
+      name: req.body.name,
+      address: req.body.address,
+      dob: req.body.dob,
+      notes: req.body.notes,
+      allergies: req.body.allergies,
+      medication: req.body.medication,
+      doctor: req.body.doctor,
+      OrganizationId: req.body.organizationId
+    },{
+      where:
+      {
+        id:req.params.studentId
+      }
+    })
+      .then(dbStudent => res.json(dbStudent))
+      .catch(err => res.status(422).json(err));
   },
 
   getStudentInfo: function(req,res){
@@ -79,7 +95,20 @@ module.exports = {
   },
 
   updateParent: function(req,res){
-    //to-do
+    db.Parent.update({
+      name: req.body.name,
+      address: req.body.address,
+      email: req.body.email,
+      password: req.body.password,
+      phone: req.body.phone,
+      StudentId: req.params.studentId,
+    },{
+      where:{
+        id:req.params.parentId
+      }
+    })
+      .then(dbParent => res.json(dbParent))
+      .catch(err => res.status(422).json(err));
   },
 /************parents**************/
 
@@ -107,11 +136,27 @@ module.exports = {
   },
 
   updatePickup: function(req,res){
-    //to-do
+    db.Pickup.update({
+      name: req.body.name,
+      address: req.body.address,
+      email: req.body.email,
+      phone: req.body.phone,
+      StudentId: req.params.studentId,
+    },{
+      where:{
+        id:req.params.pickupId
+      }
+    })
+      .then(dbPickup => res.json(dbPickup))
+      .catch(err => res.status(422).json(err));
   },
 
   deletePickup: function(req,res){
-    //to-do
+    db.Pickup.destroy({
+      where:{
+        id:req.params.pickupId
+      }
+    })
   },
 /************pickups**************/
   
@@ -219,7 +264,16 @@ createInvoice: function(req,res){
 },
 
 updateInvoice: function(req,res){
-  //to-do
+  db.Invoice.update({
+    StudentId: req.params.studentId,
+    month:req.body.month,
+    amount:req.body.amount
+  },{
+    where:{
+      id:req.params.invoiceId
+    }
+  }).then(dbInvoice => res.json(dbInvoice))
+  .catch(err => res.status(422).json(err));
 },
 /************invoice**************/
 
@@ -236,11 +290,19 @@ saveSnacks: function(req,res){
 },
 
 updateSnacks: function(req,res){
-  //to-do
+  db.Snack.update({
+    day:req.body.day,
+    morningSnack: req.body.morningSnack,
+    lunch: req.body.lunch,
+    afternoonSnack: req.body.afternoonSnack,
+    eveningSnack: req.body.eveningSnack
+  },{
+    where:{
+      id:req.params.snackId
+    }
+  }).then(dbSnack => res.json(dbSnack))
+  .catch(err => res.status(422).json(err));
 }
 /************fixedsnack**************/
-
-
-
 
 };

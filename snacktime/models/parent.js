@@ -43,9 +43,9 @@ module.exports = function(sequelize, DataTypes) {
       },
     },
     {
-      defaultScope: {
-        attributes: { exclude: ['password'] },
-      },
+      // defaultScope: {
+      //   attributes: { exclude: ['password'] },
+      // },
       hooks: {
         beforeCreate: Parent => {
           const salt = bcrypt.genSaltSync();
