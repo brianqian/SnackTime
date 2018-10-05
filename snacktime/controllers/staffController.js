@@ -203,6 +203,7 @@ module.exports = {
       ReportId: req.params.reportId
     }).then(dbDiapering => res.json(dbDiapering))
     .catch(err => res.status(422).json(err));
+
   },
 /************diapering**************/
 
@@ -238,5 +239,8 @@ updateSnacks: function(req,res){
   //to-do
 }
 /************fixedsnack**************/
+
+
+
 
 };

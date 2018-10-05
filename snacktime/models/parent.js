@@ -32,7 +32,7 @@ module.exports = function(sequelize, DataTypes) {
       },
       role: {
         type: DataTypes.STRING,
-        defaultValue: "parent"
+        defaultValue: 'parent',
       },
       address: {
         type: DataTypes.STRING,
@@ -43,6 +43,9 @@ module.exports = function(sequelize, DataTypes) {
       },
     },
     {
+      defaultScope: {
+        attributes: { exclude: ['password'] },
+      },
       hooks: {
         beforeCreate: Parent => {
           const salt = bcrypt.genSaltSync();
