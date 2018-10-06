@@ -1,11 +1,27 @@
 import React, { Component } from 'react';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
-export default class SignUp extends Component {
+
+
+export default class SignUp extends React.Component {
   state = {
     name: '',
     email: '',
     password: '',
     orgName: '',
+    open: false,
+  };
+
+  handleClickOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
   };
 
   handleChange = e => {
@@ -51,46 +67,69 @@ export default class SignUp extends Component {
       })
       .catch(err=>console.log(err))
   };
+
+  handleSubmitClose = e => {
+    this.handleSubmit(e);
+    this.handleClose();
+  }
+
   render() {
+    
     return (
       <div>
-        <form>
-          <label htmlFor="signup-name">Name: </label>
-          <input
-            onChange={this.handleChange}
-            value={this.state.name}
-            id="signup-name"
-            name="name"
-            type="text"
-          />
-          <label htmlFor="signup-email">Email: </label>
-          <input
-            onChange={this.handleChange}
-            value={this.state.email}
-            id="signup-email"
-            name="email"
-            type="text"
-          />
-          <label htmlFor="signup-password">Password: </label>
-          <input
-            onChange={this.handleChange}
-            value={this.state.password}
-            id="signup-password"
-            name="password"
-            type="password"
-          />
+        <Button onClick={this.handleClickOpen}>Create a snacktime account for your organization!</Button>
+          <Dialog
+            open={this.state.open}
+            onClose={this.handleClose}
+            aria-labelledby="form-dialog-title"
+          >
+            <DialogTitle id="form-dialog-title">Snacktime Organization Sign-Up</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  All fields are required to create your Snacktime account.
+                </DialogContentText>            
+              
+              <form>
+                <label htmlFor="signup-name">Administrator Name: </label>
+                <input
+                  onChange={this.handleChange}
+                  value={this.state.name}
+                  id="signup-name"
+                  name="name"
+                  type="text"
+                />
+                <label htmlFor="signup-email">Email: </label>
+                <input
+                  onChange={this.handleChange}
+                  value={this.state.email}
+                  id="signup-email"
+                  name="email"
+                  type="text"
+                />
+                <br></br>
+                <label htmlFor="signup-password">Password: </label>
+                <input
+                  onChange={this.handleChange}
+                  value={this.state.password}
+                  id="signup-password"
+                  name="password"
+                  type="password"
+                />
 
-          <label htmlFor="signup-orgName">Organization Name: </label>
-          <input
-            onChange={this.handleChange}
-            value={this.state.orgName}
-            id="signup-orgName"
-            name="orgName"
-            type="text"
-          />
-          <input onClick={this.handleSubmit} id="signup-submit" type="submit" />
-        </form>
+                <label htmlFor="signup-orgName">Organization Name: </label>
+                <input
+                  onChange={this.handleChange}
+                  value={this.state.orgName}
+                  id="signup-orgName"
+                  name="orgName"
+                  type="text"
+                />
+                <input onClick={this.handleSubmitClose} id="signup-submit" type="submit" />
+              </form>
+            </DialogContent>
+          </Dialog>
       </div>
     );
   }
 }
+
