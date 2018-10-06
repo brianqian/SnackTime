@@ -19,10 +19,11 @@ export default class Login extends Component {
         password: this.state.password,
       }),
     }).then(res =>
-      res.json().then(res => {
+      res.text().then(res => {
         console.log('res',res);
-        if (res.id) {
-
+        console.log(typeof res);
+        console.log(res === 'Success');
+        if (res === 'Success') {
           window.location.href = `/${this.props.type}HomePage`;
         }
         // 'Email does not exist in our database'
@@ -34,6 +35,7 @@ export default class Login extends Component {
           this.setState({statusText: 'Incorrect Password'});
         }
       })
+      .catch(err=>console.log(err))
     );
   };
 

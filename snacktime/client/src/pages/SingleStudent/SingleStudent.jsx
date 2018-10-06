@@ -28,9 +28,9 @@ export default class SingleStudent extends Component {
       <div className="student-container">
         <Card
           className="student__item"
-          // title={student.name}
+          title={this.state.name}
           destination="DailyReportPage"
-          // image={student.image}
+          // image={this.state.image}
         />
       </div>
     );

@@ -69,7 +69,7 @@ const styles = theme => ({
                 <MoreVertIcon />
               </IconButton>
             }
-            title="Shrimp and Chorizo Paella"
+            title={this.props.title}
             subheader="September 14, 2016"
           />
           <CardMedia

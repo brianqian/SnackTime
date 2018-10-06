@@ -9,7 +9,7 @@ class StaffHomePage extends Component {
     loggedIn: false,
     orgName: '',
     name: '',
-    authorized: true,
+    loginRejected: false,
   };
 
   componentDidMount = () => {
@@ -31,7 +31,7 @@ class StaffHomePage extends Component {
           });
         } else {
           this.setState({
-            authorized: false,
+            loginRejected: true,
           });
         }
       })
@@ -80,7 +80,7 @@ class StaffHomePage extends Component {
         </div>
       );
     }
-    if (!this.state.authorized) {
+    if (this.state.loginRejected) {
       return (
         <Redirect
           to={{

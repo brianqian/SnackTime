@@ -3,17 +3,8 @@ const shortid = require('shortid');
 const nodemailer = require('nodemailer');
 var db = require('../../models');
 
+//Every page is checked via sessionChecker
 var sessionChecker = (req, res, next) => {
-  console.log(
-    'SESSIONS',
-    req.session,
-    'STAFF',
-    req.session.staff,
-    'COOKIES',
-    req.cookies,
-    'USER ID',
-    req.cookies.user_sid
-  );
   if (req.session.staff && req.cookies.user_sid) {
     db.Staff.findOne({
       where: {
@@ -62,7 +53,7 @@ router.route('/Organization').post((req, res) => {
   });
 });
 
-// omm
+// Testing Routes
 router.route('/getallorg').get((req, res) => {
   db.Organization.findAll({
     include: {
@@ -122,9 +113,7 @@ router
           res.send('Incorrect Password');
         } else if (staff.validPassword(password)) {
           req.session.staff = staff.dataValues;
-          console.log('logged in');
-          console.log(staff);
-          res.json(staff);
+          res.send('Success');
         }
       });
   });
