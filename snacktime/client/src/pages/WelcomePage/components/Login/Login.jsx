@@ -10,7 +10,7 @@ export default class Login extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    console.log(`${this.props.type}`);
+    console.log('login props',this.props);
     fetch(`/auth/login/${this.props.type}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -19,9 +19,10 @@ export default class Login extends Component {
         password: this.state.password,
       }),
     }).then(res =>
-      res.text().then(res => {
-        console.log(res);
-        if (res === 'Logged In') {
+      res.json().then(res => {
+        console.log('res',res);
+        if (res.id) {
+
           window.location.href = `/${this.props.type}HomePage`;
         }
         // 'Email does not exist in our database'

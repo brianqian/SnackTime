@@ -30,8 +30,7 @@ class AllStudentsPage extends Component {
               <DashboardItem
                 className="student__item"
                 title={student.name}
-                destination="/singlestudent"
-                studentId={student.id}
+                destination={`/allstudentspage/${student.id}`}
                 image="/img/boy.png"
                 // notifications={student.notifications}
               />

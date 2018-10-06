@@ -45,4 +45,4 @@ class StudentGender extends React.Component {
       console.log("value ",event.target.value)
       this.props.onChange([name], event.target.value)
     };
-}
+  

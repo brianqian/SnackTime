@@ -29,11 +29,12 @@ var sessionChecker = (req, res, next) => {
       // console.log(staff.dataValues.Organization.dataValues.name);
       const returnObj = {
         userId: staff.dataValues.id,
-        role: staff.dataValues.role,
+        userType: staff.dataValues.role,
         name: staff.dataValues.name,
         orgName: staff.dataValues.Organization.dataValues.name,
+        orgId: staff.dataValues.Organization.dataValues.id
       };
-      console.log(returnObj);
+      console.log(returnObj); 
       res.json(returnObj);
     });
   } else {
@@ -48,8 +49,7 @@ var sessionChecker = (req, res, next) => {
 
 // route for checking currently logged in user
 router.route('/loggedin').get(sessionChecker, (req, res) => {
-  console.log('not authorized');
-  res.send('notauthorized');
+  res.json({loggedIn: false})
 });
 
 // route for creating Organization
@@ -124,7 +124,7 @@ router
           req.session.staff = staff.dataValues;
           console.log('logged in');
           console.log(staff);
-          res.send('Logged In');
+          res.json(staff);
         }
       });
   });
@@ -248,7 +248,7 @@ router.post('/forgot', (req, res) => {
         pass: '$$SnackTime33',
       },
     });
-
+conso
     var mailOptions = {
       from: 'snacktimeemail@gmail.com',
       to: email,
