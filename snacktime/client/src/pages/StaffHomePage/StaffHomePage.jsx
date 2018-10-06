@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import DashboardItem from '../../components/DashboardItem/DashboardItem';
 import './StaffHomePage.css';
-import NotAuthorized from '../notAuthorized';
+import { Redirect } from 'react-router';
 
 class StaffHomePage extends Component {
   state = {
@@ -9,10 +9,10 @@ class StaffHomePage extends Component {
     loggedIn: false,
     orgName: '',
     name: '',
+    authorized: true,
   };
 
   componentDidMount = () => {
-    console.log('mounted');
     this.getUserId();
   };
 
@@ -27,22 +27,26 @@ class StaffHomePage extends Component {
             userId: data.userId,
             loggedIn: true,
             name: data.name,
+            orgId: data.orgId,
+          });
+        } else {
+          this.setState({
+            authorized: false,
           });
         }
-        console.log(this.state);
       })
     );
   };
 
   render() {
-    // if (this.state.loggedIn) {
-      if (true){
+    if (this.state.loggedIn) {
+      // if (true){
       return (
         <div>
-        <header>
-          <p>Welcome {this.state.name}</p>
-          <p>School: {this.state.orgName}</p>
-        </header>
+          <header>
+            <p>Welcome {this.state.name}</p>
+            <p>School: {this.state.orgName}</p>
+          </header>
           <div className="dashboard-container">
             <DashboardItem
               title="Students"
@@ -62,20 +66,31 @@ class StaffHomePage extends Component {
               destination="/addstudent"
               // image=""
             />
-            <DashboardItem title="Student Schedule" destination="" 
-            // image="" 
+            <DashboardItem
+              title="Student Schedule"
+              destination=""
+              // image=""
             />
-            <DashboardItem 
-            title="Settings" 
-            destination="" 
-            image="/img/settings.png" 
+            <DashboardItem
+              title="Settings"
+              destination=""
+              image="/img/settings.png"
             />
           </div>
         </div>
       );
-    } else {
-      return <div>Logging in...</div>;
     }
+    if (!this.state.authorized) {
+      return (
+        <Redirect
+          to={{
+            pathname: '/notAuthorized',
+            state: { type: 'Staff' }
+          }}
+        />
+      );
+    }
+    return <div>Logging in</div>;
   }
 }
 

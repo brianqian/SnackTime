@@ -32,7 +32,9 @@ class SimpleTabs extends React.Component {
   state = {
     value: 0,
   };
-
+  componentDidMount() {
+    console.log('navbar',this.props.updateState);
+  }
   handleChange = (event, value) => {
     this.setState({ value });
   };
@@ -47,7 +49,7 @@ class SimpleTabs extends React.Component {
           <Tabs value={value} onChange={this.handleChange}>
             <Tab label="Snack Time" />
             <Tab label="Parent Login" />
-            <Tab label="Admin Login" href="#basic-tabs" />
+            <Tab label="Admin Login"/>
           </Tabs>
         </AppBar>
         {value === 0 && (
@@ -57,12 +59,12 @@ class SimpleTabs extends React.Component {
         )}
         {value === 1 && (
           <TabContainer>
-            <Login type="Parent" />
+            <Login updateState={this.props.updateState} type="Parent" />
           </TabContainer>
         )}
         {value === 2 && (
           <TabContainer>
-            <Login type="Staff" />
+            <Login updateState={this.props.updateState} type="Staff" />
             <SignUp />
           </TabContainer>
         )}

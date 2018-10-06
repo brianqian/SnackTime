@@ -22,10 +22,7 @@ const DashboardItem = props => {
 
   return (
     <div className="dashboard__item">
-      <Link
-        to={props.destination}
-        studentid={props.studentId ? `${props.studentId}` : ''}
-      >
+      <Link to={props.destination}>
         <img
           alt={props.title}
           className="dashboard__picture"
