@@ -4,7 +4,9 @@ module.exports = {
 
 /************student**************/
   getAllStudents: function(req, res) {
-    db.Student.findAll({})
+    db.Student.findAll({
+      order: [['name', 'ASC']]
+    })
       .then(dbStudents => res.json(dbStudents))
       .catch(err => res.status(422).json(err));
   },
@@ -42,8 +44,7 @@ module.exports = {
       notes: req.body.notes,
       allergies: req.body.allergies,
       medication: req.body.medication,
-      doctor: req.body.doctor,
-      OrganizationId: req.body.organizationId
+      doctor: req.body.doctor
     },{
       where:
       {
@@ -99,9 +100,7 @@ module.exports = {
       name: req.body.name,
       address: req.body.address,
       email: req.body.email,
-      password: req.body.password,
-      phone: req.body.phone,
-      StudentId: req.params.studentId,
+      phone: req.body.phone
     },{
       where:{
         id:req.params.parentId
@@ -140,8 +139,7 @@ module.exports = {
       name: req.body.name,
       address: req.body.address,
       email: req.body.email,
-      phone: req.body.phone,
-      StudentId: req.params.studentId,
+      phone: req.body.phone
     },{
       where:{
         id:req.params.pickupId
@@ -181,7 +179,6 @@ module.exports = {
       napEndTime: req.body.napEndTime,
       highlight: req.body.highlight,
       noteForParents: req.body.noteForParents,
-      noteForStaff: req.body.noteForStaff,
       meal1Time: req.body.meal1Time,
       meal1Food : req.body.meal1Food,
       meal2Time: req.body.meal2Time,
@@ -206,7 +203,6 @@ module.exports = {
       napEndTime: req.body.napEndTime,
       highlight: req.body.highlight,
       noteForParents: req.body.noteForParents,
-      noteForStaff: req.body.noteForStaff,
       meal1Time: req.body.meal1Time,
       meal1Food : req.body.meal1Food,
       meal2Time: req.body.meal2Time,
@@ -265,7 +261,6 @@ createInvoice: function(req,res){
 
 updateInvoice: function(req,res){
   db.Invoice.update({
-    StudentId: req.params.studentId,
     month:req.body.month,
     amount:req.body.amount
   },{

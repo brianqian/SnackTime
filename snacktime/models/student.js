@@ -35,9 +35,6 @@ module.exports = function(sequelize, DataTypes) {
     },
   });
   Student.associate = function(models) {
-    models.Student.hasMany(models.Parent, {
-      onDelete: 'cascade',
-    });
     models.Student.hasMany(models.Pickup, {
       onDelete: 'cascade',
     });

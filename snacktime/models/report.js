@@ -61,6 +61,7 @@ module.exports = function(sequelize, DataTypes) {
     attendance: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue:true
     },
   });
   Report.associate = function(models) {

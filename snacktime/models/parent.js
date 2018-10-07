@@ -54,13 +54,7 @@ module.exports = function(sequelize, DataTypes) {
       },
     }
   );
-  Parent.associate = function(models) {
-    models.Parent.belongsTo(models.Student, {
-      foreignKey: {
-        allowNull: false,
-      },
-    });
-  };
+
   Parent.prototype.validPassword = function(password) {
     return bcrypt.compareSync(password, this.password);
   };
