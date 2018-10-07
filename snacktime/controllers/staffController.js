@@ -198,7 +198,6 @@ module.exports = {
 
   updateReport: function(req,res){
     db.Report.update({
-      date:req.body.date,
       napStartTime: req.body.napStartTime,
       napEndTime: req.body.napEndTime,
       highlight: req.body.highlight,

@@ -112,11 +112,33 @@ getChildOrg: function(req,res){
 
 getOrgStaff: function(req,res){
     db.Staff.findAll({
+        inlcude:[db.Organization],
         where:{
             OrganizationId: req.params.orgId
         }
     })
     .then(dbPickup => res.json(dbPickup))
     .catch(err => res.status(422).json(err));
-}
+},
+
+saveReport: function(req,res){
+    db.Report.create({
+      StudentId: req.params.studentId,
+      date:req.body.date,
+      noteForStaff: req.body.noteForStaff
+    }).then(dbReport => res.json(dbReport))
+    .catch(err => res.status(422).json(err));
+  },
+
+  updateReport: function(req,res){
+    db.Report.update({
+        noteForStaff: req.body.noteForStaff
+      },{
+        where:
+        {
+          id:req.params.reportId
+        }
+      }).then(dbReport => res.json(dbReport))
+      .catch(err => res.status(422).json(err));
+  }
 };
