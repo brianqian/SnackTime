@@ -1,22 +1,22 @@
-const router = require('express').Router();
-const shortid = require('shortid');
-const nodemailer = require('nodemailer');
-var db = require('../../models');
+const router = require("express").Router();
+const shortid = require("shortid");
+const nodemailer = require("nodemailer");
+var db = require("../../models");
 
 //Every page is checked via sessionChecker
 var sessionChecker = (req, res, next) => {
   if (req.session.staff && req.cookies.user_sid) {
     db.Staff.findOne({
       where: {
-        id: req.session.staff.id,
+        id: req.session.staff.id
       },
       include: [
         {
-          model: db.Organization,
-        },
-      ],
+          model: db.Organization
+        }
+      ]
     }).then(staff => {
-      console.log('session checked');
+      console.log("session checked");
       // console.log(staff.dataValues.Organization.dataValues.name);
       const returnObj = {
         userId: staff.dataValues.id,
@@ -25,7 +25,7 @@ var sessionChecker = (req, res, next) => {
         orgName: staff.dataValues.Organization.dataValues.name,
         orgId: staff.dataValues.Organization.dataValues.id
       };
-      console.log(returnObj); 
+      console.log(returnObj);
       res.json(returnObj);
     });
   } else {
@@ -39,44 +39,44 @@ var sessionChecker = (req, res, next) => {
 // });
 
 // route for checking currently logged in user
-router.route('/loggedin').get(sessionChecker, (req, res) => {
-  res.json({loggedIn: false})
+router.route("/loggedin").get(sessionChecker, (req, res) => {
+  res.json({ loggedIn: false });
 });
 
 // route for creating Organization
-router.route('/Organization').post((req, res) => {
+router.route("/Organization").post((req, res) => {
   console.log(req.body);
   db.Organization.create({
-    name: req.body.orgName,
+    name: req.body.orgName
   }).then(org => {
     res.json(org);
   });
 });
 
 // Testing Routes
-router.route('/getallorg').get((req, res) => {
+router.route("/getallorg").get((req, res) => {
   db.Organization.findAll({
     include: {
-      all: true,
-    },
+      all: true
+    }
   }).then(data => res.send(data));
 });
-router.route('/getallstaff').get((req, res) => {
+router.route("/getallstaff").get((req, res) => {
   db.Staff.findAll({
     include: {
-      all: true,
-    },
+      all: true
+    }
   }).then(data => res.send(data));
 });
 
 // route for staff signup
-router.route('/signup/staff').post((req, res) => {
-  console.log('orgID', req.body.orgId);
+router.route("/signup/staff").post((req, res) => {
+  console.log("orgID", req.body.orgId);
   db.Staff.create({
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
-    OrganizationId: req.body.orgId,
+    OrganizationId: req.body.orgId
   })
     .then(staff => {
       req.session.staff = staff.dataValues;
@@ -92,12 +92,12 @@ router.route('/signup/staff').post((req, res) => {
 
 // route for staff Login
 router
-  .route('/login/:role')
+  .route("/login/:role")
   .get(sessionChecker, (req, res) => {
-    res.send('go to staff login');
+    res.send("go to staff login");
   })
   .post((req, res) => {
-    console.log('in the post', req.body);
+    console.log("in the post", req.body);
     var email = req.body.email,
       password = req.body.password;
 
@@ -107,32 +107,32 @@ router
         // console.log("validate function", staff.validPassword(password));
         console.log(staff);
         if (!staff) {
-          res.send('Email does not exist in our database');
+          res.send("Email does not exist in our database");
         } else if (!staff.validPassword(password)) {
-          console.log('incorrect password');
-          res.send('Incorrect Password');
+          console.log("incorrect password");
+          res.send("Incorrect Password");
         } else if (staff.validPassword(password)) {
           req.session.staff = staff.dataValues;
-          res.send('Success');
+          res.send("Success");
         }
       });
   });
 // route for staff logout
-router.get('/logout/staff', (req, res) => {
+router.get("/logout/staff", (req, res) => {
   if (req.session.staff && req.cookies.user_sid) {
-    res.clearCookie('user_sid');
-    res.redirect('/');
+    res.clearCookie("user_sid");
+    res.redirect("/");
   } else {
-    res.redirect('/login');
+    res.redirect("/login");
   }
 });
 
 // route for parent signup
-router.route('/signup/parent').post((req, res) => {
+router.route("/signup/parent").post((req, res) => {
   db.Parent.create({
     email: req.body.email,
     password: req.body.password,
-    OrganizationId: req.body.org,
+    OrganizationId: req.body.org
   })
     .then(parent => {
       req.session.parent = parent.dataValues;
@@ -141,15 +141,15 @@ router.route('/signup/parent').post((req, res) => {
       res.json(obj);
     })
     .catch(error => {
-      res.redirect('/');
+      res.redirect("/");
     });
 });
 
 // route for parent Login
 router
-  .route('/login/parent')
+  .route("/login/parent")
   .get(sessionChecker, (req, res) => {
-    res.send('go to parent login');
+    res.send("go to parent login");
   })
   .post((req, res) => {
     var email = req.body.email,
@@ -158,140 +158,108 @@ router
     db.Parent.findOne({ where: { email: email } })
       .then(function(parent) {
         if (!parent) {
-          res.redirect('/login');
+          res.redirect("/login");
         } else if (!parent.validPassword(password)) {
-          res.redirect('/login');
+          res.redirect("/login");
         } else {
           req.session.parent = parent.dataValues;
-          res.send('parent logged in');
+          res.send("parent logged in");
         }
       })
       .catch(err => console.log(err));
   });
 
 // route for parent logout
-router.get('/logout/parent', (req, res) => {
+router.get("/logout/parent", (req, res) => {
   if (req.session.parent && req.cookies.user_sid) {
     req.session.destroy();
-    res.clearCookie('user_sid');
-    res.redirect('/');
+    res.clearCookie("user_sid");
+    res.redirect("/");
   } else {
-    res.redirect('/login');
+    res.redirect("/login");
   }
 });
 
-router.post('/forgot', (req, res) => {
+router.post("/forgot", (req, res) => {
   let { email } = req.body; // same as let email = req.body.email
-  console.log('forgot', email);
+  console.log("forgot", email);
   let passResetKey = shortid.generate();
   let passKeyExpires = new Date().getTime() + 20 * 60 * 1000;
   db.Staff.update(
     { passResetKey: passResetKey, passKeyExpires: passKeyExpires },
     {
       where: {
-        email: email,
-      },
+        email: email
+      }
     }
   ).then(() => {
-    console.log('update successful');
-    // console.log('staff found');
-    // configuring smtp transport machanism for password reset email
-    // let transporter = nodemailer.createTransport({
-    //   service: 'gmail',
-    //   auth: {
-    //     user: 'snacktimeemail@gmail.com', // your gmail address
-    //     pass: '$$SnackTime33', // your gmail password
-    //   },
-    // });
-    // console.log(email);
-    // let mailOptions = {
-    //   subject: `Snack Time | Password reset`,
-    //   to: email,
-    //   from: `Snack Time <snacktimeemail@gmail.com>`,
-    //   html: `
-    //             <h1>Hi,</h1>
-    //             <h2>Here is your password reset key</h2>
-    //             <h2><code contenteditable="false" style="font-weight:200;font-size:1.5rem;padding:5px 10px; background: #EEEEEE; border:0">${passResetKey}</code></h4>
-    //             <p>Please ignore if you didn't try to reset your password on our platform</p>`,
-    // };
-    // transporter.sendMail(mailOptions, (error, response) => {
-    //   console.log('email sent');
-    //   if (error) {
-    //     console.log('error:\n', error, '\n');
-    //     res.status(500).send('could not send reset code');
-    //   } else {
-    //     console.log('email sent:\n', response);
-    //     res.status(200).send('Reset Code sent');
-    //   }
-    // });
-    // console.log('update successful');
-    // console.log('staff found');
-    // configuring smtp transport machanism for password reset email
     var transporter = nodemailer.createTransport({
-      service: 'gmail',
+      service: "gmail",
       type: "SMTP",
       host: "smtp.gmail.com",
       secure: true,
       auth: {
-        user: 'snacktimeemail@gmail.com',
-        pass: '$$SnackTime33',
-      },
+        user: "snacktimeemail@gmail.com",
+        pass: "$$SnackTime33"
+      }
     });
-conso
-    var mailOptions = {
-      from: 'snacktimeemail@gmail.com',
+    let mailOptions = {
+      subject: `Snack Time | Password reset`,
       to: email,
-      subject: 'Sending Email using Node.js',
-      text: 'That was easy!',
+      from: `Snack Time <snacktimeemail@gmail.com>`,
+      html: `
+                <h1>Hi,</h1>
+                <h2>Here is your password reset key</h2>
+                <h2><code contenteditable="false" style="font-weight:200;font-size:1.5rem;padding:5px 10px; background: #EEEEEE; border:0">${passResetKey}</code></h4>
+                <p>Please ignore if you didn't try to reset your password on our platform</p>`
     };
-
     transporter.sendMail(mailOptions, function(error, info) {
       if (error) {
         console.log(error);
       } else {
-        console.log('Email sent: ' + info.response);
+        console.log("Email sent: " + info.response);
       }
     });
   });
 });
 
-router.post('/resetpass', (req, res) => {
+router.post("/resetpass", (req, res) => {
   let { resetKey, newPassword } = req.body;
   db.Staff.findOne({
     where: {
-      passResetKey: resetKey,
-    },
+      passResetKey: resetKey
+    }
   }).then(staff => {
     if (staff) {
       let now = new Date().getTime();
       if (staff.passKeyExpires > now) {
+        staff.getHash(newPassword);
         db.Staff.update(
           {
-            password: newPassword,
             passResetKey: null,
-            passKeyExpires: null,
+            passKeyExpires: null
           },
           {
             where: {
-              passResetKey: resetKey,
-            },
+              passResetKey: resetKey
+            }
           }
         ).then(staff => {
           if (staff) {
-            res.status(200).send('Password reset successful');
+            res.status(200).send("Password reset successful");
           } else {
-            res.status(500).send('error resetting your password');
+            res.status(500).send("error resetting your password");
           }
         });
       } else {
         res
           .status(400)
           .send(
-            'Sorry, pass key has expired. Please initiate the request for a new one'
+            "Sorry, pass key has expired. Please initiate the request for a new one"
           );
       }
     } else {
-      res.status(400).send('invalid pass key!');
+      res.status(400).send("invalid pass key!");
     }
   });
 });
