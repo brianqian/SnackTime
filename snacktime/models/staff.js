@@ -1,35 +1,36 @@
-var bcrypt = require('bcrypt-nodejs');
+var bcrypt = require("bcrypt-nodejs");
+
 module.exports = function(sequelize, DataTypes) {
   var Staff = sequelize.define(
-    'Staff',
+    "Staff",
     {
       email: {
         type: DataTypes.STRING,
         isUnique: true,
         validate: {
-          isEmail: true,
-        },
+          isEmail: true
+        }
       },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          notEmpty: true,
-        },
+          notEmpty: true
+        }
       },
       role: {
         type: DataTypes.STRING,
-        defaultValue: 'staff',
+        defaultValue: "staff"
       },
       name: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          notEmpty: true,
-        },
+          notEmpty: true
+        }
       },
       passResetKey: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING
       },
       passKeyExpires: {
         type: DataTypes.BIGINT
@@ -43,20 +44,28 @@ module.exports = function(sequelize, DataTypes) {
         beforeCreate: async Staff => {
           const salt = await bcrypt.genSaltSync();
           Staff.password = await bcrypt.hashSync(Staff.password, salt);
-        },
+        }
       }
     }
   );
   Staff.associate = function(models) {
     models.Staff.belongsTo(models.Organization, {
       foreignKey: {
-        allowNull: false,
-      },
+        allowNull: false
+      }
     });
   };
   Staff.prototype.validPassword = function(password) {
-    console.log(password, this.password)
+    console.log(password, this.password);
     return bcrypt.compareSync(password, this.password);
   };
+
+  Staff.prototype.getHash = function(word) {
+    const salt = bcrypt.genSaltSync();
+    let newPassword = bcrypt.hashSync(word, salt);
+    this.password = newPassword;
+    this.save().then(() => {});
+  };
+
   return Staff;
 };

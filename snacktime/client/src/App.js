@@ -9,6 +9,7 @@ import AddStudent from './pages/AddStudent/AddStudent';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import AllStudents from './pages/AllStudentsPage/AllStudentsPage';
 import SingleStudent from './pages/SingleStudent/SingleStudent';
+import ResetPassword from "./pages/ForgotPassword/components/ResetPassword";
 
 class App extends Component {
   state = {
@@ -54,6 +55,7 @@ class App extends Component {
             <Route exact path="/addstudent" component={AddStudent} />
             <Route exact path="/forgotpassword" component={ForgotPassword} />
             <Route exact path="/allstudentspage" component={AllStudents} />
+            <Route path = "/resetpassword/:key" component={ResetPassword} />
             <Route path="/allstudentspage/:student" component={SingleStudent} />
             <Route component={notFound} />
           </Switch>
