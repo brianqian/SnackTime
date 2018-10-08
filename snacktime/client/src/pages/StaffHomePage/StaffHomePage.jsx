@@ -5,10 +5,11 @@ import { Redirect } from 'react-router';
 
 class StaffHomePage extends Component {
   state = {
-    userId: '',
-    loggedIn: false,
-    orgName: '',
     name: '',
+    userId: '',
+    orgName: '',
+    orgId: '',
+    loggedIn: false,
     loginRejected: false,
   };
 
@@ -17,17 +18,17 @@ class StaffHomePage extends Component {
   };
 
   getUserId = () => {
-    console.log('get request');
     fetch('/auth/loggedin').then(res =>
       res.json().then(data => {
         if (data.userId) {
-          console.log('setting state');
+          console.log('USER AUTHORIZED');
           this.setState({
-            orgName: data.orgName,
-            userId: data.userId,
-            loggedIn: true,
             name: data.name,
+            userId: data.userId,
+            orgName: data.orgName,
             orgId: data.orgId,
+            loginRejected: false,
+            loggedIn: true,
           });
         } else {
           this.setState({
@@ -40,7 +41,6 @@ class StaffHomePage extends Component {
 
   render() {
     if (this.state.loggedIn) {
-      // if (true){
       return (
         <div>
           <header>
