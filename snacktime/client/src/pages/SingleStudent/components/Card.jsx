@@ -110,9 +110,12 @@ const styles = theme => ({
               <Typography>
                 Birthday: {this.props.dob}
               </Typography>
-              <Typography>
+              {this.props.notes && <Typography>
                 Additional Notes: {this.props.notes}
-              </Typography>
+              </Typography>}
+              {this.props.doctor && <Typography>
+                Doctor: {this.props.doctor}
+              </Typography>}
             </CardContent>
           </Collapse>
         </Card>

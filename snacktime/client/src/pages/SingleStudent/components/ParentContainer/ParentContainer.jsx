@@ -14,27 +14,25 @@ const styles = theme => ({
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
-  },
+  }
 });
-// let myObj = {
-//   name: 'john',
-//   email: 'email@email',
-//   phone: '1234',
-//   address: 'address'
-// }
+
 class ParentContainer extends Component {
   state = {
-    parents: [{
-      name: 'john',
-      email: 'email@email',
-      phone: '1234',
-      address: 'address'
-    }, {
-      name: 'asdf',
-      email: 'asdf@email',
-      phone: 'asdf',
-      address: 'asdf'
-    }],
+    parents: [
+      {
+        name: 'john',
+        email: 'email@email',
+        phone: '1234',
+        address: 'address',
+      },
+      {
+        name: 'asdf',
+        email: 'asdf@email',
+        phone: 'asdf',
+        address: 'asdf',
+      },
+    ],
     email: '',
     status: '',
     showAddNewParent: true,
@@ -75,6 +73,7 @@ class ParentContainer extends Component {
         if (resp.name) {
           this.setState({ addParentForm: resp });
         } else {
+          this.setState({status: "That email doesn't exist"})
         }
       });
   };
@@ -106,7 +105,7 @@ class ParentContainer extends Component {
 
   handleAddNewParent = e => {
     e.preventDefault();
-    this.setState({ addParentForm: {}, showAddNewParent: false });
+    this.setState({ addParentForm: {}, showAddNewParent: false, status: ''});
   };
 
   render() {

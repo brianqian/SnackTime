@@ -59,6 +59,7 @@ export default class SingleStudent extends Component {
           address={this.state.address}
           allergies={this.state.allergies}
           medication={this.state.medication}
+          doctor={this.state.doctor}
           dob={this.state.dob}
           notes={this.state.notes}
           // image={this.state.image}
