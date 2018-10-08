@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import DashboardItem from '../../components/DashboardItem/DashboardItem';
-import './StaffHomePage.css';
+import DashboardItem from '../../../components/DashboardItem/DashboardItem';
+import './ParentHomePage.css';
 import { Redirect } from 'react-router';
 
-class StaffHomePage extends Component {
+class ParentHomePage extends Component {
   state = {
     name: '',
     userId: '',
+    userType: 'parent',
     orgName: '',
     orgId: '',
     loggedIn: false,
@@ -25,6 +26,7 @@ class StaffHomePage extends Component {
           this.setState({
             name: data.name,
             userId: data.userId,
+            userType: data.role,
             orgName: data.orgName,
             orgId: data.orgId,
             loginRejected: false,
@@ -50,7 +52,7 @@ class StaffHomePage extends Component {
           </header>
           <div className="dashboard-container">
             <DashboardItem
-              title="Students"
+              title="My Kids"
               destination="/allstudentspage"
               image="/img/group.png"
               // notifications={this.state.studentNotifications}
@@ -95,4 +97,4 @@ class StaffHomePage extends Component {
   }
 }
 
-export default StaffHomePage;
+export default ParentHomePage;
