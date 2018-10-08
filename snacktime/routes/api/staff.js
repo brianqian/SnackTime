@@ -21,6 +21,9 @@ router.route('/student/:studentId/parent')
   .post(staffController.saveParent) //save a parent for a particular student
   .get(staffController.getStudentParentInfo); //get parents of a particular student
 
+router.route('/parent/email/:email')
+  .get(staffController.checkParentEmail)
+
 router.route('/parent/:parentId').put(staffController.updateParent) //update a particular parent
 /******Parents Info********/
 

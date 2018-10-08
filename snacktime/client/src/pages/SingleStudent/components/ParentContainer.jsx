@@ -19,20 +19,7 @@ const styles = theme => ({
 
 class ParentContainer extends Component {
   state = {
-    parents: [
-      {
-        name: 'john',
-        email: 'email@email',
-        phone: '1234',
-        address: 'address',
-      },
-      {
-        name: 'asdf',
-        email: 'asdf@email',
-        phone: 'asdf',
-        address: 'asdf',
-      },
-    ],
+    parents: [],
     email: '',
     status: '',
     showAddNewParent: true,
@@ -49,7 +36,7 @@ class ParentContainer extends Component {
   }
 
   getExistingParent = ()=> {
-    fetch('/api/parent')
+    fetch(`/api/student/${this.props.studentId}/parent`)
       .then(resp => resp.json())
       .then(resp => {
         //if resp.name

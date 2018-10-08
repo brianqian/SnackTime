@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './AllStudentsPage.css';
-import DashboardItem from '../../components/DashboardItem/DashboardItem';
+import DashboardItem from '../../../components/DashboardItem/DashboardItem';
 
 class AllStudentsPage extends Component {
   state = {

@@ -80,9 +80,15 @@ module.exports = {
       email: req.body.email,
       password: req.body.password,
       phone: req.body.phone,
-      StudentId: req.params.studentId,
     })
-      .then(dbParent => res.json(dbParent))
+      .then(dbParent => {
+        db.ParentStudent.create({
+          ParentId: dbParent.id,
+          StudentId:req.params.studentId
+        })
+        .then(dbParentStudent => res.json(dbParentStudent))
+        .catch(err => res.status(422).json(err));
+      })
       .catch(err => res.status(422).json(err));
   },
 
@@ -108,6 +114,19 @@ module.exports = {
     })
       .then(dbParent => res.json(dbParent))
       .catch(err => res.status(422).json(err));
+  },
+
+  checkParentEmail: function(req,res){
+    db.Parent.findOne({
+      where: {
+        email:req.params.email
+      }
+    })
+    .then(dbParent => {if(dbParent)
+                        return res.json(dbParent)
+                      else  
+                        return res.send("Parent does not exist in database")})
+    .catch(err => res.status(422).json(err));
   },
 /************parents**************/
 

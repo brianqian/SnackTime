@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import DashboardItem from '../../components/DashboardItem/DashboardItem';
+import DashboardItem from '../../../components/DashboardItem/DashboardItem'
 import './StaffHomePage.css';
 import { Redirect } from 'react-router';
 

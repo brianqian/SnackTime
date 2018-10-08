@@ -3,23 +3,21 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 import WelcomePage from './pages/WelcomePage/WelcomePage';
 import notFound from './pages/notFound';
-import StaffHomePage from './pages/StaffHomePage/StaffHomePage';
+import StaffHomePage from './pages/_StaffPages/StaffHomePage/StaffHomePage';
 import notAuthorized from './pages/notAuthorized';
-import AddStudent from './pages/AddStudent/AddStudent';
+import AddStudent from './pages/_StaffPages/AddStudent/AddStudent';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
-import AllStudents from './pages/AllStudentsPage/AllStudentsPage';
+import AllStudents from './pages/_StaffPages/AllStudentsPage/AllStudentsPage';
 import SingleStudent from './pages/SingleStudent/SingleStudent';
-import ResetPassword from "./pages/ForgotPassword/components/ResetPassword";
+import ResetPassword from './pages/ForgotPassword/components/ResetPassword';
 
 class App extends Component {
-  state = {
-
-  };
+  state = {};
 
   updateState = dataObject => {
-    console.log('running')
+    console.log('running');
     const { userId, userType, orgId } = dataObject;
-    console.log(dataObject)
+    console.log(dataObject);
     this.setState(
       {
         userId,
@@ -36,26 +34,13 @@ class App extends Component {
       <div className="App">
         <Router>
           <Switch>
-            <Route
-              exact
-              path="/"
-              render={props => <WelcomePage updateState = {this.updateState} /> } 
-            />
-            <Route
-              exact
-              path="/staffhomepage"
-              // component={StaffHomePage}
-              // role={this.state.userType}
-              // organizationId={this.state.orgId}
-              render={props => <StaffHomePage userType={this.state.userType} organizationId={this.state.orgId} userId={this.state.orgId} />}
-              
-              // render={props => <StaffHomePage userType={this.state.userType} organizationId={this.state.orgId} /> }
-            />
+            <Route exact path="/" component={WelcomePage} />
+            <Route exact path="/staffhomepage" component={StaffHomePage} />
             <Route exact path="/notauthorized" component={notAuthorized} />
             <Route exact path="/addstudent" component={AddStudent} />
             <Route exact path="/forgotpassword" component={ForgotPassword} />
             <Route exact path="/allstudentspage" component={AllStudents} />
-            <Route path = "/resetpassword/:key" component={ResetPassword} />
+            <Route path="/resetpassword/:key" component={ResetPassword} />
             <Route path="/allstudentspage/:student" component={SingleStudent} />
             <Route component={notFound} />
           </Switch>

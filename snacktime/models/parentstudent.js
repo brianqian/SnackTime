@@ -4,8 +4,8 @@ module.exports = function(sequelize, DataTypes) {
   });
 
   ParentStudent.associate = function (models) {
-    models.Parent.belongsToMany(models.Student, { through: ParentStudent });
-    models.Student.belongsToMany(models.Parent, { through: ParentStudent });
+    models.Parent.belongsToMany(models.Student, { through: ParentStudent, onDelete: 'CASCADE'  });
+    models.Student.belongsToMany(models.Parent, { through: ParentStudent, onDelete: 'CASCADE'  });
   }
 
   return ParentStudent;
