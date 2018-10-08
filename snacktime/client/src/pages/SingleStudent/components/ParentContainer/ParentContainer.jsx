@@ -16,11 +16,28 @@ const styles = theme => ({
     fontWeight: theme.typography.fontWeightRegular,
   },
 });
-
+// let myObj = {
+//   name: 'john',
+//   email: 'email@email',
+//   phone: '1234',
+//   address: 'address'
+// }
 class ParentContainer extends Component {
   state = {
-    parents: [],
+    parents: [{
+      name: 'john',
+      email: 'email@email',
+      phone: '1234',
+      address: 'address'
+    }, {
+      name: 'asdf',
+      email: 'asdf@email',
+      phone: 'asdf',
+      address: 'asdf'
+    }],
     email: '',
+    status: '',
+    showAddNewParent: true,
     // addParentForm: {
     //   name: 'test',
     //   phone: '',
@@ -29,8 +46,15 @@ class ParentContainer extends Component {
     // },
   };
 
-  checkIfExistingParent() {
-    fetch('/api/parent');
+  getExistingParent() {
+    fetch('/api/parent')
+      .then(resp => resp.json())
+      .then(resp => {
+        const parents = this.state.parents;
+        parents.push(resp);
+        this.setState({ parents });
+        console.log(this.state.parents);
+      });
   }
   handleChange = e => {
     const { name, value } = e.target;
@@ -49,17 +73,41 @@ class ParentContainer extends Component {
       .then(resp => resp.json())
       .then(resp => {
         if (resp.name) {
-          this.setState({ addParentForm: resp })
-        }else{
-          
+          this.setState({ addParentForm: resp });
+        } else {
         }
       });
   };
 
-  handleAddNewParent = e =>{
+  handleSubmitNewParent = e => {
     e.preventDefault();
-    this.setState({addParentForm: {}})
-  }
+    this.setState({ showAddNewParent: true });
+    fetch('/api/parent/new', {
+      method: 'POST',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify(this.state.addParentForm),
+    })
+      .then(resp => resp.text()) //text for now, change to json later
+      .then(resp => {
+        console.log(resp);
+        if (resp !== 'asdf')
+          this.setState({
+            status: 'Parent Added!',
+            addParentForm: {
+              name: 'test',
+              phone: '',
+              email: '',
+              address: '',
+            },
+          });
+        this.getExistingParent();
+      });
+  };
+
+  handleAddNewParent = e => {
+    e.preventDefault();
+    this.setState({ addParentForm: {}, showAddNewParent: false });
+  };
 
   render() {
     const { classes } = this.props;
@@ -124,12 +172,20 @@ class ParentContainer extends Component {
                       name="addAddress"
                       type="text"
                     />
-                    <input onClick={this.submitNewParent}value="Submit New Parent"type="submit"/>
+                    <input
+                      onClick={this.handleSubmitNewParent}
+                      value="Submit New Parent"
+                      type="submit"
+                    />
                   </form>
                 )}
-                <button name="new" onClick={this.handleAddNewParent}>
-                  Add New Parent
-                </button>
+                <p>{this.state.status}</p>
+
+                {this.state.showAddNewParent && (
+                  <button name="new" onClick={this.handleAddNewParent}>
+                    Add New Parent
+                  </button>
+                )}
               </Typography>
             </ExpansionPanelDetails>
           </ExpansionPanel>
@@ -138,28 +194,6 @@ class ParentContainer extends Component {
     );
   }
 }
-
-// export default ParentContainer;
-
-// function SimpleExpansionPanel(props) {
-//   const { classes } = props;
-//   return (
-//     <div className={classes.root}>
-//       <ExpansionPanel>
-//         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-//           <Typography className={classes.heading}>Parents</Typography>
-//         </ExpansionPanelSummary>
-//         <ExpansionPanelDetails>
-//           <Typography>
-//             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-//             sit amet blandit leo lobortis eget.
-//           </Typography>
-//         </ExpansionPanelDetails>
-//       </ExpansionPanel>
-
-//     </div>
-//   );
-// }
 
 ParentContainer.propTypes = {
   classes: PropTypes.object.isRequired,
