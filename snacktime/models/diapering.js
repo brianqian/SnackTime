@@ -9,9 +9,16 @@ module.exports = function(sequelize, DataTypes) {
     type: {
       type: DataTypes.STRING
     },
+    date: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+    },
   });
   Diapering.associate = function(models) {
-    models.Diapering.belongsTo(models.Report, {
+    models.Diapering.belongsTo(models.Student, {
       foreignKey: {
         allowNull: false,
       },

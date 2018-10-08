@@ -203,9 +203,9 @@ router.post('/forgot/:role', (req, res) => {
         .then(() => {
           var transporter = nodemailer.createTransport({
             service: 'gmail',
-            // type: "SMTP",
-            // host: "smtp.gmail.com",
-            // secure: true,
+            type: "SMTP",
+            host: "smtp.gmail.com",
+            secure: true,
             auth: {
               user: 'snacktimeemail@gmail.com',
               pass: process.env.EMAIL_PASSWORD,

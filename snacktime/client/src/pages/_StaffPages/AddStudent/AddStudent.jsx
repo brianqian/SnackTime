@@ -40,8 +40,31 @@ class OutlinedTextFields extends React.Component {
     address: '',
     city: '',
     zip: '',
+    orgId: '',
+    loggedIn: false,
+    loginRejected: false,
     multiline: 'Controlled',
   };
+
+  getUserId = () => {
+    fetch('/auth/loggedin').then(res =>
+      res.json().then(data => {
+        if (data.userId) {
+          console.log('USER AUTHORIZED');
+          this.setState({
+            orgId: data.orgId,
+            loginRejected: false,
+            loggedIn: true,
+          });
+        } else {
+          this.setState({
+            loginRejected: true,
+          });
+        }
+      })
+    );
+  };
+
 
 
   handleChange = name => event => {
@@ -71,7 +94,6 @@ class OutlinedTextFields extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    console.log(`Posting DOB: ${this.state.month}, ${this.state.day}, ${this.state.year}`)
     fetch(`/api/student`, {
       method: 'POST',
       headers: { 'Content-Type':'application/json'},
@@ -83,9 +105,14 @@ class OutlinedTextFields extends React.Component {
         allergies: this.state.allergies,
         medication: this.state.meds,
         doctor: this.state.doctor,
+        orgId: this.state.orgId,
       }),
     });
   };
+
+  componentWillMount = () => {
+    this.getUserId();
+  }
   
   render() {
     const { classes } = this.props;
