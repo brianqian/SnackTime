@@ -14,7 +14,7 @@ const styles = theme => ({
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
-  }
+  },
 });
 
 class ParentContainer extends Component {
@@ -44,10 +44,15 @@ class ParentContainer extends Component {
     // },
   };
 
-  getExistingParent() {
+  componentDidMount(){
+    this.getExistingParent();
+  }
+
+  getExistingParent = ()=> {
     fetch('/api/parent')
       .then(resp => resp.json())
       .then(resp => {
+        //if resp.name
         const parents = this.state.parents;
         parents.push(resp);
         this.setState({ parents });
@@ -73,14 +78,14 @@ class ParentContainer extends Component {
         if (resp.name) {
           this.setState({ addParentForm: resp });
         } else {
-          this.setState({status: "That email doesn't exist"})
+          this.setState({ status: "That email doesn't exist" });
         }
       });
   };
 
   handleSubmitNewParent = e => {
     e.preventDefault();
-    this.setState({ showAddNewParent: true });
+    // this.setState({ showAddNewParent: true });
     fetch('/api/parent/new', {
       method: 'POST',
       headers: { 'Content-type': 'application/json' },
@@ -89,23 +94,26 @@ class ParentContainer extends Component {
       .then(resp => resp.text()) //text for now, change to json later
       .then(resp => {
         console.log(resp);
-        if (resp !== 'asdf')
+        if (resp.name) {
           this.setState({
             status: 'Parent Added!',
             addParentForm: {
-              name: 'test',
+              name: '',
               phone: '',
               email: '',
               address: '',
             },
           });
+        }else{
+          this.setState({status: 'Parent not added'})
+        }
         this.getExistingParent();
       });
   };
 
   handleAddNewParent = e => {
     e.preventDefault();
-    this.setState({ addParentForm: {}, showAddNewParent: false, status: ''});
+    this.setState({ addParentForm: {}, showAddNewParent: false, status: '' });
   };
 
   render() {
