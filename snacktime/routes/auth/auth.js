@@ -180,47 +180,56 @@ router.get("/logout/parent", (req, res) => {
   }
 });
 
-router.post("/forgot", (req, res) => {
-  let { email } = req.body; // same as let email = req.body.email
-  console.log("forgot", email);
+router.post("/forgot/:role", (req, res) => {
+  let role = req.params.role
+  console.log(role);
+  let { email, baseUrl } = req.body; // same as let email = req.body.email
+  console.log(role);
   let passResetKey = shortid.generate();
   let passKeyExpires = new Date().getTime() + 20 * 60 * 1000;
-  db.Staff.update(
-    { passResetKey: passResetKey, passKeyExpires: passKeyExpires },
-    {
+  db[req.params.role]
+    .findOne({
       where: {
         email: email
       }
-    }
-  ).then(() => {
-    var transporter = nodemailer.createTransport({
-      service: "gmail",
-      type: "SMTP",
-      host: "smtp.gmail.com",
-      secure: true,
-      auth: {
-        user: "snacktimeemail@gmail.com",
-        pass: "$$SnackTime33"
-      }
-    });
-    let mailOptions = {
-      subject: `Snack Time | Password reset`,
-      to: email,
-      from: `Snack Time <snacktimeemail@gmail.com>`,
-      html: `
-                <h1>Hi,</h1>
-                <h2>Here is your password reset key</h2>
-                <h2><code contenteditable="false" style="font-weight:200;font-size:1.5rem;padding:5px 10px; background: #EEEEEE; border:0">${passResetKey}</code></h4>
+    })
+    .then(user => {
+      user
+        .update({
+          passResetKey: passResetKey,
+          passKeyExpires: passKeyExpires
+        })
+        .then(() => {
+          var transporter = nodemailer.createTransport({
+            service: "gmail",
+            type: "SMTP",
+            host: "smtp.gmail.com",
+            secure: true,
+            auth: {
+              user: "snacktimeemail@gmail.com",
+              pass: "$$SnackTime33"
+            }
+          });
+          let mailOptions = {
+            subject: `Snack Time | Password reset`,
+            to: email,
+            from: `Snack Time <snacktimeemail@gmail.com>`,
+            html: `
+                <h1>Hi, ${user.name}</h1>
+                <h2>Click the link below to reset your password.</h2>
+                <h2><code contenteditable="false" style="font-weight:200;font-size:1.5rem;padding:5px 10px; background: #EEEEEE; border:0"><a href='${baseUrl}resetpassword/${passResetKey}'>Click here to reset your password.</a></code></h4>
                 <p>Please ignore if you didn't try to reset your password on our platform</p>`
-    };
-    transporter.sendMail(mailOptions, function(error, info) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log("Email sent: " + info.response);
-      }
+          };
+          transporter.sendMail(mailOptions, function(error, info) {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log("Email sent: " + info.response);
+              res.json("Please check your email.");
+            }
+          });
+        });
     });
-  });
 });
 
 router.post("/resetpass", (req, res) => {

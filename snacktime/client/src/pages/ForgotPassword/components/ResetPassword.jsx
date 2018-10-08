@@ -7,9 +7,9 @@ import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Send from "@material-ui/icons/Send";
-import IconButton from '@material-ui/core/IconButton';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import IconButton from "@material-ui/core/IconButton";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 const styles = theme => ({
   margin: {
@@ -18,6 +18,13 @@ const styles = theme => ({
 });
 
 class ResetPassword extends Component {
+  componentDidMount() {
+    let key = this.props.location.pathname;
+    // console.log("this.props.location", key);
+    let resetKey = key.slice(15);
+    this.setState({ resetKey: resetKey });
+  }
+
   state = {
     resetKey: "",
     newPassword: "",
@@ -47,9 +54,10 @@ class ResetPassword extends Component {
   };
   render() {
     const { classes } = this.props;
+    console.log(this.state.resetKey);
     return (
       <div>
-        <TextField
+        {/* <TextField
           className={classes.margin}
           name="resetKey"
           value={this.state.resetKey}
@@ -63,15 +71,15 @@ class ResetPassword extends Component {
               </InputAdornment>
             )
           }}
-        />
+        /> */}
         <TextField
           id="outlined-adornment-password"
           className={classNames(classes.margin, classes.textField)}
           variant="outlined"
-          type={this.state.showPassword ? 'text' : 'password'}
+          type={this.state.showPassword ? "text" : "password"}
           label="New Password"
           value={this.state.newPassword}
-          onChange={this.handleChange('newPassword')}
+          onChange={this.handleChange("newPassword")}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -82,7 +90,7 @@ class ResetPassword extends Component {
                   {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
-            ),
+            )
           }}
         />
         <Button
