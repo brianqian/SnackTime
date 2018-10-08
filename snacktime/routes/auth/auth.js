@@ -255,20 +255,20 @@ router.post("/resetpass", (req, res) => {
           }
         ).then(staff => {
           if (staff) {
-            res.status(200).send("Password reset successful");
+            res.status(200).json("Password reset successful");
           } else {
-            res.status(500).send("error resetting your password");
+            res.status(500).json("error resetting your password");
           }
         });
       } else {
         res
           .status(400)
-          .send(
+          .json(
             "Sorry, pass key has expired. Please initiate the request for a new one"
           );
       }
     } else {
-      res.status(400).send("invalid pass key!");
+      res.status(400).json("invalid pass key!");
     }
   });
 });
