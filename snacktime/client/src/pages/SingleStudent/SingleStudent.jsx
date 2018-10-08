@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Card from './components/Card';
 import './SingleStudent.css';
-import ParentContainer from './components/ParentContainer/ParentContainer'
+import ParentContainer from './components/ParentContainer'
 
 export default class SingleStudent extends Component {
   state = {
@@ -64,7 +64,7 @@ export default class SingleStudent extends Component {
           notes={this.state.notes}
           // image={this.state.image}
         />
-        <ParentContainer onClick={this.handleAddParentClick}/>
+        <ParentContainer/>
       </div>
     );
   }

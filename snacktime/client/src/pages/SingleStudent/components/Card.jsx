@@ -46,7 +46,7 @@ const styles = theme => ({
     },
   });
 
-  class RecipeReviewCard extends React.Component {
+  class SingleStudentCard extends React.Component {
     state = { expanded: false };
   
     handleExpandClick = () => {
@@ -61,13 +61,8 @@ const styles = theme => ({
           <CardHeader
             avatar={
               <Avatar aria-label="Student" className={classes.avatar}>
-                R
+                Rrrrrr
               </Avatar>
-            }
-            action={
-              <IconButton>
-                <MoreVertIcon />
-              </IconButton>
             }
             title={this.props.name}
             subheader="September 14, 2016"
@@ -123,8 +118,8 @@ const styles = theme => ({
     }
   }
   
-  RecipeReviewCard.propTypes = {
+  SingleStudentCard.propTypes = {
     classes: PropTypes.object.isRequired,
   };
   
-  export default withStyles(styles)(RecipeReviewCard);
+  export default withStyles(styles)(SingleStudentCard);
