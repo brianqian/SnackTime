@@ -29,12 +29,13 @@ class DateTimeSelector extends React.Component {
     time: n
   };
 
-  handleChange = name => event => {
+  handleChange = (event,name) => {
     console.log("event.target.value", event.target.value);
+    console.log("name:",name)
     this.setState({
       [name]: event.target.value
-    });
-    this.props.setNap(this.state.time);
+    }, function(){this.props.setNap(this.state.time)});
+    
   };
 
   render() {
@@ -47,8 +48,8 @@ class DateTimeSelector extends React.Component {
           label={this.props.label}
           type="time"
           name="time"
-          onChange={this.handleChange("time")}
-          value={this.state.time}
+          onChange={(e) => {
+            this.handleChange(e, "time")}}
           className={classes.textField}
           InputLabelProps={{
             shrink: true

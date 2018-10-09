@@ -257,23 +257,8 @@ module.exports = {
     db.Report.create({
       StudentId: req.params.studentId,
       date: req.body.date,
-      napStartTime: req.body.napStartTime,
-      napEndTime: req.body.napEndTime,
       highlight: req.body.highlight,
-      noteForParents: req.body.noteForParents,
-      meal1Time: req.body.meal1Time,
-      meal1Food: req.body.meal1Food,
-      meal2Time: req.body.meal2Time,
-      meal2Food: req.body.meal2Food,
-      meal3Time: req.body.meal3Time,
-      meal3Food: req.body.meal3Food,
-      meal4Time: req.body.meal4Time,
-      meal4Food: req.body.meal4Food,
-      meal5Time: req.body.meal5Time,
-      meal5Food: req.body.meal5Food,
-      meal6Time: req.body.meal6Time,
-      meal6Food: req.body.meal6Food,
-      attendance: req.body.attendance,
+      noteForParents: req.body.noteForParents
     })
       .then(dbReport => res.json(dbReport))
       .catch(err => res.status(422).json(err));
@@ -282,23 +267,8 @@ module.exports = {
   updateReport: function(req, res) {
     db.Report.update(
       {
-        napStartTime: req.body.napStartTime,
-        napEndTime: req.body.napEndTime,
         highlight: req.body.highlight,
-        noteForParents: req.body.noteForParents,
-        meal1Time: req.body.meal1Time,
-        meal1Food: req.body.meal1Food,
-        meal2Time: req.body.meal2Time,
-        meal2Food: req.body.meal2Food,
-        meal3Time: req.body.meal3Time,
-        meal3Food: req.body.meal3Food,
-        meal4Time: req.body.meal4Time,
-        meal4Food: req.body.meal4Food,
-        meal5Time: req.body.meal5Time,
-        meal5Food: req.body.meal5Food,
-        meal6Time: req.body.meal6Time,
-        meal6Food: req.body.meal6Food,
-        attendance: req.body.attendance,
+        noteForParents: req.body.noteForParents
       },
       {
         where: {
