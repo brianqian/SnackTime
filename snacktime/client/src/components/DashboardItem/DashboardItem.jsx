@@ -22,7 +22,10 @@ const DashboardItem = props => {
 
   return (
     <div className="dashboard__item">
-      <Link to={props.destination}>
+      <Link to={{
+            pathname: props.destination,
+            state: { activity: props.activity },
+          }}>
         <img
           alt={props.title}
           className="dashboard__picture"
@@ -32,7 +35,14 @@ const DashboardItem = props => {
         />
       </Link>
       <div className="dashboard__title">
-        <Link to={props.destination}>{props.title}</Link>
+        <Link
+          to={{
+            pathname: props.destination,
+            state: { activity: props.activity },
+          }}
+        >
+          {props.title}
+        </Link>
       </div>
     </div>
   );

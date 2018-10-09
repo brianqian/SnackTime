@@ -2,8 +2,10 @@ const router = require('express').Router();
 const staffController = require('../../controllers/staffController');
 
 /******Student Info********/
-router.route('/student')
+router.route('/student/:orgId')
   .get(staffController.getAllStudents) //get all students
+
+router.route('/student')
   .post(staffController.saveStudent)  //save a new studnet
 
 router
@@ -20,6 +22,12 @@ router.route('/parent').get(staffController.getAllParents); //get all parents
 router.route('/student/:studentId/parent')
   .post(staffController.saveParent) //save a parent for a particular student
   .get(staffController.getStudentParentInfo); //get parents of a particular student
+
+router.route('/parent/email/:email')
+  .get(staffController.checkParentEmail)
+
+router.route('/parentstudent')
+  .post(staffController.createStudentParentAssociation)
 
 router.route('/parent/:parentId').put(staffController.updateParent) //update a particular parent
 /******Parents Info********/
@@ -46,10 +54,44 @@ router.route('/report/:reportId')
 /******Report***********/
 
 /******Diapering***********/
-router.route('/diapering/report/:reportId')
-  .get(staffController.getDiapering)    //get diapering info for a particular report
-  .post(staffController.saveDiapering)  //save diapering info for a prticular report
+router.route('/student/:studentId/diapering/:date')
+  .get(staffController.getDiapering)    //get diapering info for a particular student and date
+
+router.route('/student/:studentId/diapering')
+  .post(staffController.saveDiapering)  //save diapering info for a prticular student and date
 /******Diapering***********/
+
+/******Nap***********/
+router.route('/student/:studentId/nap/:date')
+  .get(staffController.getNap)    //get nap info for a particular student and date
+
+router.route('/student/:studentId/nap')
+  .post(staffController.saveNap)  //save nap info for a prticular student and date
+/******Nap***********/
+
+/******Meal***********/
+router.route('/student/:studentId/meal/:date')
+  .get(staffController.getMeal)    //get meal info for a particular student and date
+
+router.route('/student/:studentId/meal')
+  .post(staffController.saveMeal)  //save meal info for a prticular student and date
+/******Meal***********/
+
+/******Incident***********/
+router.route('/student/:studentId/incident/:date')
+  .get(staffController.getIncident)    //get incident info for a particular student and date
+
+router.route('/student/:studentId/incident')
+  .post(staffController.saveIncident)  //save incident info for a prticular student and date
+/******Incident***********/
+
+/******Medicine***********/
+router.route('/student/:studentId/medicine/:date')
+  .get(staffController.getMedicine)    //get medicine info for a particular student and date
+
+router.route('/student/:studentId/medicine')
+  .post(staffController.saveMedicine)  //save medicine info for a prticular student and date
+/******Medicine***********/
 
 /******Invoice***********/
 router.route("/invoice/student/:studentId").post(staffController.createInvoice); //save an invoice

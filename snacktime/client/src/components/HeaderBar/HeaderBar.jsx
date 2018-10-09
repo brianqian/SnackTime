@@ -21,7 +21,7 @@ const styles = {
   },
 };
 
-function LoginBar(props) {
+function HeaderBar(props) {
   const { classes } = props;
   return (
     <div className={classes.root}>
@@ -31,21 +31,24 @@ function LoginBar(props) {
             className={classes.menuButton}
             color="inherit"
             aria-label="Menu"
+            href="/staffhomepage"
           >
-            <MenuIcon />
+          <i className="material-icons">
+            home
+          </i>
           </IconButton>
           <Typography variant="title" color="inherit" className={classes.grow}>
             Snack Time
           </Typography>
-          <Button color="inherit">Sign Up</Button>
+          <Button color="inherit">Log Out</Button>
         </Toolbar>
       </AppBar>
     </div>
   );
 }
 
-LoginBar.propTypes = {
+HeaderBar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(LoginBar);
+export default withStyles(styles)(HeaderBar);

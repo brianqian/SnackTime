@@ -21,7 +21,6 @@ export default class SingleStudent extends Component {
 
   componentWillMount() {
     this.getSingleStudent();
-    this.getParentsInfo();
     console.log(this.props.match.params.student);
   }
 
@@ -36,14 +35,6 @@ export default class SingleStudent extends Component {
       });
   };
 
-  getParentsInfo = ()=>{
-    //return an array of objects containing parent info
-    fetch(`/student/${this.props.match.params.student}/parent`)
-    .then(res=>res.text())
-    // .then(res=>this.setState({parents: res}))
-    .then((res)=>console.log(res))
-    
-  }
 
   handleAddParentClick = (e)=>{
     console.log(e.target.name)
@@ -62,9 +53,10 @@ export default class SingleStudent extends Component {
           doctor={this.state.doctor}
           dob={this.state.dob}
           notes={this.state.notes}
+        
           // image={this.state.image}
         />
-        <ParentContainer/>
+        <ParentContainer studentId={this.props.match.params.student}/>
       </div>
     );
   }

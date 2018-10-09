@@ -54,9 +54,21 @@ module.exports = function(sequelize, DataTypes) {
       },
     }
   );
-
+  Parent.associate = function(models) {  
+    Parent.belongsToMany(models.Student, {
+      through: "ParentStudent",
+    });
+  };
   Parent.prototype.validPassword = function(password) {
     return bcrypt.compareSync(password, this.password);
   };
+
+  Parent.prototype.getHash = function(word) {
+    const salt = bcrypt.genSaltSync();
+    let newPassword = bcrypt.hashSync(word, salt);
+    this.password = newPassword;
+    this.save().then(() => {});
+  };
+
   return Parent;
 };

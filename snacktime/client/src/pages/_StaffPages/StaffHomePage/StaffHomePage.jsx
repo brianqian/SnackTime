@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import DashboardItem from '../../components/DashboardItem/DashboardItem';
+import DashboardItem from '../../../components/DashboardItem/DashboardItem'
 import './StaffHomePage.css';
 import { Redirect } from 'react-router';
 
@@ -56,25 +56,28 @@ class StaffHomePage extends Component {
               // notifications={this.state.studentNotifications}
             />
             <DashboardItem
-              title="Daily Report"
-              destination="DailyReportPage"
+              title="Add Activity"
+              destination="/dailyreportmenu"
               image="/img/report.png"
               // notifications={this.state.studentNotifications}
             />
-            <DashboardItem title="Add Staff" destination="" image="" />
+            <DashboardItem 
+              title="Add Staff" 
+              destination="/addstaff" 
+              image="/img/addStaff.png" />
             <DashboardItem
               title="Add Students"
               destination="/addstudent"
-              // image=""
+              image="/img/addStudent.png"
             />
             <DashboardItem
-              title="Student Schedule"
-              destination=""
-              // image=""
+              title="School Schedule"
+              destination="/calendar"
+              image="/img/calendar.png"
             />
             <DashboardItem
               title="Settings"
-              destination=""
+              destination="/settings"
               image="/img/settings.png"
             />
           </div>

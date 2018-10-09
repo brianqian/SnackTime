@@ -44,11 +44,30 @@ module.exports = function(sequelize, DataTypes) {
     models.Student.hasMany(models.Report, {
       onDelete: 'cascade',
     });
+    models.Student.hasMany(models.Incident, {
+      onDelete: 'cascade',
+    });
+    models.Student.hasMany(models.Medicine, {
+      onDelete: 'cascade',
+    });
+    models.Student.hasMany(models.Nap, {
+      onDelete: 'cascade',
+    });
+    models.Student.hasMany(models.Diapering, {
+      onDelete: 'cascade',
+    });
+    models.Student.hasMany(models.Meal, {
+      onDelete: 'cascade',
+    });
     models.Student.belongsTo(models.Organization, {
       foreignKey: {
         allowNull: false,
       },
     });
+    Student.belongsToMany(models.Parent, {
+      through: "ParentStudent"
+    });
+
   };
 
   return Student;

@@ -19,64 +19,56 @@ const styles = theme => ({
 
 class ParentContainer extends Component {
   state = {
-    parents: [
-      {
-        name: 'john',
-        email: 'email@email',
-        phone: '1234',
-        address: 'address',
-      },
-      {
-        name: 'asdf',
-        email: 'asdf@email',
-        phone: 'asdf',
-        address: 'asdf',
-      },
-    ],
+    parents: [],
     email: '',
     status: '',
     showAddNewParent: true,
-    // addParentForm: {
-    //   name: 'test',
-    //   phone: '',
-    //   email: '',
-    //   address: '',
-    // },
+    addName: '',
+    addEmail: '',
+    addPassword: 'testpass',
+    addAddres: '',
+    addPhone: '',
   };
 
-  componentDidMount(){
+  componentDidMount() {
     this.getExistingParent();
   }
 
-  getExistingParent = ()=> {
-    fetch('/api/parent')
+  getExistingParent = () => {
+    fetch(`/api/student/${this.props.studentId}/parent`)
       .then(resp => resp.json())
       .then(resp => {
-        //if resp.name
-        const parents = this.state.parents;
-        parents.push(resp);
-        this.setState({ parents });
-        console.log(this.state.parents);
+        if (resp) {
+          if (resp === 'No parent found') {
+            this.setState({ status: 'No parents found :(' });
+          } else {
+            const parents = [];
+            resp.Parents.map(parent => parents.push(parent));
+            this.setState({ parents });
+          }
+        }
       });
-  }
+  };
   handleChange = e => {
     const { name, value } = e.target;
-    if (name.includes('add')) {
-      this.setState({ addParentForm: { [name]: value } });
-    } else {
-      this.setState({
-        [name]: value,
-      });
-    }
+
+    this.setState({
+      [name]: value,
+    });
   };
 
   handleSearch = e => {
     e.preventDefault();
-    fetch(`/api/parent/?email=${this.state.email}`)
+    fetch(`/api/parent/email/${this.state.email}`)
       .then(resp => resp.json())
       .then(resp => {
         if (resp.name) {
-          this.setState({ addParentForm: resp });
+          this.setState({ existingParent: resp });
+          const { name, email, phone, address, id } = this.state.existingParent;
+          this.setState({
+            parentId: id,
+            status: `${name}, ${email}, ${phone}, ${address}`,
+          });
         } else {
           this.setState({ status: "That email doesn't exist" });
         }
@@ -86,15 +78,27 @@ class ParentContainer extends Component {
   handleSubmitNewParent = e => {
     e.preventDefault();
     // this.setState({ showAddNewParent: true });
-    fetch('/api/parent/new', {
+    // let newObj = Object.assign({}, this.state.addParentForm);
+    // newObj.password = 'asdf';
+    let newObj = {
+      email: this.state.addEmail,
+      password: this.state.addPassword,
+      address: this.state.addAddress,
+      phone: this.state.addPhone,
+      name: this.state.addName,
+    };
+    console.log(newObj);
+    this.setState({ addParentForm: newObj });
+    console.log('ADD PARENT FORM', this.state.addParentForm);
+    fetch(`/api/student/${this.props.studentId}/parent`, {
       method: 'POST',
       headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify(this.state.addParentForm),
+      body: JSON.stringify(newObj),
     })
-      .then(resp => resp.text()) //text for now, change to json later
+      .then(resp => resp.json())
       .then(resp => {
         console.log(resp);
-        if (resp.name) {
+        if (resp) {
           this.setState({
             status: 'Parent Added!',
             addParentForm: {
@@ -104,8 +108,8 @@ class ParentContainer extends Component {
               address: '',
             },
           });
-        }else{
-          this.setState({status: 'Parent not added'})
+        } else {
+          this.setState({ status: 'Parent not added' });
         }
         this.getExistingParent();
       });
@@ -115,6 +119,35 @@ class ParentContainer extends Component {
     e.preventDefault();
     this.setState({ addParentForm: {}, showAddNewParent: false, status: '' });
   };
+
+  makeAssociation = e => {
+    e.preventDefault();
+    fetch('/api/parentstudent', {
+      method: 'POST',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify({
+        parentId: this.state.parentId,
+        studentId: this.props.studentId,
+      }),
+    }).then(() => this.getExistingParent());
+  };
+
+  deleteAssociation = e => {
+    const data = {
+      studentId: this.props.studentId,
+      parentId: e.target.name
+    }
+    console.log(data);
+    fetch('/api/', {method: 'DELETE', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)})
+    .then(() => this.getExistingParent());
+  };  
+
+  editParentInfo = e =>{
+    const data = {parentId: e.target.name}
+    fetch('/api/', {method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)})
+    .then(() => this.getExistingParent());
+
+  }
 
   render() {
     const { classes } = this.props;
@@ -135,6 +168,8 @@ class ParentContainer extends Component {
                       <p>Phone: {parent.phone}</p>
                       <p>Email: {parent.email}</p>
                       <p>Address: {parent.address}</p>
+                      <button name={parent.id} onClick={this.deleteAssociation}>X</button>
+                      <button name={parent.id} onClick={this.editParentInfo}>Edit</button>
                     </div>
                   );
                 })}
@@ -154,43 +189,47 @@ class ParentContainer extends Component {
                     <label htmlFor="name">Name: </label>
                     <input
                       onChange={this.handleChange}
-                      value={this.state.addParentForm.name}
+                      value={this.state.addName}
                       name="addName"
                       type="text"
                     />
                     <label htmlFor="phone">Phone: </label>
                     <input
                       onChange={this.handleChange}
-                      value={this.state.addParentForm.phone}
+                      value={this.state.addPhone}
                       name="addPhone"
                       type="text"
                     />
                     <label htmlFor="email">Email: </label>
                     <input
                       onChange={this.handleChange}
-                      value={this.state.addParentForm.email}
+                      value={this.state.addEmail}
                       name="addEmail"
                       type="text"
                     />
                     <label htmlFor="address">Address: </label>
                     <input
                       onChange={this.handleChange}
-                      value={this.state.addParentForm.address}
+                      value={this.state.addAddress}
                       name="addAddress"
                       type="text"
                     />
                     <input
                       onClick={this.handleSubmitNewParent}
-                      value="Submit New Parent"
+                      value="Register and Email New Parent"
                       type="submit"
                     />
                   </form>
                 )}
                 <p>{this.state.status}</p>
-
+                {this.state.existingParent && (
+                  <button onClick={this.makeAssociation}>
+                    Add Existing Parent to Child
+                  </button>
+                )}
                 {this.state.showAddNewParent && (
                   <button name="new" onClick={this.handleAddNewParent}>
-                    Add New Parent
+                    Create New Parent Account
                   </button>
                 )}
               </Typography>
