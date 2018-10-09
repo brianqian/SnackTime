@@ -30,7 +30,7 @@ const styles = theme => ({
 
 class AddMeds extends React.Component {
   state = {
-    studentId: '',
+    selectedStudents: this.props.location.state.selectedStudents,
     time: '',
     medName: '',
     multiline: 'Controlled',
@@ -42,18 +42,40 @@ class AddMeds extends React.Component {
     });
   };
 
-  handleSubmit = event => {
-    event.preventDefault();
-    fetch(`/diapering/report/:reportId`, {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json'},
+  setMedTime = time => {
+    this.setState({ time: time })
+  }
+
+  postMeds = id => {
+    let today = new Date();
+    let date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+    console.log(date);
+    fetch(`/api/student/${id}/medicine`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        studentId: this.state.studentId,
         time: this.state.time,
         medName: this.state.medName,
-      }),
-    });  
-  }
+        date: date,
+      })
+    })
+      .then(resp => {
+        console.log(resp);
+        return resp.json();
+      })
+      .then(resp => console.log(resp));
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+
+    this.state.selectedStudents.map(id => this.postMeds(id));
+  };  
 
   render() {
     const { classes } = this.props;
@@ -65,8 +87,10 @@ class AddMeds extends React.Component {
 
         <DateTimeSelector
           label="Time: "
+          name="time"
           className={classes.textField}
           value={this.state.time}
+          setTime={this.setMedTime}
         //   onChange={this.handleSelectorChange}
         //   margin="normal"
         //   variant="outlined"

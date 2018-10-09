@@ -3,10 +3,10 @@ module.exports = function(sequelize, DataTypes) {
       time: {
         type: DataTypes.TIME,
       },
-      food: {
+      type:{
         type: DataTypes.STRING,
       },
-      quantity:{
+      food: {
         type: DataTypes.STRING,
       },
       date: {

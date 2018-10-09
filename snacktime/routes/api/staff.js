@@ -14,6 +14,7 @@ router
   .put(staffController.updateStudent);   //update a student
   
 router.route('/allinfo/student/:studentId').get(staffController.getStudentInfo) //get a single student
+router.route('/allinfo/students?users').get(staffController.getStudentsInfo)
 /******Student Info********/
 
 /******Parents Info********/

@@ -1,39 +1,42 @@
 import React, { Component } from 'react';
 import DashboardItem from '../../../../components/DashboardItem/DashboardItem';
-import HeaderBar from '../../../../components/HeaderBar/HeaderBar'
+import HeaderBar from '../../../../components/HeaderBar/HeaderBar';
 import './DailyReportMenu.css';
+import Auth from '../../../../utils/Auth';
+import {Redirect} from 'react-router-dom'
 
 class DailyReport extends Component {
   state = {
-    orgId:'',
-    loggedIn:false,
-    loginRejected:false
-
+    orgId: '',
+    loggedIn: false,
+    loginRejected: false,
   };
 
   componentDidMount = () => {
     console.log('mounted');
-    this.getUserId();
+    // this.getUserId();
+    Auth.loggedIn(this);
+    console.log('test');
   };
 
-  getUserId = () => {
-    fetch('/auth/loggedin').then(res =>
-      res.json().then(data => {
-        if (data.userId) {
-          console.log('USER AUTHORIZED');
-          this.setState({
-            orgId: data.orgId,
-            loginRejected: false,
-            loggedIn: true,
-          });
-        } else {
-          this.setState({
-            loginRejected: true,
-          });
-        }
-      })
-    );
-  };
+  // getUserId = () => {
+  //   fetch('/auth/loggedin').then(res =>
+  //     res.json().then(data => {
+  //       if (data.userId) {
+  //         console.log('USER AUTHORIZED');
+  //         this.setState({
+  //           orgId: data.orgId,
+  //           loginRejected: false,
+  //           loggedIn: true,
+  //         });
+  //       } else {
+  //         this.setState({
+  //           loginRejected: true,
+  //         });
+  //       }
+  //     })
+  //   );
+  // };
 
   render() {
     if (this.state.loggedIn) {
@@ -42,7 +45,7 @@ class DailyReport extends Component {
           <HeaderBar />
           <div className="dashboard-container">
             <DashboardItem
-              title="Food"
+              title="Meal"
               destination="/studentselect"
               activity="/dailyreport/addmeal"
               image="/img/bottle.png"
@@ -53,40 +56,44 @@ class DailyReport extends Component {
               activity="/dailyreport/addnap"
               image="/img/sleep.png"
             />
-            <DashboardItem 
+            <DashboardItem
               title="Potty"
-              destination="/studentselect" 
-              activity="/dailyreport/addpotty" 
-              image="/img/toilet.png" 
+              destination="/studentselect"
+              activity="/dailyreport/addpotty"
+              image="/img/toilet.png"
             />
             <DashboardItem
               title="Meds"
-              destination="/studentselect" 
-              activity="/dailyreport/addmeds" 
+              destination="/studentselect"
+              activity="/dailyreport/addmeds"
               image="/img/medication.png"
             />
             <DashboardItem
               title="Note"
-              destination="/studentselect" 
-              activity="/dailyreport/addnote" 
+              destination="/studentselect"
+              activity="/dailyreport/addnote"
               image="/img/message.png"
             />
             <DashboardItem
               title="Incident"
-              destination="/studentselect" 
-              activity="/dailyreport/addincident" 
+              destination="/studentselect"
+              activity="/dailyreport/addincident"
               image="/img/incident.png"
             />
           </div>
         </div>
       );
-    }
-    else {
+    } else if (this.state.loginRejected) {
       return (
-        <div>
-          Hello
-        </div>
+        <Redirect
+          to={{
+            pathname: '/notAuthorized',
+            state: { type: 'Staff' },
+          }}
+        />
       );
+    } else {
+      return <div />;
     }
   }
 }

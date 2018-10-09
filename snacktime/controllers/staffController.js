@@ -5,6 +5,9 @@ const nodemailer = require('nodemailer');
 module.exports = {
   /************student**************/
   getAllStudents: function(req, res) {
+    console.log(
+      'GETALLSTUDENTSCONTROLEER--------------------------------------------------'
+    );
     db.Student.findAll({
       order: [['name', 'ASC']],
       where: {
@@ -17,10 +20,16 @@ module.exports = {
       ],
     })
       .then(dbStudents => {
-        if (dbStudents) return res.json(dbStudents);
-        else return res.json({ notFound: true });
+        if (dbStudents) {
+          return res.json(dbStudents);
+        } else {
+          return res.json({ notFound: true });
+        }
       })
-      .catch(err => res.status(422).json(err));
+      .catch(err => {
+        console.log('+++++++++++++++++++++++++++++++EMPTYDATABASEERROR???');
+        return res.status(422).json(err);
+      });
   },
 
   saveStudent: function(req, res) {
@@ -79,6 +88,18 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
+  getStudentsInfo: function(req,res){
+    console.log("I am here")
+    db.Student.findAll({
+      attributes:['name'],
+      where:{
+        id:req.params.users
+      }
+    })
+    .then(dbStudent => res.json(dbStudent))
+    .catch(err => res.status(422).json(err));
+  },
+
   /************student**************/
 
   /************parents**************/
@@ -89,30 +110,60 @@ module.exports = {
   },
 
   saveParent: function(req, res) {
-    console.log("body", req.body);
+    console.log('body', req.body);
+    let baseUrl = req.body.baseUrl;
+    let tempPass = shortid.generate();
     db.Parent.create({
       name: req.body.name,
       address: req.body.address,
       email: req.body.email,
-      password: req.body.password,
+      password: tempPass,
       phone: req.body.phone,
     })
       .then(parent => {
-        console.log("created new parent", parent);
+        console.log('created new parent', parent);
+        try {
+          var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            type: 'SMTP',
+            host: 'smtp.gmail.com',
+            secure: true,
+            auth: {
+              user: 'snacktimeemail@gmail.com',
+              pass: process.env.EMAIL_PASSWORD,
+            },
+          });
+          let mailOptions = {
+            subject: `Snack Time | Password reset`,
+            to: email,
+            from: `Snack Time <snacktimeemail@gmail.com>`,
+            html: `
+              <h1>Hi, ${parent.name}</h1>
+              <h2>Thank you for joining Snack Time!</h2>
+              <h3>Your temporary password is ${tempPass}</h3>
+              <h3>Please change your password under your settings the next time you log in.</h3>`,
+          };
+          transporter.sendMail(mailOptions, function(error, info) {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Email sent: ' + info.response);
+              res.json('Please check your email.');
+            }
+          });
+        } catch {
+          console.log('email failed');
+        }
         db.Student.findOne({
           where: {
             id: req.params.studentId,
           },
-        }).then(student => {
-          parent.setStudents([student]);
-          res.json(student);
-        }).catch(err => res.status(422).json(err))
-        // db.ParentStudent.create({
-        //   ParentId: dbParent.id,
-        //   StudentId: req.params.studentId,
-        // })
-        //   .then(dbParentStudent => res.json(dbParentStudent))
-        //   .catch(err => res.status(422).json(err));
+        })
+          .then(student => {
+            parent.setStudents([student]);
+            res.json(student);
+          })
+          .catch(err => res.status(422).json(err));
       })
       .catch(err => res.status(422).json(err));
   },
@@ -242,14 +293,17 @@ module.exports = {
 
   /************report**************/
   getReport: function(req, res) {
-    db.Report.findAll({
-      include: [db.Diapering],
+    console.log("Req ",req.params)
+    db.Student.findAll({
+      include: [
+        {model: db.Diapering, as: 'Diapering'}
+      ],
       where: {
         StudentID: req.params.studentId,
-        date: req.params.date,
+        '$Diapering.date': req.params.date
       },
     })
-      .then(dbReport => res.json(dbReport))
+      .then(dbStudent => {res.json(dbStudent)})
       .catch(err => res.status(422).json(err));
   },
 
@@ -258,7 +312,7 @@ module.exports = {
       StudentId: req.params.studentId,
       date: req.body.date,
       highlight: req.body.highlight,
-      noteForParents: req.body.noteForParents
+      noteForParents: req.body.noteForParents,
     })
       .then(dbReport => res.json(dbReport))
       .catch(err => res.status(422).json(err));
@@ -268,7 +322,7 @@ module.exports = {
     db.Report.update(
       {
         highlight: req.body.highlight,
-        noteForParents: req.body.noteForParents
+        noteForParents: req.body.noteForParents,
       },
       {
         where: {
@@ -286,7 +340,7 @@ module.exports = {
     db.Diapering.findAll({
       where: {
         StudentId: req.params.studentId,
-        date: req.params.date
+        date: req.params.date,
       },
     })
       .then(dbDiapering => res.json(dbDiapering))
@@ -307,18 +361,18 @@ module.exports = {
   /************diapering**************/
 
   /************Nap**************/
-  getNap: function(req,res){
+  getNap: function(req, res) {
     db.Nap.findAll({
       where: {
         StudentId: req.params.studentId,
-        date: req.params.date
+        date: req.params.date,
       },
     })
-      .then(dbDiapering => res.json(dbDiapering))
+      .then(dbNap => res.json(dbNap))
       .catch(err => res.status(422).json(err));
   },
 
-  saveNap: function(req,res){
+  saveNap: function(req, res) {
     console.log('NAP BODY', req.body);
     console.log('NAP BODY', req.params);
     db.Nap.create({
@@ -327,38 +381,81 @@ module.exports = {
       date: req.body.date,
       StudentId: req.params.studentId,
     })
-    .then(dbNap => res.json(dbNap))
-    .catch(err => res.status(422).json(err));
+      .then(dbNap => res.json(dbNap))
+      .catch(err => res.status(422).json(err));
   },
   /************Nap**************/
 
   /************Meal**************/
-  getMeal: function(req,res){
-
+  getMeal: function(req, res) {
+    db.Meal.findAll({
+      where: {
+        StudentId: req.params.studentId,
+        date: req.params.date,
+      },
+    })
+      .then(dbMeal => res.json(dbMeal))
+      .catch(err => res.status(422).json(err));
   },
 
-  saveMeal: function(req,res){
-
+  saveMeal: function(req, res) {
+    db.Meal.create({
+      time: req.body.time,
+      type: req.body.type,
+      food: req.body.food,
+      date: req.body.date,
+      StudentId: req.params.studentId,
+    })
+      .then(dbMeal => res.json(dbMeal))
+      .catch(err => res.status(422).json(err));
   },
   /************Meal**************/
 
   /************Incident**************/
-  getIncident: function(req,res){
-
+  getIncident: function(req, res) {
+    db.Incident.findAll({
+      where: {
+        StudentId: req.params.studentId,
+        date: req.params.date,
+      },
+    })
+      .then(dbIncident => res.json(dbIncident))
+      .catch(err => res.status(422).json(err));
   },
 
-  saveIncident: function(req,res){
-
+  saveIncident: function(req, res) {
+    db.Incident.create({
+      time: req.body.time,
+      incident: req.body.incident,
+      date: req.body.date,
+      StudentId: req.params.studentId,
+    })
+      .then(dbIncident => res.json(dbIncident))
+      .catch(err => res.status(422).json(err));
   },
   /************Incident**************/
 
   /************Medicine**************/
-  getMedicine: function(req,res){
-
+  getMedicine: function(req, res) {
+    db.Medicine.findAll({
+      where: {
+        StudentId: req.params.studentId,
+        date: req.params.date,
+      },
+    })
+      .then(dbMedicine => res.json(dbMedicine))
+      .catch(err => res.status(422).json(err));
   },
 
-  saveMedicine: function(req,res){
-
+  saveMedicine: function(req, res) {
+    db.Medicine.create({
+      time: req.body.time,
+      medName: req.body.medName,
+      date: req.body.date,
+      StudentId: req.params.studentId,
+    })
+      .then(dbMedicine => res.json(dbMedicine))
+      .catch(err => res.status(422).json(err));
   },
   /************Medicine**************/
 

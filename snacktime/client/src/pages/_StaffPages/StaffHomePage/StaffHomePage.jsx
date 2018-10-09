@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import DashboardItem from '../../../components/DashboardItem/DashboardItem'
+import DashboardItem from '../../../components/DashboardItem/DashboardItem';
 import './StaffHomePage.css';
 import { Redirect } from 'react-router';
+import Auth from '../../../utils/Auth'
 
 class StaffHomePage extends Component {
   state = {
@@ -12,34 +13,11 @@ class StaffHomePage extends Component {
     loggedIn: false,
     loginRejected: false,
   };
-
   componentDidMount = () => {
-    this.getUserId();
+    Auth.loggedIn(this)
   };
 
-  getUserId = () => {
-    fetch('/auth/loggedin').then(res =>
-      res.json().then(data => {
-        if (data.userId) {
-          console.log('USER AUTHORIZED');
-          this.setState({
-            name: data.name,
-            userId: data.userId,
-            orgName: data.orgName,
-            orgId: data.orgId,
-            loginRejected: false,
-            loggedIn: true,
-          });
-        } else {
-          this.setState({
-            loginRejected: true,
-          });
-        }
-      })
-    );
-  };
 
-  
   render() {
     if (this.state.loggedIn) {
       return (
@@ -61,10 +39,11 @@ class StaffHomePage extends Component {
               image="/img/report.png"
               // notifications={this.state.studentNotifications}
             />
-            <DashboardItem 
-              title="Add Staff" 
-              destination="/addstaff" 
-              image="/img/addStaff.png" />
+            <DashboardItem
+              title="Add Staff"
+              destination="/addstaff"
+              image="/img/addStaff.png"
+            />
             <DashboardItem
               title="Add Students"
               destination="/addstudent"
@@ -89,7 +68,7 @@ class StaffHomePage extends Component {
         <Redirect
           to={{
             pathname: '/notAuthorized',
-            state: { type: 'Staff' }
+            state: { type: 'Staff' },
           }}
         />
       );
