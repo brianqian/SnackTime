@@ -107,8 +107,8 @@ class AddNap extends React.Component {
             name="napStart"
             className={classes.textField}
             value={this.state.napStart}
-            setNap={this.setNapStart}
-            onChange={this.handleChange}
+            setNap={this.setNapStart.bind(this)}
+            onChange={this.handleChange.bind(this)}
             //   margin="normal"
             //   variant="outlined"
           />
