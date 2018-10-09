@@ -7,7 +7,7 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.TIME,
       },
       date: {
-        type: DataTypes.DATE,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: true,

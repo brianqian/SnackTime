@@ -1,7 +1,7 @@
 module.exports = function(sequelize, DataTypes) {
   var Report = sequelize.define('Report', {
     date: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: true,
