@@ -56,26 +56,42 @@ router.route('/report/:reportId')
 /******Diapering***********/
 router.route('/student/:studentId/diapering/:date')
   .get(staffController.getDiapering)    //get diapering info for a particular student and date
+
+router.route('/student/:studentId/diapering')
   .post(staffController.saveDiapering)  //save diapering info for a prticular student and date
 /******Diapering***********/
 
 /******Nap***********/
 router.route('/student/:studentId/nap/:date')
   .get(staffController.getNap)    //get nap info for a particular student and date
+
+router.route('/student/:studentId/nap')
   .post(staffController.saveNap)  //save nap info for a prticular student and date
 /******Nap***********/
 
 /******Meal***********/
 router.route('/student/:studentId/meal/:date')
   .get(staffController.getMeal)    //get meal info for a particular student and date
+
+router.route('/student/:studentId/meal')
   .post(staffController.saveMeal)  //save meal info for a prticular student and date
 /******Meal***********/
 
 /******Incident***********/
 router.route('/student/:studentId/incident/:date')
   .get(staffController.getIncident)    //get incident info for a particular student and date
+
+router.route('/student/:studentId/incident')
   .post(staffController.saveIncident)  //save incident info for a prticular student and date
 /******Incident***********/
+
+/******Medicine***********/
+router.route('/student/:studentId/medicine/:date')
+  .get(staffController.getMedicine)    //get medicine info for a particular student and date
+
+router.route('/student/:studentId/medicine')
+  .post(staffController.saveMedicine)  //save medicine info for a prticular student and date
+/******Medicine***********/
 
 /******Invoice***********/
 router.route("/invoice/student/:studentId").post(staffController.createInvoice); //save an invoice

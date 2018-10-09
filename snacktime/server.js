@@ -49,6 +49,18 @@ app.use(function(req, res, next) {
   );
   next();
 });
+
+// function authChecker(req, res, next) {
+//   if (req.session.staff || req.path==='/') {
+//     console.log("req.session.staff", req.session.staff);
+//       next();
+//   } else {
+//      res.redirect("/");
+//   }
+// }
+
+// app.use(authChecker);
+
 app.use(routes);
 // router for handling 404 requests(unavailable routes)
 app.use(function(req, res, next) {

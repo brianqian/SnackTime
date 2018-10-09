@@ -15,16 +15,28 @@ const styles = theme => ({
   },
 });
 
-function DateTimeSelector(props) {
-  const { classes } = props;
+class DateTimeSelector extends React.Component {
+  state = {
+    time: "",
+  }
+handleChange = event => {
+  this.setState({
+    [name]: event.target.value,
+  });
+  this.props.setNap(this)
+}
 
+  const { classes } = this.props;
+  render() {
   return (
     <form className={classes.container} noValidate>
       <TextField
         label={props.label}
         id="datetime-local"
         type="datetime-local"
-        defaultValue="2017-05-24T10:30"
+        name="time"
+        onChange={this.handleChange}
+        value={this.state.time}
         className={classes.textField}
         InputLabelProps={{
           shrink: true,

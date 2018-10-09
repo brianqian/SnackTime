@@ -9,6 +9,7 @@ import HeaderBar from '../../../../components/HeaderBar/HeaderBar';
 // import Label from '@material-ui/core/Label';
 import DateTimeSelector from '../../../../components/DateTimeSelector/DateTimeSelector'
 
+
 const styles = theme => ({
   container: {
     display: 'flex',
@@ -30,31 +31,65 @@ const styles = theme => ({
 
 class AddNap extends React.Component {
   state = {
-    selectedStudents: [],
-    selectedStudentsId: [],
+    selectedStudents: this.props.location.state.selectedStudents,
     napStart: '',
     napEnd: '',
     multiline: 'Controlled',
   };
 
-  handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value,
-    });
+  handleChange = event => {
+    console.log(event.target);
+    // this.setState({
+    //   [name]: event.target.value,
+    // });
+    console.log('NAP START, END', this.state.napStart, this.state.napEnd);
   };
+
+  setNapStart = (time) => {
+    this.setState({ napStart: time })
+  }
+
+  setNapEnd = (time) => {
+    this.setState({ napEnd: time })
+  }
+
+  postNap = id =>{
+    let today= new Date();
+    let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    console.log(date);
+    fetch(`/api/student/${id}/nap`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          napStart: this.state.napStart,
+          napEnd: this.state.napEnd,
+          date: date,
+        }),
+      })
+      .then(resp=>{
+        console.log(resp);
+        return resp.json()
+        })
+      .then(resp=> console.log(resp));
+  }
 
   handleSubmit = event => {
     event.preventDefault();
-    fetch(`/report/:reportId`, {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json'},
-      body: JSON.stringify({
-        studentId: this.state.studentId,
-        napStart: this.state.napStart,
-        napEnd: this.state.napEnd,
-      }),
-    });  
+
+    this.state.selectedStudents.map(id=> this.postNap(id));
+
+    // fetch(`/student/:student/nap`, {
+    //   method: 'POST',
+    //   headers: { 'Content-Type':'application/json'},
+    //   body: JSON.stringify({
+    //     studentId: this.state.studentId,
+    //     napStart: this.state.napStart,
+    //     napEnd: this.state.napEnd,
+    //   }),
+    // }  
   }
+
+
 
   render() {
     const { classes } = this.props;
@@ -66,18 +101,22 @@ class AddNap extends React.Component {
 
         <DateTimeSelector
           label="Start Time: "
+          name="napStart"
           className={classes.textField}
           value={this.state.napStart}
-        //   onChange={this.handleSelectorChange}
+          setNapStart={()=> this.setNapStart}
+          onChange={this.handleChange}
         //   margin="normal"
         //   variant="outlined"
         />
         <hr/>
         <DateTimeSelector
           label="End Time: "
+          name="napEnd"
           className={classes.textField}
           value={this.state.napEnd}
-        //   onChange={this.handleSelectorChange}
+          setNapEnd={()=> this.setNapEnd}
+          onChange={this.handleChange}
         //   margin="normal"
         //   variant="outlined" 
         />

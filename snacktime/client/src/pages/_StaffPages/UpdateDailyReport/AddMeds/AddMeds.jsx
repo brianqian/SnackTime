@@ -36,11 +36,11 @@ class AddMeds extends React.Component {
     multiline: 'Controlled',
   };
 
-//   handleChange = name => event => {
-//     this.setState({
-//       [name]: event.target.value,
-//     });
-//   };
+  handleChange = name => event => {
+    this.setState({
+      [name]: event.target.value,
+    });
+  };
 
   handleSubmit = event => {
     event.preventDefault();

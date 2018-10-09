@@ -20,7 +20,7 @@ const styles = theme => ({
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 120,
-    maxWidth: 300,
+    maxWidth: 500,
   },
   chips: {
     display: 'flex',
@@ -46,6 +46,7 @@ class MultiStudentSelect extends React.Component {
   state = {
     students: [],
     selectedStudents: [],
+    selectedStudentsId: [],
     orgId: '',
     loginRejected: false,
     loggedIn: false,
@@ -93,13 +94,16 @@ class MultiStudentSelect extends React.Component {
       .then(result => {
         console.log('Res:', result);
         this.setState({ students: result }, function() {
-          console.log('State', this.state.students);
         });
       });
   };
 
   handleChange = event => {
-    this.setState({ selectedStudents: event.target.value });
+    console.log(event.target);
+    this.setState({ selectedStudents: event.target.value },
+      function(){
+        console.log(this.state.selectedStudents);
+        });
   };
 
   render() {
@@ -116,19 +120,19 @@ class MultiStudentSelect extends React.Component {
             value={this.state.selectedStudents}
             onChange={this.handleChange}
             input={<Input id="select-multiple-chip" />}
-            renderValue={selected => (
-              <div className={classes.chips}>
-                {selected.map(value => (
-                  <Chip key={value} label={value} className={classes.chip} />
-                ))}
-              </div>
-            )}
+            // renderValue={selected => (
+            //   <div className={classes.chips}>
+            //     {selected.map(value => (
+            //       <Chip key={value} label={value} className={classes.chip} />
+            //     ))}
+            //   </div>
+            // )}
             MenuProps={MenuProps}
           >
             {this.state.students.map(student => (
               <MenuItem
                 key={student.id}
-                value={student.name}
+                value={student.id}
                 style={{
                   fontWeight:
                     this.state.students.indexOf(student.name) === -1

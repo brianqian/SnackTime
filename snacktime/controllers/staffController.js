@@ -105,7 +105,7 @@ module.exports = {
           },
         }).then(student => {
           parent.setStudents([student]);
-          res.json("Association complete");
+          res.json(student);
         }).catch(err => res.status(422).json(err))
         // db.ParentStudent.create({
         //   ParentId: dbParent.id,
@@ -164,7 +164,7 @@ module.exports = {
     })
       .then(dbParent => {
         if (dbParent) return res.json(dbParent);
-        else return res.send('Parent does not exist in database');
+        else return res.json('Parent does not exist in database');
       })
       .catch(err => res.status(422).json(err));
   },
@@ -315,7 +315,8 @@ module.exports = {
   getDiapering: function(req, res) {
     db.Diapering.findAll({
       where: {
-        ReportId: req.params.reportId,
+        StudentId: req.params.studentId,
+        date: req.params.date
       },
     })
       .then(dbDiapering => res.json(dbDiapering))
@@ -327,12 +328,69 @@ module.exports = {
       place: req.body.place,
       type: req.body.type,
       time: req.body.time,
-      ReportId: req.params.reportId,
+      date: req.body.date,
+      StudentId: req.params.studentId,
     })
       .then(dbDiapering => res.json(dbDiapering))
       .catch(err => res.status(422).json(err));
   },
   /************diapering**************/
+
+  /************Nap**************/
+  getNap: function(req,res){
+    db.Nap.findAll({
+      where: {
+        StudentId: req.params.studentId,
+        date: req.params.date
+      },
+    })
+      .then(dbDiapering => res.json(dbDiapering))
+      .catch(err => res.status(422).json(err));
+  },
+
+  saveNap: function(req,res){
+    console.log('NAP BODY', req.body);
+    console.log('NAP BODY', req.params);
+    db.Nap.create({
+      startTime: req.body.napStart,
+      endTime: req.body.napEnd,
+      date: req.body.date,
+      StudentId: req.params.studentId,
+    })
+    .then(dbNap => res.json(dbNap))
+    .catch(err => res.status(422).json(err));
+  },
+  /************Nap**************/
+
+  /************Meal**************/
+  getMeal: function(req,res){
+
+  },
+
+  saveMeal: function(req,res){
+
+  },
+  /************Meal**************/
+
+  /************Incident**************/
+  getIncident: function(req,res){
+
+  },
+
+  saveIncident: function(req,res){
+
+  },
+  /************Incident**************/
+
+  /************Medicine**************/
+  getMedicine: function(req,res){
+
+  },
+
+  saveMedicine: function(req,res){
+
+  },
+  /************Medicine**************/
 
   /************invoice**************/
 
