@@ -26,7 +26,7 @@ class ParentContainer extends Component {
     addName: '',
     addEmail: '',
     addPassword: 'testpass',
-    addAddres: '',
+    addAddress: '',
     addPhone: '',
   };
 
@@ -88,7 +88,7 @@ class ParentContainer extends Component {
       address: this.state.addAddress,
       phone: this.state.addPhone,
       name: this.state.addName,
-      baseUrl: url
+      baseUrl: url,
     };
     console.log(newObj);
     this.setState({ addParentForm: newObj });
@@ -104,12 +104,11 @@ class ParentContainer extends Component {
         if (resp) {
           this.setState({
             status: 'Parent Added!',
-            addParentForm: {
-              name: '',
-              phone: '',
-              email: '',
-              address: '',
-            },
+            addName: '',
+            addEmail: '',
+            addPassword: 'testpass',
+            addAddress: '',
+            addPhone: '',
           });
         } else {
           this.setState({ status: 'Parent not added' });
@@ -138,19 +137,24 @@ class ParentContainer extends Component {
   deleteAssociation = e => {
     const data = {
       studentId: this.props.studentId,
-      parentId: e.target.name
-    }
+      parentId: e.target.name,
+    };
     console.log(data);
-    fetch('/api/', {method: 'DELETE', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)})
-    .then(() => this.getExistingParent());
-  };  
+    fetch('/api/', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    }).then(() => this.getExistingParent());
+  };
 
-  editParentInfo = e =>{
-    const data = {parentId: e.target.name}
-    fetch('/api/', {method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)})
-    .then(() => this.getExistingParent());
-
-  }
+  editParentInfo = e => {
+    const data = { parentId: e.target.name };
+    fetch('/api/', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    }).then(() => this.getExistingParent());
+  };
 
   render() {
     const { classes } = this.props;
@@ -171,8 +175,12 @@ class ParentContainer extends Component {
                       <p>Phone: {parent.phone}</p>
                       <p>Email: {parent.email}</p>
                       <p>Address: {parent.address}</p>
-                      <button name={parent.id} onClick={this.deleteAssociation}>X</button>
-                      <button name={parent.id} onClick={this.editParentInfo}>Edit</button>
+                      <button name={parent.id} onClick={this.deleteAssociation}>
+                        X
+                      </button>
+                      <button name={parent.id} onClick={this.editParentInfo}>
+                        Edit
+                      </button>
                     </div>
                   );
                 })}

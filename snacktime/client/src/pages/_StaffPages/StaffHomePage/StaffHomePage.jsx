@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import DashboardItem from '../../../components/DashboardItem/DashboardItem';
 import './StaffHomePage.css';
 import { Redirect } from 'react-router';
-import Auth from '../../../utils/Auth'
+import Auth from '../../../utils/Auth';
 
 class StaffHomePage extends Component {
   state = {
@@ -13,10 +13,10 @@ class StaffHomePage extends Component {
     loggedIn: false,
     loginRejected: false,
   };
-  componentDidMount = () => {
-    Auth.loggedIn(this)
-  };
 
+  componentDidMount() {
+    Auth.StaffAuthorize(this);
+  }
 
   render() {
     if (this.state.loggedIn) {

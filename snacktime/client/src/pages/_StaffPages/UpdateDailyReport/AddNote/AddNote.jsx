@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import HeaderBar from '../../../../components/HeaderBar/HeaderBar';
 // import Label from '@material-ui/core/Label';
 import DateTimeSelector from '../../../../components/DateTimeSelector/DateTimeSelector'
+import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
   container: {
@@ -80,6 +81,9 @@ class AddNote extends React.Component {
 
   render() {
     const { classes } = this.props;
+    if(!this.state.selectedStudents){
+      return <Redirect to='/dailyreportmenu'/>
+    }
 
     return (
       <div>  

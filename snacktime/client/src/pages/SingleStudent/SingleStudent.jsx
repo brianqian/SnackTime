@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import Card from './components/Card';
 import './SingleStudent.css';
-import ParentContainer from './components/ParentContainer'
+import ParentContainer from './components/ParentContainer';
+import Auth from '../../utils/Auth';
+import {Redirect} from 'react-router-dom'
 
 export default class SingleStudent extends Component {
   state = {
@@ -16,52 +18,62 @@ export default class SingleStudent extends Component {
     name: '',
     notes: '',
     updatedAt: '',
-
   };
 
-  componentWillMount() {
-    this.getSingleStudent();
-    console.log(this.props.match.params.student);
+  async componentDidMount() {
+    let studentOrg = await this.getSingleStudent();
+    await Auth.StaffAuthorize(this, studentOrg);
   }
 
-  getSingleStudent = () => {
-    fetch(`/api/allinfo/student/${this.props.match.params.student}`)
-      .then(res => res.json())
-      .then(res => {
-        const stateObj = Object.assign({}, res);
-        //if stateobj.orgid === user.orgid then...
-        this.setState(stateObj);
-        console.log(this.state);
-      });
+  async getSingleStudent() {
+    let result = await (await fetch(
+      `/api/allinfo/student/${this.props.match.params.student}`
+    )).json();
+    await this.setState(result);
+    return result.OrganizationId;
+  }
+
+  handleAddParentClick = e => {
+    console.log(e.target.name);
   };
 
-  handleAddParentClick = (e)=>{
-    console.log(e.target.name)
-  }
-
-
-  handleAddParentClick = (e)=>{
-    console.log(e.target.name)
-  }
+  handleAddParentClick = e => {
+    console.log(e.target.name);
+  };
 
   render() {
-    return (
-      <div className="student-container">
-        <Card
-          className="student__item"
-          name={this.state.name}
-          destination="DailyReportPage"
-          address={this.state.address}
-          allergies={this.state.allergies}
-          medication={this.state.medication}
-          doctor={this.state.doctor}
-          dob={this.state.dob}
-          notes={this.state.notes}
-        
-          // image={this.state.image}
+    if (this.state.loggedIn) {
+      return (
+        <div className="student-container">
+          <Card
+            className="student__item"
+            name={this.state.name}
+            destination="DailyReportPage"
+            address={this.state.address}
+            allergies={this.state.allergies}
+            medication={this.state.medication}
+            doctor={this.state.doctor}
+            dob={this.state.dob}
+            notes={this.state.notes}
+
+            // image={this.state.image}
+          />
+          <ParentContainer studentId={this.props.match.params.student} />
+        </div>
+      );
+    } else if (this.state.loginRejected) {
+      return (
+        <Redirect
+          to={{
+            pathname: '/notAuthorized',
+            state: { type: 'Staff' },
+          }}
         />
-        <ParentContainer studentId={this.props.match.params.student}/>
-      </div>
-    );
+      );
+    } else if (!this.state.sameOrg) {
+      return <Redirect to="/staffhomepage" />;
+    } else {
+      return <div />;
+    }
   }
 }

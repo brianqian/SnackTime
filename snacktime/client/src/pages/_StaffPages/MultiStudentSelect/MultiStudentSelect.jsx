@@ -53,23 +53,32 @@ class MultiStudentSelect extends React.Component {
     loggedIn: false,
   };
 
-  componentDidMount = () => {
-    Auth.loggedIn(this, this.getAllStudents);
-  };
+  async componentDidMount() {
+    await Auth.StaffAuthorize(this);
+    if (this.state.orgId) this.getAllStudents();
+  }
 
-  getAllStudents = () => {
-    console.log('get all students running');
-    console.log(this.state);
-    fetch(`/api/student/${this.state.orgId}`)
-      .then(res => res.json())
-      .then(result => {
-        console.log('Res:', result);
-        this.setState({ students: result }, function() {});
-      });
-  };
+  async getAllStudents() {
+    let data = await (await fetch(`/api/student/${this.state.orgId}`)).json();
+    const nameArray = [];
+    data.forEach(elem => nameArray.push(elem.name));
+    this.setState({ students: nameArray });
+  }
+
+  // getAllStudents = () => {
+  //   console.log('get all students running');
+  //   console.log(this.state);
+  //   fetch(`/api/student/${this.state.orgId}`)
+  //     .then(res => res.json())
+  //     .then(result => {
+  //       console.log('Res:', result);
+  //       this.setState({ students: result }, function() {});
+
+  //     });
+  // };
 
   handleChange = event => {
-    console.log("Multiselect :",event.target.value);
+    console.log('Multiselect :', event.target.value);
     this.setState({ selectedStudents: event.target.value }, function() {
       console.log(this.state.selectedStudents);
     });

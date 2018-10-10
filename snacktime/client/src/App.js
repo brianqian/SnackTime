@@ -47,6 +47,7 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={WelcomePage} />
             <Route exact path="/staffhomepage" component={StaffHomePage} />
+            <Route exact path="/staffhome" component={StaffHomePage} />
             <Route exact path="/addstaff" component={AddStaff} />
             <Route exact path="/dailyreportmenu" component={DailyReportMenu} />
             <Route exact path="/studentselect" component={MultiStudentSelect} />
@@ -55,11 +56,7 @@ class App extends Component {
             <Route exact path="/dailyreport/addmeds" component={AddMeds} />
             <Route exact path="/dailyreport/addmeal" component={AddMeal} />
             <Route exact path="/dailyreport/addnote" component={AddNote} />
-            <Route
-              exact
-              path="/dailyreport/addincident"
-              component={AddIncident}
-            />
+            <Route exact path="/dailyreport/addincident" component={AddIncident} />
             <Route exact path="/notauthorized" component={notAuthorized} />
             <Route exact path="/addstudent" component={AddStudent} />
             <Route exact path="/allstudentspage" component={AllStudents} />
