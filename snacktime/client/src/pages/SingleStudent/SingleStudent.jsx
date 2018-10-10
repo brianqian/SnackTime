@@ -18,17 +18,18 @@ export default class SingleStudent extends Component {
     name: '',
     notes: '',
     updatedAt: '',
+    orgUserCheck: true
   };
 
-  async componentDidMount() {
-    let studentOrg = await this.getSingleStudent();
-    await Auth.StaffAuthorize(this, studentOrg);
+  async componentWillMount() {
+    await this.getSingleStudent();
   }
-
+  
   async getSingleStudent() {
     let result = await (await fetch(
       `/api/allinfo/student/${this.props.match.params.student}`
-    )).json();
+      )).json();
+    await Auth.StaffAuthorize(this, result.OrganizationId);
     await this.setState(result);
     return result.OrganizationId;
   }
@@ -70,7 +71,8 @@ export default class SingleStudent extends Component {
           }}
         />
       );
-    } else if (!this.state.sameOrg) {
+    } else if (!this.state.orgUserCheck) {
+      console.log(this.state)
       return <Redirect to="/staffhomepage" />;
     } else {
       return <div />;
