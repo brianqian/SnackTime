@@ -29,6 +29,7 @@ const styles = theme => ({
   }
 });
 
+
 class AddNap extends React.Component {
   state = {
     selectedStudents: this.props.location.state.selectedStudents,
@@ -47,6 +48,10 @@ class AddNap extends React.Component {
   //     //this.setState({ selectedStudentsName: result });
   //   });
   // }
+  async componentWillMount() {
+    this.props.location.state ?
+    await this.setState({selectedStudents: this.props.location.state.selectedStudents}): this.setState({selectedStudents: false})
+  }
 
   handleChange = event => {
     console.log(event.target);

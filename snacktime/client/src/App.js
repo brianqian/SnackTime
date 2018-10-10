@@ -23,23 +23,6 @@ import StaffSettingsPage from './pages/_StaffPages/StaffSettings/StaffSettingsPa
 import ChangePassword from './pages/ForgotPassword/components/ChangePassword';
 
 class App extends Component {
-  state = {};
-
-  updateState = dataObject => {
-    console.log('running');
-    const { userId, userType, orgId } = dataObject;
-    console.log(dataObject);
-    this.setState(
-      {
-        userId,
-        userType,
-        orgId,
-      },
-      function() {
-        console.log('APP STATE', this.state);
-      }
-    );
-  };
   render() {
     return (
       <div className="App">

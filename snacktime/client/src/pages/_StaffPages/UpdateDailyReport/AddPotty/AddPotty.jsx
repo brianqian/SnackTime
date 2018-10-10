@@ -38,6 +38,11 @@ class AddPotty extends React.Component {
     multiline: 'Controlled',
   };
 
+  async componentWillMount() {
+    this.props.location.state ?
+    await this.setState({selectedStudents: this.props.location.state.selectedStudents}): this.setState({selectedStudents: false})
+  }
+
   handleClick = (name,value) => {
     console.log("Sasha says this has been clicked")
     this.setState({ [name]: value})

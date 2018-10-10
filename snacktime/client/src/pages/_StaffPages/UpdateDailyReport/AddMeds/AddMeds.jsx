@@ -36,6 +36,10 @@ class AddMeds extends React.Component {
     medName: '',
     multiline: 'Controlled',
   };
+  async componentWillMount() {
+    this.props.location.state ?
+    await this.setState({selectedStudents: this.props.location.state.selectedStudents}): this.setState({selectedStudents: false})
+  }
 
   handleChange = name => event => {
     this.setState({

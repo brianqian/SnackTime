@@ -65,10 +65,14 @@ class AddMeal extends React.Component {
     type: 'Breakfast',
     multiline: 'Controlled',
   };
-
+  async componentWillMount() {
+    this.props.location.state ?
+    await this.setState({selectedStudents: this.props.location.state.selectedStudents}): this.setState({selectedStudents: false})
+  }
   componentDidMount() {
       console.log("add meal check" + this.state.type)
   }
+
 
   setMealTime = time => {
     this.setState({time: time})

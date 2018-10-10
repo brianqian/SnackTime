@@ -5,6 +5,7 @@ import Chip from '@material-ui/core/Chip';
 import FaceIcon from '@material-ui/icons/Face';
 import './AllStudentsPage.css';
 import HeaderBar from '../../../components/HeaderBar/HeaderBar';
+import Auth from '../../../utils/Auth';
 // import DashboardItem from '../../components/DashboardItem/DashboardItem';
 
 export default class AllStudentsPage extends Component {
@@ -18,32 +19,10 @@ export default class AllStudentsPage extends Component {
     allStudents: [],
   };
 
-  componentWillMount = () => {
-    this.getUserId();
-    
+  async componentWillMount() {
+    await Auth.StaffAuthorize(this);
+    await this.getAllStudents();
   }
-
-  getUserId = () => {
-    fetch('/auth/loggedin').then(res =>
-      res.json().then(data => {
-        if (data.userId) {
-          console.log('USER AUTHORIZED');
-          this.setState({
-            userId: data.userId,
-            orgName: data.orgName,
-            orgId: data.orgId,
-            loginRejected: false,
-            loggedIn: true,
-          });
-        } else {
-          this.setState({
-            loginRejected: true,
-          });
-        }
-        this.getAllStudents();
-      })
-    );
-  };
 
   getAllStudents = () => {
     fetch(`/api/student/${this.state.orgId}`)
@@ -54,7 +33,7 @@ export default class AllStudentsPage extends Component {
           console.log(this.state.allStudents);
         });
       })
-      .catch(err=>console.log(err));
+      .catch(err => console.log(err));
   };
 
   render() {
