@@ -4,7 +4,6 @@ import About from './components/About/About';
 
 class WelcomePage extends Component {
   componentDidMount(){
-
     console.log('welcome page',this.props)
   }
   render() {

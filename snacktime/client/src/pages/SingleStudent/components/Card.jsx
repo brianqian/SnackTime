@@ -47,11 +47,45 @@ const styles = theme => ({
   });
 
   class SingleStudentCard extends React.Component {
-    state = { expanded: false };
-  
+    state = { 
+      expanded: false,
+      diaperings:[],
+      meals: [],
+      naps: [],
+      status: '',             
+    };
     handleExpandClick = () => {
       this.setState(state => ({ expanded: !state.expanded }));
     };
+
+    getDiapering= () =>{
+      let today = new Date();
+      let date =
+        today.getFullYear() +
+        '-' +
+        (today.getMonth() + 1) +
+        '-' +
+        today.getDate();
+      console.log("Date:",date);
+      fetch(`/api/student/${this.props.id}/diapering/${date}`)
+      .then(resp => resp.json())
+      .then(resp => {
+        if (resp) {
+          if (resp === 'No diaperings') {
+            this.setState({ status: 'No diapering found :(' });
+          } else {
+            console.log("Resp: ",resp);
+            const diaperings = [];
+            resp.map(diapering => diaperings.push(diapering));
+            this.setState({ diaperings: diaperings });
+          }
+        }
+      });
+    }
+
+    ComponentWillMount = () => {
+      this.getDiapering();
+    }
   
     render() {
       const { classes } = this.props;
@@ -61,7 +95,7 @@ const styles = theme => ({
           <CardHeader
             avatar={
               <Avatar aria-label="Student" className={classes.avatar}>
-                Rrrrrr
+                Rrr
               </Avatar>
             }
             title={this.props.name}
@@ -74,8 +108,7 @@ const styles = theme => ({
           /> */}
           <CardContent>
             <Typography component="p">
-              This impressive paella is a perfect party dish and a fun meal to cook together with your
-              guests. Add 1 cup of frozen peas along with the mussels, if you like.
+            {/* render daily activities */}
             </Typography>
           </CardContent>
           <CardActions className={classes.actions} disableActionSpacing>

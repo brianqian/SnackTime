@@ -50,6 +50,7 @@ export default class SingleStudent extends Component {
             className="student__item"
             name={this.state.name}
             destination="DailyReportPage"
+            id={this.state.id}
             address={this.state.address}
             allergies={this.state.allergies}
             medication={this.state.medication}

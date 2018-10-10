@@ -7,8 +7,9 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import HeaderBar from '../../../../components/HeaderBar/HeaderBar';
 // import Label from '@material-ui/core/Label';
-import DateTimeSelector from '../../../../components/DateTimeSelector/DateTimeSelector'
-import Redirect from 'react-router-dom/Redirect';
+import DateTimeSelector from '../../../../components/DateTimeSelector/DateTimeSelector';
+import Auth from '../../../../utils/Auth';
+import MultiSelectContainer from '../MultiSelect/MultiSelectContainer';
 
 const styles = theme => ({
   container: {
@@ -29,54 +30,68 @@ const styles = theme => ({
 });
 
 const types = [
-    {
-      value: 'Breakfast',
-      label: 'Breakfast',
-    },
-    {
-      value: 'AM Snack',
-      label: 'AM Snack',
-    },
-    {
-      value: 'Lunch',
-      label: 'Lunch',
-    },
-    {
-      value: 'PM Snack',
-      label: 'PM Snack',
-    },
-    {
-        value: 'Dinner',
-        label: 'Dinner',
-      },
-      {
-        value: 'Late Snack',
-        label: 'Late Snack',
-      },
-  ];
-
+  {
+    value: 'Breakfast',
+    label: 'Breakfast',
+  },
+  {
+    value: 'AM Snack',
+    label: 'AM Snack',
+  },
+  {
+    value: 'Lunch',
+    label: 'Lunch',
+  },
+  {
+    value: 'PM Snack',
+    label: 'PM Snack',
+  },
+  {
+    value: 'Dinner',
+    label: 'Dinner',
+  },
+  {
+    value: 'Late Snack',
+    label: 'Late Snack',
+  },
+];
 
 class AddMeal extends React.Component {
   state = {
-    selectedStudents: this.props.location.state.selectedStudents,
+    allStudents: [],
     studentId: '',
     time: '',
     food: '',
     type: 'Breakfast',
     multiline: 'Controlled',
   };
-  async componentWillMount() {
-    this.props.location.state ?
-    await this.setState({selectedStudents: this.props.location.state.selectedStudents}): this.setState({selectedStudents: false})
-  }
-  componentDidMount() {
-      console.log("add meal check" + this.state.type)
-  }
 
+  async componentWillMount() {
+    await Auth.StaffAuthorize(this);
+  }
+  selectStudent = (e) => {
+    let item = e.target;
+    let studentArray = this.state.allStudents.slice();
+    console.log(item.getAttribute('value'))
+    console.log(item.classList.contains('selected'))
+    if (item.classList.contains('selected')){
+      studentArray.find(student=>student.name === item.getAttribute('value')).selected = false;
+    } else{
+      studentArray.find(student=>student.name === item.getAttribute('value')).selected = true;
+    }
+    this.setState({allStudents: studentArray})
+    item.classList.toggle('selected')
+
+  };
+  returnSelectedStudents = student => {
+    let array = this.state.allStudents.slice();
+    array.push(student);
+    this.setState({ allStudents: array });
+  };
 
   setMealTime = time => {
-    this.setState({time: time})
-  }
+    this.setState({ time: time });
+  };
 
   handleChange = name => event => {
     this.setState({
@@ -85,30 +100,26 @@ class AddMeal extends React.Component {
   };
 
   handleClick = name => event => {
-      this.setState({
-        [name]: event.target.value,
-      })
-  }
+    this.setState({
+      [name]: event.target.value,
+    });
+  };
 
   postMeal = id => {
     let today = new Date();
-    let date =
-      today.getFullYear() +
-      "-" +
-      (today.getMonth() + 1) +
-      "-" +
-      today.getDate();
+    //prettier-ignore
+    let date = today.getFullYear() +'-' + (today.getMonth() + 1) + '-' + today.getDate();
     console.log(date);
     fetch(`/api/student/${id}/meal`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         date: date,
         time: this.state.time,
         food: this.state.food,
         type: this.state.type,
         date: date,
-      })
+      }),
     })
       .then(resp => {
         console.log(resp);
@@ -119,32 +130,34 @@ class AddMeal extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    this.state.selectedStudents.map(id => this.postMeal(id));  
-  }
+    this.state.allStudents.map(id => this.postMeal(id));
+  };
 
   render() {
     const { classes } = this.props;
 
-    if(!this.state.selectedStudents){
-      return <Redirect to='/dailyreportmenu'/>
-    }
+    if (this.state.loggedIn) {
+      return (
+        <div>
+          <HeaderBar />
 
-    return (
-      <div>  
-      <HeaderBar />  
-      <form className={classes.container} noValidate autoComplete="off">
+          <MultiSelectContainer
+            selectStudent={this.selectStudent}
+            orgId={this.state.orgId}
+          />
 
-        <DateTimeSelector
-          name="mealTime"
-          setTime={this.setMealTime}
-          label="Time: "
-          className={classes.textField}
-          value={this.state.time}
-        //   onChange={this.handleChange}
-        //   margin="normal"
-        //   variant="outlined"
-        />
-        {/* <hr/>
+          <form className={classes.container} noValidate autoComplete="off">
+            <DateTimeSelector
+              name="mealTime"
+              setTime={this.setMealTime}
+              label="Time: "
+              className={classes.textField}
+              value={this.state.time}
+              //   onChange={this.handleChange}
+              //   margin="normal"
+              //   variant="outlined"
+            />
+            {/* <hr/>
         <Button
           onClick={this.handleClick}
           name 
@@ -156,8 +169,8 @@ class AddMeal extends React.Component {
           value="bottle">
           Bottle
         </Button>  */}
-        <hr/>
-        {/* <Button value="all">
+            <hr />
+            {/* <Button value="all">
           All
         </Button> 
         <Button value="most">
@@ -170,49 +183,49 @@ class AddMeal extends React.Component {
           None
         </Button> 
         <hr/> */}
-        <TextField
-          id="standard-select-type-native"
-          select
-          label="Type: "
-          name="type"
-          className={classes.textField}
-          value={this.state.type}
-          onChange={this.handleChange('type')}
-          SelectProps={{
-            native: true,
-            MenuProps: {
-              className: classes.menu,
-            },
-          }}
-        //   helperText="Please select your currency"
-          margin="normal"
-        >
-          {types.map(option => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </TextField>
-        <hr/>
-        <TextField
-          required
-          label="Meal Items"
-          className={classes.textField}
-          value={this.state.food}
-          onChange={this.handleChange('food')}
-          margin="normal"
-          variant="outlined" 
-        />
-        <hr/>
-        <Button
-        onClick={this.handleSubmit}
-        >
-        Add Activity
-        </Button>
-      </form>
-      </div>
-    );
+            <TextField
+              id="standard-select-type-native"
+              select
+              label="Type: "
+              name="type"
+              className={classes.textField}
+              value={this.state.type}
+              onChange={this.handleChange('type')}
+              SelectProps={{
+                native: true,
+                MenuProps: {
+                  className: classes.menu,
+                },
+              }}
+              //   helperText="Please select your currency"
+              margin="normal"
+            >
+              {types.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </TextField>
+            <hr />
+            <TextField
+              required
+              label="Meal Items"
+              className={classes.textField}
+              value={this.state.food}
+              onChange={this.handleChange('food')}
+              margin="normal"
+              variant="outlined"
+            />
+            <hr />
+            <Button onClick={this.handleSubmit}>Add Activity</Button>
+          </form>
+        </div>
+      );
+    }else{
+      return <div/>
+    }
   }
+  
 }
 
 AddMeal.propTypes = {

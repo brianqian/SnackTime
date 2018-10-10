@@ -21,6 +21,10 @@ import AddNote from './pages/_StaffPages/UpdateDailyReport/AddNote/AddNote';
 import AddIncident from './pages/_StaffPages/UpdateDailyReport/AddIncident/AddIncident';
 import StaffSettingsPage from './pages/_StaffPages/StaffSettings/StaffSettingsPage';
 import ChangePassword from './pages/ForgotPassword/components/ChangePassword';
+import MultiSelectContainer from './pages/_StaffPages/UpdateDailyReport/MultiSelect/MultiSelectContainer';
+import Settings from "./pages/_StaffPages/StaffSettings/StaffSettingsPage";
+import UpdateCalendar from './pages/_StaffPages/UpdateCalendar/UpdateCalendar';
+
 
 class App extends Component {
   render() {
@@ -48,6 +52,9 @@ class App extends Component {
             <Route path="/allstudentspage/:student" component={SingleStudent} />
             <Route exact path="/staffsettings" component={StaffSettingsPage} />
             <Route exact path="/changepassword" component={ChangePassword} />
+            <Route exact path="/multiselect" component={MultiSelectContainer} /> {/*TEST ROUTE*/}
+            <Route exact path="/staffsettings" component={Settings} />
+            <Route exact path="/updatecalendar" component={UpdateCalendar} />
             <Route component={notFound} />
           </Switch>
         </Router>

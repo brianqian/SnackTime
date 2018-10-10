@@ -22,10 +22,10 @@ router.route('/parent/student/:studentId/report/:date')
   .get(parentController.getReport)   //get report of a student for a prticular date
 
 //update report(notes-to-staff)
-router.route('/student/:studentId/report')
+router.route('/parent/student/:studentId/report')
   .post(parentController.saveReport) //creates new report with notes to staff
 
-router.route('/report/:reportId')
+router.route('/parent/report/:reportId')
   .put(parentController.updateReport); //updates report of a student for current date to send notes to staff
 /**************Report*****************/
 

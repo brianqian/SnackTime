@@ -18,7 +18,7 @@ router.route('/allinfo/students?users').get(staffController.getStudentsInfo)
 /******Student Info********/
 
 /******Parents Info********/
-router.route('/parent').get(staffController.getAllParents); //get all parents
+router.route('/parent/:orgId').get(staffController.getAllParentsEmail); //get all org parents email
 
 router.route('/student/:studentId/parent')
   .post(staffController.saveParent) //save a parent for a particular student
@@ -44,8 +44,8 @@ router.route('/pickup/:pickupId')
 /******Pickup Info********/
 
 /******Report***********/
-router.route('/student/:studentId/report/:date')
-  .get(staffController.getReport)   //get report of a student for a prticular date
+router.route('/student/:studentId/reportconsolidated/:date')
+  .get(staffController.getReportConsolidated)   //get report of a student for a prticular date
  
 router.route('/student/:studentId/report')
   .post(staffController.saveReport) //saves report of a student for current date
@@ -104,5 +104,8 @@ router.route("/fixedsnack").post(staffController.saveSnacks)  //saves fixed snac
 router.route("/fixedsnack/:snackId").put(staffController.updateSnacks) //updates fixed snack of the org day-wise
 /******FixedSnack***********/
 
+/******Email All Parents***********/
+router.route("/emailparents").post(staffController.emailParents)
+/******Email All Parents***********/
 
 module.exports = router;

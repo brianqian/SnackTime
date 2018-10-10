@@ -6,7 +6,7 @@
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
     "start:prod": "node server.js",
-    "start:dev": "concurrently \"nodemon --ignore 'client/*'\" \"npm run client\"",
+    "start:dev": "concurrently \"lsof -ti:3001 | xargs kill\" \"nodemon --ignore 'client/*'\" \"npm run client\"",
     "client": "cd client && npm run start",
     "seed": "node scripts/seedDB.js",
     "install": "cd client && yarn install",
@@ -17,7 +17,7 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^4.0.1",
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.18.3"
   },
   "dependencies": {
     "bcrypt-nodejs": "^0.0.3",
@@ -26,10 +26,12 @@
     "express": "^4.16.3",
     "express-router": "^0.0.1",
     "express-session": "^1.15.6",
+    "material-ui-table-edit": "^3.0.3",
     "moment": "^2.22.2",
     "mysql2": "^1.6.1",
     "nodemailer": "^4.6.8",
     "passport": "^0.4.0",
+    "react-swipeable-views": "^0.13.0",
     "sequelize": "^4.39.0",
     "shortid": "^2.2.13"
   }

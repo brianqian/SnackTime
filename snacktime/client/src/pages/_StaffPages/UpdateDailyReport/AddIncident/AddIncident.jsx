@@ -9,6 +9,8 @@ import HeaderBar from '../../../../components/HeaderBar/HeaderBar';
 // import Label from '@material-ui/core/Label';
 import DateTimeSelector from '../../../../components/DateTimeSelector/DateTimeSelector';
 import { Redirect } from 'react-router-dom';
+import Auth from '../../../../utils/Auth'
+
 
 const styles = theme => ({
   container: {
@@ -37,8 +39,7 @@ class AddIncident extends React.Component {
   };
 
   async componentWillMount() {
-    this.props.location.state ?
-    await this.setState({selectedStudents: this.props.location.state.selectedStudents}): this.setState({selectedStudents: false})
+    Auth.StaffAuthorize(this);
   }
   
 

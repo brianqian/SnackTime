@@ -6,80 +6,176 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Avatar from '@material-ui/core/Avatar';
+import Chip from '@material-ui/core/Chip';
+import SwipeableViews from 'react-swipeable-views';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+
+function TabContainer({ children, dir }) {
+  return (
+    <Typography component="div" dir={dir} style={{ padding: 8 * 3 }}>
+      {children}
+    </Typography>
+  );
+}
 
 const styles = theme => ({
   root: {
-    width: '100%',
+    margin: 'auto',
+    width: '75%',
+    textAlign: 'center',
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
-    flexBasis: '33.33%',
+    flexBasis: '100%',
     flexShrink: 0,
   },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
     color: theme.palette.text.secondary,
   },
+  chip: {
+    margin: theme.spacing.unit,
+  },
+  spacing: {
+    display: 'inline-block',
+    margin: 'auto',
+  },
+  textCenter: {
+    display: 'block',
+    textAlign: 'center',
+  },
 });
 
-class ControlledExpansionPanels extends React.Component {
+class Settings extends React.Component {
   state = {
     expanded: null,
+    value: 0,
   };
 
-  handleChange = panel => (event, expanded) => {
+  handlePanelChange = panel => (event, expanded) => {
     this.setState({
       expanded: expanded ? panel : false,
     });
   };
 
-  render() {
-    const { classes } = this.props;
-    const { expanded } = this.state;
+  handleClick = () => {};
 
+  handleChange = (event, value) => {
+    this.setState({ value });
+  };
+
+  handleChangeIndex = index => {
+    this.setState({ value: index });
+  };
+
+  render() {
+    const { classes, theme } = this.props;
+    const { expanded } = this.state;
+    const { value } = this.state;
     return (
       <div className={classes.root}>
-        <ExpansionPanel expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')}>
+        <ExpansionPanel
+          expanded={expanded === 'panel1'}
+          onChange={this.handlePanelChange('panel1')}
+        >
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>General settings</Typography>
-            <Typography className={classes.secondaryHeading}>I am an expansion panel</Typography>
+            <Typography className={classes.heading}>Organization</Typography>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Typography>
-              Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat. Aliquam eget
-              maximus est, id dignissim quam.
-            </Typography>
+          <ExpansionPanelDetails className={classes.textCenter}>
+            <AppBar position="static" color="default">
+              <Tabs
+                value={value}
+                onChange={this.handleChange}
+                indicatorColor="primary"
+                textColor="primary"
+                fullWidth
+                scrollable
+                scrollButtons="auto"
+              >
+                <Tab label="Item One" />
+                <Tab label="Item Two" />
+                <Tab label="Item Three" />
+              </Tabs>
+            </AppBar>
+            {value === 0 && <TabContainer>Item One</TabContainer>}
+            {value === 1 && <TabContainer>Item Two</TabContainer>}
+            {value === 2 && <TabContainer>Item Three</TabContainer>}
           </ExpansionPanelDetails>
         </ExpansionPanel>
-        <ExpansionPanel expanded={expanded === 'panel2'} onChange={this.handleChange('panel2')}>
+        <ExpansionPanel
+          expanded={expanded === 'panel2'}
+          onChange={this.handlePanelChange('panel2')}
+        >
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Users</Typography>
-            <Typography className={classes.secondaryHeading}>
-              You are currently not an owner
-            </Typography>
+            <Typography className={classes.heading}>Staff</Typography>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Typography>
-              Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar
-              diam eros in elit. Pellentesque convallis laoreet laoreet.
-            </Typography>
+          <ExpansionPanelDetails className={classes.textCenter}>
+            <AppBar position="static" color="default">
+              <Tabs
+                value={value}
+                onChange={this.handleChange}
+                indicatorColor="primary"
+                textColor="primary"
+                scrollable
+                scrollButtons="auto"
+              >
+                <Tab label="Item One" />
+                <Tab label="Item Two" />
+                <Tab label="Item Three" />
+                <Tab label="Item Four" />
+                <Tab label="Item Five" />
+                <Tab label="Item Six" />
+                <Tab label="Item Seven" />
+              </Tabs>
+            </AppBar>
+            {value === 0 && <TabContainer>Item One</TabContainer>}
+            {value === 1 && <TabContainer>Item Two</TabContainer>}
+            {value === 2 && <TabContainer>Item Three</TabContainer>}
+            {value === 3 && <TabContainer>Item Four</TabContainer>}
+            {value === 4 && <TabContainer>Item Five</TabContainer>}
+            {value === 5 && <TabContainer>Item Six</TabContainer>}
+            {value === 6 && <TabContainer>Item Seven</TabContainer>}
           </ExpansionPanelDetails>
         </ExpansionPanel>
-        <ExpansionPanel expanded={expanded === 'panel3'} onChange={this.handleChange('panel3')}>
+        <ExpansionPanel
+          expanded={expanded === 'panel3'}
+          onChange={this.handlePanelChange('panel3')}
+        >
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Advanced settings</Typography>
-            <Typography className={classes.secondaryHeading}>
-              Filtering has been entirely disabled for whole web server
-            </Typography>
+            <Typography className={classes.heading}>Account</Typography>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Typography>
-              Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas
-              eros, vitae egestas augue. Duis vel est augue.
-            </Typography>
+          <ExpansionPanelDetails className={classes.textCenter}>
+            <AppBar position="static" color="default">
+              <Tabs
+                value={value}
+                onChange={this.handleChange}
+                indicatorColor="primary"
+                textColor="primary"
+                scrollable
+                scrollButtons="auto"
+              >
+                <Tab label="Item One" />
+                <Tab label="Item Two" />
+                <Tab label="Item Three" />
+                <Tab label="Item Four" />
+                <Tab label="Item Five" />
+                <Tab label="Item Six" />
+                <Tab label="Item Seven" />
+              </Tabs>
+            </AppBar>
+            {value === 0 && <TabContainer>Item One</TabContainer>}
+            {value === 1 && <TabContainer>Item Two</TabContainer>}
+            {value === 2 && <TabContainer>Item Three</TabContainer>}
+            {value === 3 && <TabContainer>Item Four</TabContainer>}
+            {value === 4 && <TabContainer>Item Five</TabContainer>}
+            {value === 5 && <TabContainer>Item Six</TabContainer>}
+            {value === 6 && <TabContainer>Item Seven</TabContainer>}
           </ExpansionPanelDetails>
         </ExpansionPanel>
-        <ExpansionPanel expanded={expanded === 'panel4'} onChange={this.handleChange('panel4')}>
+        {/* <ExpansionPanel expanded={expanded === 'panel4'} onChange={this.handleChange('panel4')}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>Personal data</Typography>
           </ExpansionPanelSummary>
@@ -89,14 +185,15 @@ class ControlledExpansionPanels extends React.Component {
               eros, vitae egestas augue. Duis vel est augue.
             </Typography>
           </ExpansionPanelDetails>
-        </ExpansionPanel>
+        </ExpansionPanel> */}
       </div>
     );
   }
 }
 
-ControlledExpansionPanels.propTypes = {
+Settings.propTypes = {
   classes: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ControlledExpansionPanels);
+export default withStyles(styles, { withTheme: true })(Settings);

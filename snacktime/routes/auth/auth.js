@@ -47,7 +47,12 @@ router.route("/loggedin").get(sessionChecker, (req, res) => {
 router.route("/Organization").post((req, res) => {
   console.log(req.body);
   db.Organization.create({
-    name: req.body.orgName
+    name: req.body.orgName,
+    phone: req.body.orgPhoneNum,
+    openTime:req.body.openTime,
+    closeTime:req.body.closeTime,
+    address: req.body.orgAddress
+
   }).then(org => {
     res.json(org);
   });
@@ -97,7 +102,7 @@ router
     res.send("go to staff login");
   })
   .post((req, res) => {
-    console.log("in the post", req.body);
+    // console.log("in the post", req.body);
     var email = req.body.email,
       password = req.body.password;
 
@@ -105,7 +110,7 @@ router
       .findOne({ where: { email: email } })
       .then(function(staff) {
         // console.log("validate function", staff.validPassword(password));
-        console.log(staff);
+        // console.log(staff);
         if (!staff) {
           res.send("Email does not exist in our database");
         } else if (!staff.validPassword(password)) {
@@ -113,19 +118,20 @@ router
           res.send("Incorrect Password");
         } else if (staff.validPassword(password)) {
           req.session.staff = staff.dataValues;
+          // console.log("REQ.SESSION.STAFF", req.session.staff);
           res.send("Success");
         }
       });
   });
 // route for staff logout
-router.get("/logout/staff", (req, res) => {
-  if (req.session.staff && req.cookies.user_sid) {
-    res.clearCookie("user_sid");
-    res.redirect("/");
-  } else {
-    res.redirect("/login");
-  }
-});
+// router.get("/logout/staff", (req, res) => {
+//   if (req.session.staff && req.cookies.user_sid) {
+//     res.clearCookie("user_sid");
+//     res.redirect("/");
+//   } else {
+//     res.redirect("/login");
+//   }
+// });
 
 // route for parent signup
 router.route("/signup/parent").post((req, res) => {
@@ -170,14 +176,14 @@ router
       .catch(err => console.log(err));
   });
 
-// route for parent logout
-router.get("/logout/parent", (req, res) => {
-  if (req.session.parent && req.cookies.user_sid) {
+// logout
+router.get("/logout", (req, res) => {
+  if (req.session.parent || req.session.staff) {
     req.session.destroy();
     res.clearCookie("user_sid");
-    res.redirect("/");
+    res.json("Logged out.");
   } else {
-    res.redirect("/login");
+    res.json("Not logged in.");
   }
 });
 

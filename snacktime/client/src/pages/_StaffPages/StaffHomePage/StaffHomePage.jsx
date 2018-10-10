@@ -3,6 +3,7 @@ import DashboardItem from '../../../components/DashboardItem/DashboardItem';
 import './StaffHomePage.css';
 import { Redirect } from 'react-router';
 import Auth from '../../../utils/Auth';
+import HeaderBar from "../../../components/HeaderBar/HeaderBar"
 
 class StaffHomePage extends Component {
   state = {
@@ -22,6 +23,7 @@ class StaffHomePage extends Component {
     if (this.state.loggedIn) {
       return (
         <div>
+          <HeaderBar />
           <header>
             <p><strong>Welcome {this.state.name}</strong></p>
             <p>School: {this.state.orgName}</p>
