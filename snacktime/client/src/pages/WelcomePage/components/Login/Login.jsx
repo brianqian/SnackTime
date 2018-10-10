@@ -52,7 +52,7 @@ class LogIn extends React.Component {
     password: '',
     statusText: '',
   };
-
+  
   handleSubmit = e => { 
     e.preventDefault();
     console.log('login props', this.props);

@@ -51,7 +51,7 @@ class OutlinedTextFields extends React.Component {
   };
 
   componentWillMount = () => {
-    Auth.loggedIn(this);
+    Auth.StaffAuthorize(this);
   };
 
   handleChange = name => event => {

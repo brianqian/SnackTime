@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import HeaderBar from '../../../../components/HeaderBar/HeaderBar';
 // import Label from '@material-ui/core/Label';
 import DateTimeSelector from '../../../../components/DateTimeSelector/DateTimeSelector'
+import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
   container: {
@@ -35,6 +36,10 @@ class AddMeds extends React.Component {
     medName: '',
     multiline: 'Controlled',
   };
+  async componentWillMount() {
+    this.props.location.state ?
+    await this.setState({selectedStudents: this.props.location.state.selectedStudents}): this.setState({selectedStudents: false})
+  }
 
   handleChange = name => event => {
     this.setState({
@@ -79,7 +84,9 @@ class AddMeds extends React.Component {
 
   render() {
     const { classes } = this.props;
-
+    if(!this.state.selectedStudents){
+      return <Redirect to='/dailyreportmenu'/>
+    }
     return (
       <div>  
       <HeaderBar />  

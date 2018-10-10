@@ -9,6 +9,9 @@ import Button from "@material-ui/core/Button";
 import HeaderBar from "../../../../components/HeaderBar/HeaderBar";
 // import Label from '@material-ui/core/Label';
 import DateTimeSelector from "../../../../components/DateTimeSelector/DateTimeSelector";
+
+import {Redirect} from 'react-router-dom'
+
 //import MultiStudentSelect from "../../MultiStudentSelect/MultiStudentSelect";
 
 import Input from '@material-ui/core/Input';
@@ -23,6 +26,7 @@ import Chip from '@material-ui/core/Chip';
 //import HeaderBar from '../../../components/HeaderBar/HeaderBar';
 import { Link, Redirect } from 'react-router-dom';
 import Auth from "../../../../utils/Auth";
+
 
 const styles = theme => ({
   container: {
@@ -42,6 +46,7 @@ const styles = theme => ({
   }
 });
 
+
 class AddNap extends React.Component {
   state = {
     //selectedStudents: this.props.location.state.selectedStudents,
@@ -56,8 +61,18 @@ class AddNap extends React.Component {
     loggedIn: false,
   };
 
-  componentDidMount = () => {
-    Auth.loggedIn(this, this.getAllStudents);
+  async componentWillMount() {
+    this.props.location.state ?
+    await this.setState({selectedStudents: this.props.location.state.selectedStudents}): this.setState({selectedStudents: false})
+  }
+
+  handleChange = event => {
+    console.log(event.target);
+    // this.setState({
+    //   [name]: event.target.value,
+    // });
+    console.log("NAP START, END", this.state.napStart, this.state.napEnd);
+
   };
 
   getAllStudents = () => {
@@ -125,6 +140,7 @@ class AddNap extends React.Component {
   };
 
   render() {
+
     const { classes, theme } = this.props;
     if (this.state.loggedIn) {
       if (this.props.location.state) {
@@ -161,7 +177,7 @@ class AddNap extends React.Component {
               </FormControl>
             </div>
             <div>
- 
+
         <Paper
           className={classes.root}
           elevation={1}          

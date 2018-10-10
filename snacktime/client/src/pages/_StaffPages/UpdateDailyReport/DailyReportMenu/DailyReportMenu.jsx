@@ -15,7 +15,7 @@ class DailyReport extends Component {
   componentDidMount = () => {
     console.log('mounted');
     // this.getUserId();
-    Auth.loggedIn(this);
+    Auth.StaffAuthorize(this);
     console.log('test');
   };
 

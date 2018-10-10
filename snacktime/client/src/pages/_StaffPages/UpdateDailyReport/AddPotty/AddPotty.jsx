@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import HeaderBar from '../../../../components/HeaderBar/HeaderBar';
 // import Label from '@material-ui/core/Label';
 import DateTimeSelector from '../../../../components/DateTimeSelector/DateTimeSelector'
+import {Redirect} from 'react-router-dom'
 
 const styles = theme => ({
   container: {
@@ -36,6 +37,11 @@ class AddPotty extends React.Component {
     type: '',
     multiline: 'Controlled',
   };
+
+  async componentWillMount() {
+    this.props.location.state ?
+    await this.setState({selectedStudents: this.props.location.state.selectedStudents}): this.setState({selectedStudents: false})
+  }
 
   handleClick = (name,value) => {
     console.log("Sasha says this has been clicked")
@@ -91,6 +97,9 @@ class AddPotty extends React.Component {
 
   render() {
     const { classes } = this.props;
+    if (!this.state.selectedStudents){
+      return <Redirect to='/dailyreportmenu'/>
+    }
 
     return (
       <div>  
