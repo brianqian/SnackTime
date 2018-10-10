@@ -77,6 +77,8 @@ class ParentContainer extends Component {
 
   handleSubmitNewParent = e => {
     e.preventDefault();
+    let url = window.location.href;
+    url = url.substring(0, url.length - 14);
     // this.setState({ showAddNewParent: true });
     // let newObj = Object.assign({}, this.state.addParentForm);
     // newObj.password = 'asdf';
@@ -86,6 +88,7 @@ class ParentContainer extends Component {
       address: this.state.addAddress,
       phone: this.state.addPhone,
       name: this.state.addName,
+      baseUrl: url
     };
     console.log(newObj);
     this.setState({ addParentForm: newObj });

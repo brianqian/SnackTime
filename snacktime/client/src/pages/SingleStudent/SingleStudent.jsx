@@ -35,6 +35,10 @@ export default class SingleStudent extends Component {
       });
   };
 
+  handleAddParentClick = (e)=>{
+    console.log(e.target.name)
+  }
+
 
   handleAddParentClick = (e)=>{
     console.log(e.target.name)

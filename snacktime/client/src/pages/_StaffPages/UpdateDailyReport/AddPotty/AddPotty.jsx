@@ -30,31 +30,64 @@ const styles = theme => ({
 
 class AddPotty extends React.Component {
   state = {
-    studentId: '',
+    selectedStudents: this.props.location.state.selectedStudents,
     pottyTime: '',
     place: '',
     type: '',
     multiline: 'Controlled',
   };
 
-  handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value,
-    });
+  handleClick = (name,value) => {
+    console.log("Sasha says this has been clicked")
+    this.setState({ [name]: value})
+  }
+  // handleClick = event => {
+  //   console.log(event.target);
+  //   const name = event.target.name
+  //   event.preventDefault();
+  //   this.setState({
+  //     [name]: event.target.value,
+  //   });
+  // };
+  
+  setPottyTime = time => {
+    this.setState({ pottyTime: time })
+  }
+
+  postPotty = id => {
+    let today = new Date();
+    let date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+    console.log(date);
+    console.log(`PLACE`, this.state.place);
+    console.log(`TYPE`, this.state.type);
+    fetch(`/api/student/${id}/diapering`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        time: this.state.time,
+        place: this.state.place,
+        type: this.state.type,
+        date: date
+      })
+    })
+      .then(resp => {
+        console.log(resp);
+        return resp.json();
+      })
+      .then(resp => console.log(resp));
   };
 
   handleSubmit = event => {
     event.preventDefault();
-    fetch(`/diapering/report/:reportId`, {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json'},
-      body: JSON.stringify({
-        studentId: this.state.studentId,
-        napStart: this.state.napStart,
-        napEnd: this.state.napEnd,
-      }),
-    });  
-  }
+
+    this.state.selectedStudents.map(id => this.postPotty(id));
+  };  
+
 
   render() {
     const { classes } = this.props;
@@ -66,30 +99,57 @@ class AddPotty extends React.Component {
 
         <DateTimeSelector
           label="Potty Time: "
+          name="pottyTime"
           className={classes.textField}
-          value={this.state.napStart}
+          value={this.state.pottyTime}
+          setTime={this.setPottyTime}
+          //onChange={this.handleChange}
         //   onChange={this.handleSelectorChange}
         //   margin="normal"
         //   variant="outlined"
         />
         <hr/>
-        <Button >
+        <Button
+          name="place"
+          value="Diaper"
+          onClick={()=>this.handleClick("place", "Diaper")}
+        >
           Diaper
         </Button>
-        <Button >
+        <Button
+          name="place"
+          value="Potty"
+          onClick={()=>this.handleClick("place", "Potty")}
+        >
           Potty
         </Button>
-        <Button >
+        <Button 
+          name="place"
+          value="Accident"
+          onClick={()=>this.handleClick("place", "Accident")}
+        >
           Accident
         </Button>
         <hr/>
-        <Button >
+        <Button
+          name="type"
+          value="Wet"
+          onClick={()=>this.handleClick("type", "Wet")}
+        >
           Wet
         </Button>
-        <Button >
+        <Button 
+          name="type"
+          value="BM"
+          onClick={()=>this.handleClick("type", "BM")}        
+        >
           BM
         </Button>
-        <Button >
+        <Button
+          name="type"
+          value="Dry"
+          onClick={()=>this.handleClick("type", "Dry")}
+        >
           Dry
         </Button>
         <hr/>

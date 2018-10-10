@@ -8,6 +8,8 @@ import Icon from '@material-ui/core/Icon';
 import SaveIcon from '@material-ui/icons/Save';
 import TextField from '@material-ui/core/TextField';
 import StudentDOB from './components/NativeSelect';
+import HeaderBar from '../../../components/HeaderBar/HeaderBar';
+import Auth from '../../../utils/Auth';
 
 const styles = theme => ({
   container: {
@@ -46,60 +48,42 @@ class OutlinedTextFields extends React.Component {
     multiline: 'Controlled',
   };
 
-  getUserId = () => {
-    fetch('/auth/loggedin').then(res =>
-      res.json().then(data => {
-        if (data.userId) {
-          console.log('USER AUTHORIZED');
-          this.setState({
-            orgId: data.orgId,
-            loginRejected: false,
-            loggedIn: true,
-          });
-        } else {
-          this.setState({
-            loginRejected: true,
-          });
-        }
-      })
-    );
+  componentWillMount = () => {
+    Auth.loggedIn(this);
   };
-
-
 
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value,
     });
   };
-  
-  handleSelectorChange = (type,data) => {
-    console.log("Inside handleSelectorChange")
-    console.log("data: ",data)
-    console.log("type: ", type)
-    if(type[0]==="month"){
-      console.log("inside month")
-      this.setState({month: data})
+
+  handleSelectorChange = (type, data) => { 
+    console.log('Inside handleSelectorChangex');
+    console.log('data: ', data);
+    console.log('type: ', type);
+    if (type[0] === 'month') {
+      console.log('inside month');
+      this.setState({ month: data });
+    } else if (type[0] === 'day') {
+      console.log('inside day');
+      this.setState({ day: data });
+    } else if (type[0] === 'year') {
+      console.log('inside year');
+      this.setState({ year: data });
     }
-      else if(type[0]==="day"){
-        console.log("inside day")
-        this.setState({day:data})
-      }
-      else if(type[0]==="year"){
-        console.log("inside year")
-        this.setState({year: data})  
-      }
-              
   };
 
   handleSubmit = event => {
     event.preventDefault();
     fetch(`/api/student`, {
       method: 'POST',
-      headers: { 'Content-Type':'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name: this.state.firstName + " " + this.state.lastName,
-        address: `${this.state.address},  ${this.state.city}, ${this.state.zip}`,
+        name: this.state.firstName + ' ' + this.state.lastName,
+        address: `${this.state.address},  ${this.state.city}, ${
+          this.state.zip
+        }`,
         dob: `${this.state.month}, ${this.state.day}, ${this.state.year}`,
         notes: this.state.notes,
         allergies: this.state.allergies,
@@ -110,122 +94,128 @@ class OutlinedTextFields extends React.Component {
     });
   };
 
-  componentWillMount = () => {
-    this.getUserId();
-  }
-  
   render() {
     const { classes } = this.props;
 
     return (
-      <form className={classes.container} noValidate autoComplete="off">
-        <TextField
-          required
-          id="outlined-name"
-          label="firstName"
-          name="firstName"
-          className={classes.textField}
-          value={this.state.firstName}
-          onChange={this.handleChange('firstName')}
-          margin="normal"
-          variant="outlined"
-        />
-        <TextField
-          required
-          id="outlined-name"
-          label="lastName"
-          name="lastName"
-          className={classes.textField}
-          value={this.state.lastName}
-          onChange={this.handleChange('lastName')}
-          margin="normal"
-          variant="outlined"
-        />
-        <StudentDOB
-          required
-          id="outlined-birthday"
-          label="DOB"
-          className={classes.textField}
-          value={this.state.dob}
-          onChange={this.handleSelectorChange}
-          margin="normal"
-          variant="outlined"
-        />
-        <TextField
-          id="outlined-notes"
-          label="Notes"
-          defaultValue=""
-          className={classes.textField}
-          value={this.state.notes}
-          onChange={this.handleChange('notes')}
-          margin="normal"
-          variant="outlined"
-        />
-        <TextField
-          id="outlined-allergies"
-          label="Allergies"
-          defaultValue=""
-          className={classes.textField}
-          value={this.state.allergies}
-          onChange={this.handleChange('allergies')}
-          margin="normal"
-          variant="outlined"
-        />
-        <TextField
-          id="outlined-meds"
-          label="Medications"
-          defaultValue=""
-          className={classes.textField}
-          value={this.state.meds}
-          onChange={this.handleChange('meds')}
-          margin="normal"
-          variant="outlined"
-        />
-        <TextField
-          id="outlined-doctor"
-          label="Doctor"
-          defaultValue=""
-          className={classes.textField}
-          value={this.state.doctor}
-          onChange={this.handleChange('doctor')}
-          margin="normal"
-          variant="outlined"
-        />
-        <TextField
-          id="outlined-address"
-          label="Address"
-          defaultValue=""
-          className={classes.textField}
-          value={this.state.address}
-          onChange={this.handleChange('address')}
-          margin="normal"
-          variant="outlined"
-        />
-        <TextField
-          id="outlined-city"
-          label="City"
-          defaultValue=""
-          className={classes.textField}
-          value={this.state.city}
-          onChange={this.handleChange('city')}
-          margin="normal"
-          variant="outlined"
-        />
-        <TextField
-          id="outlined-zip"
-          label="Zip / Postal Code"
-          defaultValue=""
-          className={classes.textField}
-          value={this.state.zip}
-          onChange={this.handleChange('zip')}
-          margin="normal"
-          variant="outlined"
-        />    
-          <Button variant="contained" size="small" onClick={this.handleSubmit} className={classes.button}>
-          <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
-          Save
-        </Button>
-      </form>
+      <div>
+        <HeaderBar />
+        <form className={classes.container} noValidate autoComplete="off">
+          <TextField
+            required
+            id="outlined-name"
+            label="firstName"
+            name="firstName"
+            className={classes.textField}
+            value={this.state.firstName}
+            onChange={this.handleChange('firstName')}
+            margin="normal"
+            variant="outlined"
+          />
+          <TextField
+            required
+            id="outlined-name"
+            label="lastName"
+            name="lastName"
+            className={classes.textField}
+            value={this.state.lastName}
+            onChange={this.handleChange('lastName')}
+            margin="normal"
+            variant="outlined"
+          />
+          <StudentDOB
+            required
+            id="outlined-birthday"
+            label="DOB"
+            className={classes.textField}
+            value={this.state.dob}
+            onChange={this.handleSelectorChange}
+            margin="normal"
+            variant="outlined"
+          />
+          <TextField
+            id="outlined-notes"
+            label="Notes"
+            defaultValue=""
+            className={classes.textField}
+            value={this.state.notes}
+            onChange={this.handleChange('notes')}
+            margin="normal"
+            variant="outlined"
+          />
+          <TextField
+            id="outlined-allergies"
+            label="Allergies"
+            defaultValue=""
+            className={classes.textField}
+            value={this.state.allergies}
+            onChange={this.handleChange('allergies')}
+            margin="normal"
+            variant="outlined"
+          />
+          <TextField
+            id="outlined-meds"
+            label="Medications"
+            defaultValue=""
+            className={classes.textField}
+            value={this.state.meds}
+            onChange={this.handleChange('meds')}
+            margin="normal"
+            variant="outlined"
+          />
+          <TextField
+            id="outlined-doctor"
+            label="Doctor"
+            defaultValue=""
+            className={classes.textField}
+            value={this.state.doctor}
+            onChange={this.handleChange('doctor')}
+            margin="normal"
+            variant="outlined"
+          />
+          <TextField
+            id="outlined-address"
+            label="Address"
+            defaultValue=""
+            className={classes.textField}
+            value={this.state.address}
+            onChange={this.handleChange('address')}
+            margin="normal"
+            variant="outlined"
+          />
+          <TextField
+            id="outlined-city"
+            label="City"
+            defaultValue=""
+            className={classes.textField}
+            value={this.state.city}
+            onChange={this.handleChange('city')}
+            margin="normal"
+            variant="outlined"
+          />
+          <TextField
+            id="outlined-zip"
+            label="Zip / Postal Code"
+            defaultValue=""
+            className={classes.textField}
+            value={this.state.zip}
+            onChange={this.handleChange('zip')}
+            margin="normal"
+            variant="outlined"
+          />
+          <Button
+            variant="contained"
+            size="small"
+            onClick={this.handleSubmit}
+            className={classes.button}
+          >
+            <SaveIcon
+              className={classNames(classes.leftIcon, classes.iconSmall)}
+            />
+            Save
+          </Button>
+        </form>
+      </div>
     );
   }
 }

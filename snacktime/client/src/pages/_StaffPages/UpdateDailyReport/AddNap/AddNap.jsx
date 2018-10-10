@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
+import Paper from '@material-ui/core/Paper';
 import Button from "@material-ui/core/Button";
 import HeaderBar from "../../../../components/HeaderBar/HeaderBar";
 // import Label from '@material-ui/core/Label';
@@ -32,8 +33,19 @@ class AddNap extends React.Component {
     selectedStudents: this.props.location.state.selectedStudents,
     napStart: "",
     napEnd: "",
-    multiline: "Controlled"
+    multiline: "Controlled",
+    //selectedStudentsName:[]
   };
+
+  // componentDidMount =()=>{
+  //   console.log("student ids from component mount:",this.state.selectedStudents);
+  //   fetch(`/api/allinfo/students?users=${this.state.selectedStudents}`)
+  //   .then(res => res)
+  //   .then(result => {
+  //     console.log('Res:', result);
+  //     //this.setState({ selectedStudentsName: result });
+  //   });
+  // }
 
   handleChange = event => {
     console.log(event.target);
@@ -83,16 +95,6 @@ class AddNap extends React.Component {
     event.preventDefault();
 
     this.state.selectedStudents.map(id => this.postNap(id));
-
-    // fetch(`/student/:student/nap`, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type':'application/json'},
-    //   body: JSON.stringify({
-    //     studentId: this.state.studentId,
-    //     napStart: this.state.napStart,
-    //     napEnd: this.state.napEnd,
-    //   }),
-    // }
   };
 
   render() {
@@ -101,13 +103,17 @@ class AddNap extends React.Component {
     return (
       <div>
         <HeaderBar />
+        <Paper
+          className={classes.root}
+          elevation={1}          
+        />
         <form className={classes.container} noValidate autoComplete="off">
           <DateTimeSelector
             label="Start Time: "
             name="napStart"
             className={classes.textField}
             value={this.state.napStart}
-            setNap={this.setNapStart}
+            setTime={this.setNapStart}
             onChange={this.handleChange}
             //   margin="normal"
             //   variant="outlined"
@@ -118,7 +124,7 @@ class AddNap extends React.Component {
             name="napEnd"
             className={classes.textField}
             value={this.state.napEnd}
-            setNap={this.setNapEnd}
+            setTime={this.setNapEnd}
             // onChange={this.handleChange}
             //   margin="normal"
             //   variant="outlined"

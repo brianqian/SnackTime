@@ -203,8 +203,8 @@ router.post('/forgot/:role', (req, res) => {
         .then(() => {
           var transporter = nodemailer.createTransport({
             service: 'gmail',
-            type: "SMTP",
-            host: "smtp.gmail.com",
+            type: 'SMTP',
+            host: 'smtp.gmail.com',
             secure: true,
             auth: {
               user: 'snacktimeemail@gmail.com',
@@ -218,7 +218,7 @@ router.post('/forgot/:role', (req, res) => {
             html: `
                 <h1>Hi, ${user.name}</h1>
                 <h2>Click the link below to reset your password.</h2>
-                <h2><code contenteditable="false" style="font-weight:200;font-size:1.5rem;padding:5px 10px; background: #EEEEEE; border:0"><a href='${baseUrl}resetpassword/${role}/${passResetKey}'>Click here to reset your password.</a></code></h4>
+                <h2><code contenteditable="false" style="font-weight:200;font-size:1.5rem;padding:5px 10px; background: #EEEEEE; border:0"><a href='${baseUrl}resetpassword/${role}/${passResetKey}'>Click here to reset your password.</a></code></h2>
                 <p>Please ignore if you didn't try to reset your password on our platform</p>`,
           };
           transporter.sendMail(mailOptions, function(error, info) {
@@ -276,6 +276,107 @@ router.post('/resetpass', (req, res) => {
         res.status(400).json('invalid pass key!');
       }
     });
+});
+
+function changedPassword(name, email, role, baseUrl, passResetKey) {
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    type: 'SMTP',
+    host: 'smtp.gmail.com',
+    secure: true,
+    auth: {
+      user: 'snacktimeemail@gmail.com',
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
+  let mailOptions = {
+    subject: `Snack Time | Password reset`,
+    to: email,
+    from: `Snack Time <snacktimeemail@gmail.com>`,
+    html: `
+        <h1>Hi, ${name}</h1>
+        <h2>Your password was recently changed.</h2>
+        <p>If you did not make this change please reset your password.</p>
+        <h2><code contenteditable="false" style="font-weight:200;font-size:1.5rem;padding:5px 10px; background: #EEEEEE; border:0"><a href='${baseUrl}resetpassword/${role}/${passResetKey}'>Click here to reset your password.</a></code></h2>`,
+  };
+}
+
+router.post('/changepass', (req, res) => {
+  console.log('route hit');
+  let { password, newPassword, baseUrl } = req.body;
+  let passResetKey = shortid.generate();
+  let passKeyExpires = new Date().getTime() + 20 * 60 * 1000;
+  if (req.session) {
+    if (req.session.staff) {
+      if (req.session.staff.email) {
+        let email = req.session.staff.email;
+        db.Staff.findOne({
+          where: {
+            email: email,
+          },
+        }).then(staff => {
+          if (staff.validPassword(password)) {
+            staff.getHash(newPassword);
+            staff.update({
+              passResetKey: passResetKey,
+              passKeyExpires: passKeyExpires,
+            });
+          } else {
+            return res.json('Invalid password');
+          }
+          try {
+            console.log('trying to email');
+            changedPassword(
+              parent.name,
+              parent.email,
+              'Parent',
+              baseUrl,
+              passResetKey
+            );
+          } catch(error) {
+            console.log(error)
+            console.log('email failed');
+          }
+          return res.json('Password successfully changed!');
+        });
+        // .catch(err => {
+        //   res.json("Something went wrong, please relog to try again.");
+        // })
+      }
+    }
+    if (req.session.parent) {
+      if (req.session.parent.email === email) {
+        let email = req.session.parent.email;
+        db.Parent.findOne({
+          where: {
+            email: email,
+          },
+        }).then(parent => {
+          parent.getHash(newPassword);
+          parent.update({
+            passResetKey: passResetKey,
+            passKeyExpires: passKeyExpires,
+          });
+          try {
+            console.log('trying to email');
+            changedPassword(
+              parent.name,
+              parent.email,
+              'Parent',
+              baseUrl,
+              passResetKey
+            );
+          } catch(error) {
+            console.log(error) 
+            console.log('email failed');
+          }
+          return res.json('Password successfully changed!');
+        });
+      }
+    }
+  } else {
+    return res.json('Unauthorized');
+  }
 });
 //
 module.exports = router;

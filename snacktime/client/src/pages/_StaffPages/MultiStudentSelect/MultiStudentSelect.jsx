@@ -10,7 +10,9 @@ import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
-import { Link } from 'react-router-dom';
+import HeaderBar from '../../../components/HeaderBar/HeaderBar';
+import { Link, Redirect } from 'react-router-dom';
+import Auth from '../../../utils/Auth';
 
 const styles = theme => ({
   root: {
@@ -46,115 +48,95 @@ class MultiStudentSelect extends React.Component {
   state = {
     students: [],
     selectedStudents: [],
-    selectedStudentsId: [],
     orgId: '',
     loginRejected: false,
     loggedIn: false,
   };
 
   componentDidMount = () => {
-    console.log('mounted');
-    console.log(this.props.location.state.activity);
-    this.getUserId();
+    Auth.loggedIn(this, this.getAllStudents);
   };
-
-  getUserId = () => {
-    fetch('/auth/loggedin').then(res =>
-      res.json().then(data => {
-        if (data.userId) {
-          console.log('USER AUTHORIZED');
-          this.setState({
-            orgId: data.orgId,
-            loginRejected: false,
-            loggedIn: true,
-          });
-        } else {
-          this.setState({
-            loginRejected: true,
-          });
-        }
-        this.getAllStudents();
-      })
-    );
-  };
-
-  // handleSubmit = event => {
-  //   event.preventDefault();
-  //   <Redirect
-  //   to=({
-  //     pathname: {this.props.activity},
-  //     state: {selectedStudents: this.state.selectedStudents},
-  //   })
-  //   />
-  // }
 
   getAllStudents = () => {
+    console.log('get all students running');
+    console.log(this.state);
     fetch(`/api/student/${this.state.orgId}`)
       .then(res => res.json())
       .then(result => {
         console.log('Res:', result);
-        this.setState({ students: result }, function() {
-        });
+        this.setState({ students: result }, function() {});
       });
   };
 
   handleChange = event => {
-    console.log(event.target);
-    this.setState({ selectedStudents: event.target.value },
-      function(){
-        console.log(this.state.selectedStudents);
-        });
+    console.log("Multiselect :",event.target.value);
+    this.setState({ selectedStudents: event.target.value }, function() {
+      console.log(this.state.selectedStudents);
+    });
   };
 
   render() {
     const { classes, theme } = this.props;
-
-    return (
-      <div className={classes.root}>
-        <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="select-multiple-chip">
-            Select Students
-          </InputLabel>
-          <Select
-            multiple
-            value={this.state.selectedStudents}
-            onChange={this.handleChange}
-            input={<Input id="select-multiple-chip" />}
-            // renderValue={selected => (
-            //   <div className={classes.chips}>
-            //     {selected.map(value => (
-            //       <Chip key={value} label={value} className={classes.chip} />
-            //     ))}
-            //   </div>
-            // )}
-            MenuProps={MenuProps}
-          >
-            {this.state.students.map(student => (
-              <MenuItem
-                key={student.id}
-                value={student.id}
-                style={{
-                  fontWeight:
-                    this.state.students.indexOf(student.name) === -1
-                      ? theme.typography.fontWeightRegular
-                      : theme.typography.fontWeightMedium,
-                }}
-              >
-                {student.name}
-              </MenuItem>
-            ))}
-          </Select>
-          <Link
-            to={{
-              pathname: `${this.props.location.state.activity}`,
-              state: { selectedStudents: this.state.selectedStudents },
-            }}
-          >
-            <button>Next</button>
-          </Link>
-        </FormControl>
-      </div>
-    );
+    if (this.state.loggedIn) {
+      if (this.props.location.state) {
+        return (
+          <div>
+            <HeaderBar />
+            <div className={classes.root}>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="select-multiple-chip">
+                  Select Students
+                </InputLabel>
+                <Select
+                  multiple
+                  value={this.state.selectedStudents}
+                  onChange={this.handleChange}
+                  input={<Input id="select-multiple-chip" />}
+                  MenuProps={MenuProps}
+                >
+                  {this.state.students.map(student => (
+                    <MenuItem
+                      key={student.id}
+                      value={student.id}
+                      style={{
+                        fontWeight:
+                          this.state.students.indexOf(student.name) === -1
+                            ? theme.typography.fontWeightRegular
+                            : theme.typography.fontWeightMedium,
+                      }}
+                    >
+                      {student.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <Link
+                  to={{
+                    pathname: `${this.props.location.state.activity}`,
+                    state: { selectedStudents: this.state.selectedStudents },
+                  }}
+                >
+                  <button>Next</button>
+                </Link>
+              </FormControl>
+            </div>
+          </div>
+        );
+      } else {
+        console.log('hello');
+        window.location.href = '/dailyreportmenu';
+      }
+    } else if (this.state.loginRejected) {
+      return (
+        <Redirect
+          to={{
+            pathname: '/notAuthorized',
+            state: { type: 'Staff' },
+          }}
+        />
+      );
+    } else {
+      return <div />;
+    }
   }
 }
 

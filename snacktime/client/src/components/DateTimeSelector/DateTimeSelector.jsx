@@ -34,13 +34,12 @@ class DateTimeSelector extends React.Component {
     console.log("name:",name)
     this.setState({
       [name]: event.target.value
-    }, function(){this.props.setNap(this.state.time)});
+    }, function(){this.props.setTime(this.state.time)});
     
   };
 
   render() {
     const { classes } = this.props;
-    console.log(this.props.setNap)
     return (
       <form className={classes.container} noValidate>
         <TextField
