@@ -135,7 +135,7 @@ module.exports = {
           });
           let mailOptions = {
             subject: `Snack Time | Password reset`,
-            to: email,
+            to: req.body.email,
             from: `Snack Time <snacktimeemail@gmail.com>`,
             html: `
               <h1>Hi, ${parent.name}</h1>
@@ -151,7 +151,7 @@ module.exports = {
               res.json('Please check your email.');
             }
           });
-        } catch {
+        } catch(error) {
           console.log('email failed');
         }
         db.Student.findOne({
