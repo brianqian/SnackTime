@@ -135,7 +135,7 @@ module.exports = {
           });
           let mailOptions = {
             subject: `Snack Time | Password reset`,
-            to: email,
+            to: req.body.email,
             from: `Snack Time <snacktimeemail@gmail.com>`,
             html: `
               <h1>Hi, ${parent.name}</h1>
@@ -151,7 +151,7 @@ module.exports = {
               res.json('Please check your email.');
             }
           });
-        } catch {
+        } catch(error) {
           console.log('email failed');
         }
         db.Student.findOne({
@@ -295,12 +295,19 @@ module.exports = {
   getReport: function(req, res) {
     console.log("Req ",req.params)
     db.Student.findAll({
-      include: [
-        {model: db.Diapering, as: 'Diapering'}
-      ],
+      include: [{model: db.Nap, as:'Naps',required: false,
+                  where:{'$Naps.date$':req.params.date}}, 
+                {model:db.Diapering, as:'Diaperings',required: false,
+                     where:{'$Diaperings.date$':req.params.date}},
+                {model:db.Meal, as:'Meals',required: false,
+                      where:{'$Meals.date$':req.params.date}},
+                {model:db.Incident, as:'Incidents',required: false,
+                      where:{'$Incidents.date$':req.params.date}},
+                {model:db.Medicine, as:'Medicines',required: false,
+                      where:{'$Medicines.date$':req.params.date}}
+                ],
       where: {
-        StudentID: req.params.studentId,
-        '$Diapering.date': req.params.date
+        id: req.params.studentId
       },
     })
       .then(dbStudent => {res.json(dbStudent)})

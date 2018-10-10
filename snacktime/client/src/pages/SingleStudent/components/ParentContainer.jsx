@@ -75,6 +75,14 @@ class ParentContainer extends Component {
       });
   };
 
+  capitalize = name =>{
+    const names = name.split(" ");
+    for(var i =0;i<names.length;i++){
+      names[i]=names[i].charAt(0).toUpperCase()+ names[i].slice(1)
+    }
+    return names.join(" ")
+  }
+
   handleSubmitNewParent = e => {
     e.preventDefault();
     let url = window.location.href;
@@ -87,8 +95,9 @@ class ParentContainer extends Component {
       password: this.state.addPassword,
       address: this.state.addAddress,
       phone: this.state.addPhone,
-      name: this.state.addName,
-      baseUrl: url,
+      name: this.capitalize(this.state.addName),
+      baseUrl: url
+
     };
     console.log(newObj);
     this.setState({ addParentForm: newObj });

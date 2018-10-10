@@ -43,6 +43,14 @@ class OutlinedTextFields extends React.Component {
     Auth.StaffAuthorize(this);
   };
 
+  capitalize = name =>{
+    const names = name.split(" ");
+    for(var i =0;i<names.length;i++){
+      names[i]=names[i].charAt(0).toUpperCase()+ names[i].slice(1)
+    }
+    return names.join(" ")
+  }
+
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value,
@@ -56,7 +64,8 @@ class OutlinedTextFields extends React.Component {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name: this.state.firstName + ' ' + this.state.lastName,
+        name: this.capitalize(this.state.firstName + " " + this.state.lastName),
+
         email: this.state.email,
         password: this.state.password,
         orgId: this.state.orgId,

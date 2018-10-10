@@ -15,6 +15,14 @@ export default class SignUp extends Component {
     });
   };
 
+  capitalize = name =>{
+    const names = name.split(" ");
+    for(var i =0;i<names.length;i++){
+      names[i]=names[i].charAt(0).toUpperCase()+ names[i].slice(1)
+    }
+    return names.join(" ")
+  }
+
   handleSubmit = e => {
     e.preventDefault();
     console.log(this.state);
@@ -26,7 +34,7 @@ export default class SignUp extends Component {
         "Content-type": 'application/json'
       },
       credentials: 'include',
-      body: JSON.stringify({orgName}),
+      body: JSON.stringify({orgName: this.capitalize(this.state.orgName)}),
     })
       .then(res => res.json())
       .then(res => {
@@ -38,7 +46,7 @@ export default class SignUp extends Component {
           },
           credentials: 'include',
           body: JSON.stringify({
-            name,
+            name: this.capitalize(this.state.name),
             email,
             password,
             orgId: res.id,

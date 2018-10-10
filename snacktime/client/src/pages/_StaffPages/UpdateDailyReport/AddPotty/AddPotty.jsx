@@ -75,7 +75,7 @@ class AddPotty extends React.Component {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        time: this.state.time,
+        time: this.state.pottyTime,
         place: this.state.place,
         type: this.state.type,
         date: date
