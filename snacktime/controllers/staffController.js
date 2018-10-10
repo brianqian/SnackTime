@@ -103,10 +103,17 @@ module.exports = {
   /************student**************/
 
   /************parents**************/
-  getAllParents: function(req, res) {
-    db.Parent.findAll({})
-      .then(dbParents => res.json(dbParents))
-      .catch(err => res.status(422).json(err));
+
+  getAllParentsEmail: function(req,res){
+    db.Parent.findAll({
+      attributes:['email'],
+          include:[{model:db.Student,
+                    where:{OrganizationId:req.params.orgId},
+                    attributes:['id']}],
+        }).then(dbStudents => {
+          console.log(dbStudents)
+          res.json(dbStudents);
+    })
   },
 
   saveParent: function(req, res) {
@@ -292,19 +299,24 @@ module.exports = {
   /************pickups**************/
 
   /************report**************/
-  getReport: function(req, res) {
+  getReportConsolidated: function(req, res) {
     console.log("Req ",req.params)
     db.Student.findAll({
       include: [{model: db.Nap, as:'Naps',required: false,
-                  where:{'$Naps.date$':req.params.date}}, 
+                  where:{'$Naps.date$':req.params.date},
+                  order:'$Naps.createdAt$'}, 
                 {model:db.Diapering, as:'Diaperings',required: false,
-                     where:{'$Diaperings.date$':req.params.date}},
+                     where:{'$Diaperings.date$':req.params.date},
+                    order:'$Diaperings.createdAt$'},
                 {model:db.Meal, as:'Meals',required: false,
-                      where:{'$Meals.date$':req.params.date}},
+                      where:{'$Meals.date$':req.params.date},
+                      order:'$Meals.createdAt$'},
                 {model:db.Incident, as:'Incidents',required: false,
-                      where:{'$Incidents.date$':req.params.date}},
+                      where:{'$Incidents.date$':req.params.date},
+                      order:'$Incidents.createdAt$'},
                 {model:db.Medicine, as:'Medicines',required: false,
-                      where:{'$Medicines.date$':req.params.date}}
+                      where:{'$Medicines.date$':req.params.date},
+                      order:'$Medicines.createdAt$'}
                 ],
       where: {
         id: req.params.studentId
@@ -312,6 +324,16 @@ module.exports = {
     })
       .then(dbStudent => {res.json(dbStudent)})
       .catch(err => res.status(422).json(err));
+  },
+
+  getReport: function(req,res){
+    db.Report.findOne({
+      where:{
+        StudentId: req.params.studentId,
+        date: req.body.date
+      }
+    }).then(dbReport => {res.json(dbReport)})
+    .catch(err => res.status(422).json(err));
   },
 
   saveReport: function(req, res) {
@@ -362,7 +384,10 @@ module.exports = {
       date: req.body.date,
       StudentId: req.params.studentId,
     })
-      .then(dbDiapering => res.json(dbDiapering))
+      .then(dbDiapering => {
+        if(dbDiapering) return res.json(dbDiapering)
+        else return res.json("No diaperings")
+      })
       .catch(err => res.status(422).json(err));
   },
   /************diapering**************/
@@ -499,10 +524,9 @@ module.exports = {
   saveSnacks: function(req, res) {
     db.Snack.create({
       day: req.body.day,
-      morningSnack: req.body.morningSnack,
-      lunch: req.body.lunch,
-      afternoonSnack: req.body.afternoonSnack,
-      eveningSnack: req.body.eveningSnack,
+      time: req.body.time,
+      snackType: req.body.snackType,
+      snackFood: req.body.snackFood
     })
       .then(dbSnack => res.json(dbSnack))
       .catch(err => res.status(422).json(err));
@@ -527,4 +551,39 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   /************fixedsnack**************/
+
+  /************email**************/
+  emailParents: function(req, res) {
+    try {
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        type: 'SMTP',
+        host: 'smtp.gmail.com',
+        secure: true,
+        auth: {
+          user: 'snacktimeemail@gmail.com',
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
+      let mailOptions = {
+        subject: `Snack Time | Message to all parents`,
+        to: req.body.emails,
+        from: `Snack Time <snacktimeemail@gmail.com>`,
+        html: `
+          <h1>This is a message to all parents.</h1>
+          <p>${req.body.message}</p>`,
+      };
+      transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+          res.json('Please check your email.');
+        }
+      });
+    } catch(error) {
+      console.log('email failed');
+    }
+  }
+  /************email**************/
 };

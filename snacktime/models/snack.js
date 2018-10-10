@@ -4,19 +4,15 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull :false
         },
-        morningSnack :{
+        time :{
+            type: DataTypes.TIME
+        },
+        snackType:{
             type: DataTypes.STRING
         },
-        lunch :{
-            type: DataTypes.STRING
-        },
-        afternoonSnack :{
-            type: DataTypes.STRING
-        },
-        eveningSnack :{
+        snackFood :{
             type: DataTypes.STRING
         }
-        
     })
     return Snack;
 }

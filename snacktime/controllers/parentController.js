@@ -42,17 +42,15 @@ getSnacks: function(req,res){
     .catch(err => res.status(422).json(err));
 },
 
-getReport: function(req, res) {
-    db.Report.findAll({
-      include: [db.Diapering],
-      where: {
-        StudentID: req.params.studentId,
-        date: req.params.date,
-      },
-    })
-      .then(dbReport => res.json(dbReport))
-      .catch(err => res.status(422).json(err));
-},
+getReport: function(req,res){
+    db.Report.findOne({
+      where:{
+        StudentId: req.params.studentId,
+        date: req.body.date
+      }
+    }).then(dbReport => {res.json(dbReport)})
+    .catch(err => res.status(422).json(err));
+  },
 
 updateParentInfo: function(req,res){
     db.Parent.update({
@@ -121,24 +119,28 @@ getOrgStaff: function(req,res){
     .catch(err => res.status(422).json(err));
 },
 
-saveReport: function(req,res){
+saveReport: function(req, res) {
     db.Report.create({
       StudentId: req.params.studentId,
-      date:req.body.date,
+      date: req.body.date,
       noteForStaff: req.body.noteForStaff
-    }).then(dbReport => res.json(dbReport))
-    .catch(err => res.status(422).json(err));
+    })
+      .then(dbReport => res.json(dbReport))
+      .catch(err => res.status(422).json(err));
   },
 
-  updateReport: function(req,res){
-    db.Report.update({
+  updateReport: function(req, res) {
+    db.Report.update(
+      {
         noteForStaff: req.body.noteForStaff
-      },{
-        where:
-        {
-          id:req.params.reportId
-        }
-      }).then(dbReport => res.json(dbReport))
+      },
+      {
+        where: {
+          id: req.params.reportId,
+        },
+      }
+    )
+      .then(dbReport => res.json(dbReport))
       .catch(err => res.status(422).json(err));
-  }
+  },
 };

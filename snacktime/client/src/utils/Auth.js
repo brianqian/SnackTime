@@ -35,16 +35,19 @@ export default {
       page.setState({
         loginRejected: true,
       });
-      //If we are checking a student page, check to make sure user and student are from same organization and are staff
-    } else if (data.userType !== 'staff' && studentOrg && data.orgId !== studentOrg) {
-      console.log(data.userType);
+    } else if (data.userType !== 'staff'){
+      page.setState({
+        orgUserCheck: false,
+      });
+      //If we are checking a student page, check to make sure user and student are from same organization
+    }else if (studentOrg && data.orgId !== studentOrg) {
       page.setState({
         orgUserCheck: false,
       });
       //Validate user/student have same organization or only user if no student organization is provided
     } else if (
-      (data.userType === 'staff' && (studentOrg && data.orgId === studentOrg) ||
-      (data.orgId && !studentOrg))
+      (studentOrg && data.orgId === studentOrg) ||
+      (data.orgId && !studentOrg)
     ) {
       console.log('USER AUTHORIZED');
       page.setState({

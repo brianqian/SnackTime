@@ -1,0 +1,10 @@
+.multi-item {
+  border: 1px black solid;
+  width: 6em;
+  margin: auto;
+}
+
+.selected {
+  color: white;
+  background-color: black;
+}

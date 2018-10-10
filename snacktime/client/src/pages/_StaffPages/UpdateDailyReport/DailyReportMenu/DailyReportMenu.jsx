@@ -46,7 +46,7 @@ class DailyReport extends Component {
           <div className="dashboard-container">
             <DashboardItem
               title="Meal"
-              destination="/studentselect"
+              destination="/dailyreport/addmeal"
               activity="/dailyreport/addmeal"
               image="/img/bottle.png"
             />
