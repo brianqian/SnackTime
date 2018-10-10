@@ -23,7 +23,7 @@ class StaffHomePage extends Component {
       return (
         <div>
           <header>
-            <p>Welcome {this.state.name}</p>
+            <p><strong>Welcome {this.state.name}</strong></p>
             <p>School: {this.state.orgName}</p>
           </header>
           <div className="dashboard-container">

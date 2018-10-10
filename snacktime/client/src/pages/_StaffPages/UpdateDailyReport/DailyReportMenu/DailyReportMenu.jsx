@@ -52,7 +52,8 @@ class DailyReport extends Component {
             />
             <DashboardItem
               title="Nap"
-              destination="/studentselect"
+              //destination="/studentselect"
+              destination="/dailyreport/addnap"
               activity="/dailyreport/addnap"
               image="/img/sleep.png"
             />
