@@ -10,7 +10,8 @@ import TextField from '@material-ui/core/TextField';
 import StudentDOB from './components/NativeSelect';
 import HeaderBar from '../../../components/HeaderBar/HeaderBar';
 import Auth from '../../../utils/Auth';
-
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
 const styles = theme => ({
   container: {
     display: 'flex',
@@ -46,6 +47,7 @@ class OutlinedTextFields extends React.Component {
     loggedIn: false,
     loginRejected: false,
     multiline: 'Controlled',
+    //staffs:[]
   };
 
   componentWillMount = () => {
@@ -211,6 +213,21 @@ class OutlinedTextFields extends React.Component {
             margin="normal"
             variant="outlined"
           />
+           {/* <InputLabel htmlFor="age-simple">Staff</InputLabel>
+          <Select
+            native
+            name='staff'
+            value=""
+            //onChange={this.handleChange}
+            inputProps={{
+              name: 'staff',
+              id: 'age-simple',
+            }}
+          >
+          <option value=""></option>
+          <option></option>
+
+          </Select> */}
           <Button
             variant="contained"
             size="small"
