@@ -6,6 +6,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import TextField from '@material-ui/core/TextField';
 
 const styles = theme => ({
   root: {
@@ -178,13 +179,13 @@ class ParentContainer extends Component {
               <Typography className={classes.heading}>Info</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-            <Typography paragraph>
+            <Typography>
                 Address: {this.props.address}
               </Typography>
-              <Typography paragraph>
+              <Typography>
                 Allergies: {this.props.allergies}
               </Typography>
-              <Typography paragraph>
+              <Typography>
                 Medication: {this.props.medication}
               </Typography>
               <Typography>
@@ -211,21 +212,25 @@ class ParentContainer extends Component {
                       <p>Phone: {parent.phone}</p>
                       <p>Email: {parent.email}</p>
                       <p>Address: {parent.address}</p>
-                      <button name={parent.id} onClick={this.deleteAssociation}>
+                      {/* <button name={parent.id} onClick={this.deleteAssociation}>
                         X
                       </button>
                       <button name={parent.id} onClick={this.editParentInfo}>
                         Edit
-                      </button>
+                      </button> */}
                     </div>
                   );
                 })}
                 <form>
-                  <label htmlFor="existing">Add Parent by Email: </label>
-                  <input
+                  
+                  <TextField
                     name="email"
                     value={this.state.email}
                     onChange={this.handleChange}
+                    id="addParents"
+                    label="Add Parents by Email"
+                    margin="normal"
+                    variant="outlined"
                   />
                   <button onClick={this.handleSearch} type="submit">
                     Search
@@ -233,34 +238,50 @@ class ParentContainer extends Component {
                 </form>
                 {this.state.addParentForm && (
                   <form>
-                    <label htmlFor="name">Name: </label>
-                    <input
-                      onChange={this.handleChange}
-                      value={this.state.addName}
-                      name="addName"
-                      type="text"
-                    />
-                    <label htmlFor="phone">Phone: </label>
-                    <input
-                      onChange={this.handleChange}
-                      value={this.state.addPhone}
-                      name="addPhone"
-                      type="text"
-                    />
-                    <label htmlFor="email">Email: </label>
-                    <input
-                      onChange={this.handleChange}
-                      value={this.state.addEmail}
-                      name="addEmail"
-                      type="text"
-                    />
-                    <label htmlFor="address">Address: </label>
-                    <input
-                      onChange={this.handleChange}
-                      value={this.state.addAddress}
-                      name="addAddress"
-                      type="text"
-                    />
+                    <TextField
+                    name="addName"
+                    onChange={this.handleChange}
+                    value={this.state.addName}
+                    id="ParentName"
+                    label="Parent's Name"
+                    margin="normal"
+                    variant="outlined"
+                    type="text"
+                  />
+
+                  <TextField
+                    name="addPhone"
+                    onChange={this.handleChange}
+                    value={this.state.addPhone}
+                    id="ParentPhone"
+                    label="Parent's Phone"
+                    margin="normal"
+                    variant="outlined"
+                    type="text"
+                  />
+
+                  <TextField
+                    name="addEmail"
+                    onChange={this.handleChange}
+                    value={this.state.addEmail}
+                    id="ParentEmail"
+                    label="Parent's Email"
+                    margin="normal"
+                    variant="outlined"
+                    type="text"
+                  />
+
+                  <TextField
+                    name="addAddress"
+                    onChange={this.handleChange}
+                    value={this.state.addAddress}
+                    id="ParentAddress"
+                    label="Parent's Address"
+                    margin="normal"
+                    variant="outlined"
+                    type="text"
+                  />
+            
                     <input
                       onClick={this.handleSubmitNewParent}
                       value="Register and Email New Parent"

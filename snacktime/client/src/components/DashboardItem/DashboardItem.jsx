@@ -24,7 +24,7 @@ const DashboardItem = props => {
     <div className="dashboard__item">
       <Link to={{
             pathname: props.destination,
-            state: { id: props.id },
+            state: { id: props.id,name:props.name, role:props.role },
           }}>
         <img
           alt={props.title}
@@ -38,7 +38,7 @@ const DashboardItem = props => {
         <Link
           to={{
             pathname: props.destination,
-            state: { id: props.id},
+            state: { id: props.id,name:props.name, role:props.role},
            
           }}
         >

@@ -35,8 +35,11 @@ const styles = theme => ({
 class AddNote extends React.Component {
   state = {
     time: '',
-    note: '',
+    noteForStaff: '',
+    noteForParents: '',
     id: this.props.location.state.id,
+    name:this.props.location.state.name,
+    role:this.props.location.state.role,
     reportId: '',
     multiline: 'Controlled',
     noteExists:false
@@ -66,7 +69,7 @@ class AddNote extends React.Component {
     .then(resp=>{
       console.log(resp);
       if(resp !== "No Notes"){
-        this.setState({note:resp.noteForParents, noteExists:true, reportId: resp.id})
+        this.setState({noteForParents:resp.noteForParents, noteForStaff:resp.noteForStaff, noteExists:true, reportId: resp.id})
       }
     })
   }
@@ -80,12 +83,13 @@ class AddNote extends React.Component {
       "-" +
       today.getDate();
     console.log(date);
+    if(this.state.role = "staff"){
     fetch(`/api/student/${this.state.id}/report`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         studentId: this.state.id,
-        noteForParents: this.state.note,
+        noteForParents: this.state.noteForParents,
         date: date
       })
     })
@@ -94,6 +98,23 @@ class AddNote extends React.Component {
         return resp.json();
       })
       .then(resp => console.log(resp));
+    }
+    else if(this.state.role = "parent"){
+      fetch(`/api/student/${this.state.id}/report`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          studentId: this.state.id,
+          noteForStaff: this.state.noteForStaff,
+          date: date
+        })
+      })
+        .then(resp => {
+          console.log(resp);
+          return resp.json();
+        })
+        .then(resp => console.log(resp));
+      }
   };
 
   updateNote = id => {
@@ -105,18 +126,32 @@ class AddNote extends React.Component {
       "-" +
       today.getDate();
     console.log(date);
-    fetch(`/api/report/${this.state.reportId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        noteForParents: this.state.note,
-      })
-    })
-      .then(resp => {
+    if(this.state.role = "staff"){
+      fetch(`/api/report/${this.state.reportId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          noteForParents: this.state.noteForParents,
+        })
+      }).then(resp => {
         console.log(resp);
         return resp.json();
       })
       .then(resp => console.log(resp));
+    }
+    else if (this.state.role = "parent"){
+      fetch(`/api/report/${this.state.reportId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          noteForStaff: this.state.noteForStaff,
+        })
+      }).then(resp => {
+        console.log(resp);
+        return resp.json();
+      })
+      .then(resp => console.log(resp));
+    }
   };
 
 
@@ -128,22 +163,43 @@ class AddNote extends React.Component {
       this.postNote(this.state.id);
   };  
 
+  renderTexField(){
+    const { classes } = this.props;
+    if(this.state.role==="staff") 
+      return(<div>
+        <TextField
+          required
+          label={this.state.name}
+          className={classes.textField}
+          value={this.state.noteForParents}
+          onChange={this.handleChange('note')}
+          margin="normal"
+          variant="outlined"  
+        />
+        <hr/>
+      </div>)
+    else if(this.state.role==="parent")
+    return(<div>
+      <TextField
+        required
+        label={this.state.name}
+        className={classes.textField}
+        value={this.state.noteForStaff}
+        onChange={this.handleChange('note')}
+        margin="normal"
+        variant="outlined"  
+      />
+      <hr/>
+    </div>)
+  }
   render() {
     const { classes } = this.props;
     return (
       <div>  
       <HeaderBar />  
       <form className={classes.container} noValidate autoComplete="off">
-        <TextField
-          required
-          label="Note"
-          className={classes.textField}
-          value={this.state.note}
-          onChange={this.handleChange('note')}
-          margin="normal"
-          variant="outlined"  
-        />
-        <hr/>
+      {this.renderTexField()}
+        
         <Button
         onClick={this.handleSubmit}
         >
