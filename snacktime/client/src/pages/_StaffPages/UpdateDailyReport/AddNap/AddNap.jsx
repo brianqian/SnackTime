@@ -129,7 +129,7 @@ class AddNap extends React.Component {
     if (this.state.loggedIn) {
         return (
           <div>
-            <HeaderBar />
+            <HeaderBar type={this.state.userType} />
             <MultiSelectContainer
             orgId={this.state.orgId}
             allStudents={this.state.allStudents}
@@ -184,7 +184,7 @@ class AddNap extends React.Component {
 
     // return (
     //   <div>
-    //     <HeaderBar />
+    //     <HeaderBar type={this.state.userType} />
     //     <Paper
     //       className={classes.root}
     //       elevation={1}
@@ -329,7 +329,7 @@ export default withStyles(styles)(AddNap);
 
 //     return (
 //       <div>
-//         <HeaderBar />
+//         <HeaderBar type={this.state.userType} />
 //         <Paper
 //           className={classes.root}
 //           elevation={1}

@@ -60,8 +60,7 @@ const styles = theme => ({
       date: '',
       status: '',   
       noteForStaff:null ,
-      noteForParents:null,
-      role:"staff"     
+      noteForParents:null,   
     };
 
     componentWillMount(){
@@ -240,13 +239,13 @@ const styles = theme => ({
 
 
     renderNoteForStaff() {
-      if(this.state.role =="staff"){
-        if(!this.state.noteForStaff && this.state.role=="staff") {
+      if(this.props.role =="staff"){
+        if(!this.state.noteForStaff) {
           return <div></div>;
         } else {
           return (
             <div>
-            <strong>Note from Parents:</strong>
+            <strong>Note for Staff:</strong>
               <Typography component="p">
                  {this.state.noteForStaff}   
               </Typography>
@@ -259,7 +258,7 @@ const styles = theme => ({
 
 
     renderNoteForParents() {
-      if(this.state.role=="parent"){
+      if(this.props.role=="parent"){
         if(!this.state.noteForParents) {
           return <div></div>;
         } else {
@@ -378,7 +377,7 @@ const styles = theme => ({
     }
 
     renderNoteButton(){
-      if(this.state.role=="staff")
+      if(this.props.role=="staff")
       return (<DashboardItem
         destination="/addnote"
         title="Note to Parents"
@@ -387,7 +386,7 @@ const styles = theme => ({
         name={this.props.name}
         role="staff"
         />)
-      else if(this.state.role=="parent")
+      else if(this.props.role=="parent")
       return (<DashboardItem
         destination="/addnote"
         title="Note to Staff"

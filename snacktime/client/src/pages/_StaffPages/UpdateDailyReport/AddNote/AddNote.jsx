@@ -47,7 +47,12 @@ class AddNote extends React.Component {
   componentWillMount() {
     console.log(this.state.id);
     Auth.StaffAuthorize(this);
-    this.getNote();
+
+    if(this.state.role ==="staff")
+      this.getNoteForParent();
+    else if(this.state.role ==="parent")
+    this.getNoteForStaff(); 
+    console.log("Log:" ,this.state.id, this.state.name, this.state.role)
   }
 
   handleChange = name => event => {
@@ -56,7 +61,7 @@ class AddNote extends React.Component {
     });
   };
 
-  getNote= () =>{
+  getNoteForParent= () =>{
     let today = new Date();
     let date =
       today.getFullYear() +
@@ -69,12 +74,35 @@ class AddNote extends React.Component {
     .then(resp=>{
       console.log(resp);
       if(resp !== "No Notes"){
-        this.setState({noteForParents:resp.noteForParents, noteForStaff:resp.noteForStaff, noteExists:true, reportId: resp.id})
+        
+        this.setState({noteForParents:resp.noteForParents, noteExists:true, reportId: resp.id},
+          console.log("Log:note for parents ",this.state.noteForParents))
       }
     })
   }
 
-  postNote = id => {
+  getNoteForStaff =()=>{
+    let today = new Date();
+    let date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+    fetch(`/api/student/${this.state.id}/report/${date}`)
+    .then(resp=>resp.json())
+    .then(resp=>{
+      console.log(resp);
+      if(resp !== "No Notes"){
+        
+        this.setState({noteForStaff:resp.noteForStaff, noteExists:true, reportId: resp.id},
+          console.log("Log:note for staff ", this.state.noteForStaff))
+      }
+    })
+  }
+
+  postNote =() => {
+    console.log("In post note")
     let today = new Date();
     let date =
       today.getFullYear() +
@@ -90,6 +118,7 @@ class AddNote extends React.Component {
       body: JSON.stringify({
         studentId: this.state.id,
         noteForParents: this.state.noteForParents,
+        highlight:'',
         date: date
       })
     })
@@ -100,7 +129,7 @@ class AddNote extends React.Component {
       .then(resp => console.log(resp));
     }
     else if(this.state.role = "parent"){
-      fetch(`/api/student/${this.state.id}/report`, {
+      fetch(`/api/parent/student/${this.state.id}/report`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -117,7 +146,8 @@ class AddNote extends React.Component {
       }
   };
 
-  updateNote = id => {
+  updateNote = () => {
+    console.log("In update note")
     let today = new Date();
     let date =
       today.getFullYear() +
@@ -140,7 +170,7 @@ class AddNote extends React.Component {
       .then(resp => console.log(resp));
     }
     else if (this.state.role = "parent"){
-      fetch(`/api/report/${this.state.reportId}`, {
+      fetch(`/api/parent/report/${this.state.reportId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -158,9 +188,9 @@ class AddNote extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     if(this.state.noteExists)
-      this.updateNote(this.state.id)
+      this.updateNote()
     else
-      this.postNote(this.state.id);
+      this.postNote();
   };  
 
   renderTexField(){
@@ -169,10 +199,11 @@ class AddNote extends React.Component {
       return(<div>
         <TextField
           required
+          name="noteForParents"
           label={this.state.name}
           className={classes.textField}
           value={this.state.noteForParents}
-          onChange={this.handleChange('note')}
+          onChange={this.handleChange('noteForParents')}
           margin="normal"
           variant="outlined"  
         />
@@ -182,10 +213,11 @@ class AddNote extends React.Component {
     return(<div>
       <TextField
         required
+        name="noteForStaff"
         label={this.state.name}
         className={classes.textField}
         value={this.state.noteForStaff}
-        onChange={this.handleChange('note')}
+        onChange={this.handleChange('noteForStaff')}
         margin="normal"
         variant="outlined"  
       />
@@ -196,7 +228,7 @@ class AddNote extends React.Component {
     const { classes } = this.props;
     return (
       <div>  
-      <HeaderBar />  
+      <HeaderBar type={this.state.userType} />  
       <form className={classes.container} noValidate autoComplete="off">
       {this.renderTexField()}
         

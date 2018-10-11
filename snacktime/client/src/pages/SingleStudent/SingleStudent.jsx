@@ -19,7 +19,8 @@ export default class SingleStudent extends Component {
     name: '',
     notes: '',
     updatedAt: '',
-    orgUserCheck: true
+    orgUserCheck: true,
+    role:this.props.location.state.role
   };
 
   componentWillMount() {
@@ -56,6 +57,7 @@ export default class SingleStudent extends Component {
           <Card
             id={this.state.id}
             name={this.state.name}
+            role={this.state.role}
           />
           <ParentContainer
             className="student__item"
@@ -68,6 +70,7 @@ export default class SingleStudent extends Component {
             doctor={this.state.doctor}
             dob={this.state.dob}
             notes={this.state.notes}
+            role={this.state.role}
 
             // image={this.state.image}
           />
@@ -79,7 +82,7 @@ export default class SingleStudent extends Component {
         <Redirect
           to={{
             pathname: '/notAuthorized',
-            state: { type: 'Staff' },
+            state: { type: 'Parent' },
           }}
         />
       );

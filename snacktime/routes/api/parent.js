@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const staffController = require('../../controllers/parentController');
+const parentController = require('../../controllers/parentController.js');
 
 /**************Parent*****************/
 router.route('/parent/parentinfo/:parentId') 

@@ -106,7 +106,7 @@ class AddIncident extends React.Component {
     if(this.state.loggedIn){
     return (
       <div>
-        <HeaderBar />
+        <HeaderBar type={this.state.userType} />
         <MultiSelectContainer
           orgId={this.state.orgId}
           allStudents={this.state.allStudents}
@@ -132,6 +132,7 @@ class AddIncident extends React.Component {
             className={classes.textField}
             value={this.state.medName}
             onChange={this.handleChange("incident")}
+            multiline
             margin="normal"
             variant="outlined"
           />

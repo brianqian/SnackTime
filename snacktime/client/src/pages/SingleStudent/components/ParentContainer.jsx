@@ -29,6 +29,7 @@ class ParentContainer extends Component {
     addPassword: 'testpass',
     addAddress: '',
     addPhone: '',
+    role:this.props.role
   };
 
   componentDidMount() {
@@ -168,6 +169,95 @@ class ParentContainer extends Component {
     }).then(() => this.getExistingParent());
   };
 
+  renderAddParentForm(){
+    if(this.state.role==="staff")
+    return (
+    <div>
+      <form>        
+      <TextField
+        name="email"
+        value={this.state.email}
+        onChange={this.handleChange}
+        id="addParents"
+        label="Add Parents by Email"
+        margin="normal"
+        variant="outlined"
+      />
+      <button onClick={this.handleSearch} type="submit">
+        Search
+      </button>
+    </form>
+    {this.state.addParentForm && (
+      <form>
+        
+        <TextField
+        name="addName"
+        onChange={this.handleChange}
+        value={this.state.addName}
+        id="ParentName"
+        label="Parent's Name"
+        margin="normal"
+        variant="outlined"
+        type="text"
+      />
+
+      <TextField
+        name="addPhone"
+        onChange={this.handleChange}
+        value={this.state.addPhone}
+        id="ParentPhone"
+        label="Parent's Phone"
+        margin="normal"
+        variant="outlined"
+        type="text"
+      />
+
+      <TextField
+        name="addEmail"
+        onChange={this.handleChange}
+        value={this.state.addEmail}
+        id="ParentEmail"
+        label="Parent's Email"
+        margin="normal"
+        variant="outlined"
+        type="text"
+      />
+
+      <TextField
+        name="addAddress"
+        onChange={this.handleChange}
+        value={this.state.addAddress}
+        id="ParentAddress"
+        label="Parent's Address"
+        margin="normal"
+        variant="outlined"
+        type="text"
+      />
+
+        <input
+          onClick={this.handleSubmitNewParent}
+          value="Register and Email New Parent"
+          type="submit"
+        />
+      </form>
+    )}
+    <p>{this.state.status}</p>
+    {this.state.existingParent && (
+      <button onClick={this.makeAssociation}>
+        Add Existing Parent to Child
+      </button>
+    )}
+    {this.state.showAddNewParent && (
+      <button name="new" onClick={this.handleAddNewParent}>
+        Create New Parent Account
+      </button>
+    )}
+  </div>)
+
+  else if(this.state.role==="parent")
+      return (<div></div>)
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -221,85 +311,9 @@ class ParentContainer extends Component {
                     </div>
                   );
                 })}
-                <form>
-                  
-                  <TextField
-                    name="email"
-                    value={this.state.email}
-                    onChange={this.handleChange}
-                    id="addParents"
-                    label="Add Parents by Email"
-                    margin="normal"
-                    variant="outlined"
-                  />
-                  <button onClick={this.handleSearch} type="submit">
-                    Search
-                  </button>
-                </form>
-                {this.state.addParentForm && (
-                  <form>
-                    <TextField
-                    name="addName"
-                    onChange={this.handleChange}
-                    value={this.state.addName}
-                    id="ParentName"
-                    label="Parent's Name"
-                    margin="normal"
-                    variant="outlined"
-                    type="text"
-                  />
 
-                  <TextField
-                    name="addPhone"
-                    onChange={this.handleChange}
-                    value={this.state.addPhone}
-                    id="ParentPhone"
-                    label="Parent's Phone"
-                    margin="normal"
-                    variant="outlined"
-                    type="text"
-                  />
+                {this.renderAddParentForm()}
 
-                  <TextField
-                    name="addEmail"
-                    onChange={this.handleChange}
-                    value={this.state.addEmail}
-                    id="ParentEmail"
-                    label="Parent's Email"
-                    margin="normal"
-                    variant="outlined"
-                    type="text"
-                  />
-
-                  <TextField
-                    name="addAddress"
-                    onChange={this.handleChange}
-                    value={this.state.addAddress}
-                    id="ParentAddress"
-                    label="Parent's Address"
-                    margin="normal"
-                    variant="outlined"
-                    type="text"
-                  />
-            
-                    <input
-                      onClick={this.handleSubmitNewParent}
-                      value="Register and Email New Parent"
-                      type="submit"
-                    />
-                  </form>
-                )}
-                <p>{this.state.status}</p>
-                {this.state.existingParent && (
-                  <button onClick={this.makeAssociation}>
-                    Add Existing Parent to Child
-                  </button>
-                )}
-                {this.state.showAddNewParent && (
-                  <button name="new" onClick={this.handleAddNewParent}>
-                    Create New Parent Account
-                  </button>
-                )}
               </Typography>
             </ExpansionPanelDetails>
           </ExpansionPanel>

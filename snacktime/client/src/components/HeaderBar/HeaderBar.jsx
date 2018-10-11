@@ -6,7 +6,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import SvgIcon from '@material-ui/core/SvgIcon'
 import { Redirect } from 'react-router-dom'
 
 const styles = {
@@ -21,7 +21,13 @@ const styles = {
     marginRight: 20,
   },
 };
-
+function HomeIcon(props) {
+  return (
+    <SvgIcon {...props}>
+      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+    </SvgIcon>
+  );
+}
 class HeaderBar extends React.Component {
   state = {};
 
@@ -47,9 +53,9 @@ class HeaderBar extends React.Component {
                 className={classes.menuButton}
                 color="inherit"
                 aria-label="Menu"
-                href="/staffhomepage"
+                href={`/${this.props.type}homepage`}
               >
-                <i className="material-icons">home</i>
+                <HomeIcon className="{classes.icon}" style={{ fontSize: 40 }}/>
               </IconButton>
               <Typography
                 variant="title"

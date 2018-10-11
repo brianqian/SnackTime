@@ -14,11 +14,11 @@ router
   .put(staffController.updateStudent);   //update a student
   
 router.route('/allinfo/student/:studentId').get(staffController.getStudentInfo) //get a single student
-router.route('/allinfo/students?users').get(staffController.getStudentsInfo)
+
 /******Student Info********/
 
 /******Parents Info********/
-router.route('/parent/:orgId').get(staffController.getAllParentsEmail); //get all org parents email
+router.route('/parentemails/:orgId').get(staffController.getAllParentsEmail); //get all org parents email
 
 router.route('/student/:studentId/parent')
   .post(staffController.saveParent) //save a parent for a particular student
@@ -115,5 +115,12 @@ router.route("/emailparents").post(staffController.emailParents)
 router.route("/changeorg").post(staffController.changeOrg)
 /******change org info***********/
 
+/******remove staff***********/
+router.route("/removestaff").delete(staffController.removeStaff);
+/******remove staff***********/
+
+/**********get all staff in org***********/
+router.route("/getallstaff").get(staffController.getAllStaff);
+/**********get all staff in org***********/
 
 module.exports = router;

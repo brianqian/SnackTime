@@ -14,6 +14,7 @@ const styles = theme => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
+    justifyContent: "center"
   },
   textField: {
     marginLeft: theme.spacing.unit,
@@ -78,7 +79,7 @@ class OutlinedTextFields extends React.Component {
 
     return (
       <div>
-        <HeaderBar />
+        {/* <HeaderBar type={this.state.userType} /> */}
         <form className={classes.container} noValidate autoComplete="off">
           <TextField
             required

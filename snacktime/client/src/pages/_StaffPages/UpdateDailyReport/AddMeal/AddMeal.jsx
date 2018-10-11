@@ -143,7 +143,7 @@ class AddMeal extends React.Component {
     if (this.state.loggedIn) {
       return (
         <div>
-          <HeaderBar />
+          <HeaderBar type={this.state.userType} />
 
           <MultiSelectContainer
             orgId={this.state.orgId}
@@ -219,6 +219,7 @@ class AddMeal extends React.Component {
               className={classes.textField}
               value={this.state.food}
               onChange={this.handleChange("food")}
+              multiline
               margin="normal"
               variant="outlined"
             />

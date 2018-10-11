@@ -114,7 +114,7 @@ class AddPotty extends React.Component {
     if (this.state.loggedIn) {
       return (
         <div>
-          <HeaderBar />
+          <HeaderBar type={this.state.userType} />
           <MultiSelectContainer
             orgId={this.state.orgId}
             allStudents={this.state.allStudents}

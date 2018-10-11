@@ -105,7 +105,7 @@ class AddMeds extends React.Component {
     if(this.state.loggedIn){
     return (
       <div>  
-      <HeaderBar />  
+      <HeaderBar type={this.state.userType} />  
       <MultiSelectContainer
             orgId={this.state.orgId}
             allStudents={this.state.allStudents}
@@ -131,6 +131,7 @@ class AddMeds extends React.Component {
           className={classes.textField}
           value={this.state.medName}
           onChange={this.handleChange('medName')}
+          multiline
           margin="normal"
           variant="outlined" 
         />

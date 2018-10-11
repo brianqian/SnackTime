@@ -5,33 +5,61 @@ var db = require("../../models");
 
 //Every page is checked via sessionChecker
 var sessionChecker = (req, res, next) => {
-  if (req.session.staff && req.cookies.user_sid) {
-    db.Staff.findOne({
-      where: {
-        id: req.session.staff.id
-      },
-      include: [
-        {
-          model: db.Organization
-        }
-      ]
-    }).then(staff => {
-      console.log("session checked");
-      // console.log(staff.dataValues.Organization.dataValues.name);
-      const returnObj = {
-        userId: staff.dataValues.id,
-        userType: staff.dataValues.role,
-        name: staff.dataValues.name,
-        orgName: staff.dataValues.Organization.dataValues.name,
-        orgId: staff.dataValues.Organization.dataValues.id
-      };
-      console.log(returnObj);
-      res.json(returnObj);
-    });
-  } else {
+  // console.log(req.session.staff, req.session.parent)
+  console.log("SESSION CHECER", req.session.user);
+  if (req.session.user && req.cookies.user_sid) {
+    if (req.session.user.role == "staff") {
+      db.Staff.findOne({
+        where: {
+          id: req.session.user.id
+        },
+        include: [
+          {
+            model: db.Organization
+          }
+        ]
+      }).then(staff => {
+        // console.log("session checked");
+        // console.log(staff.dataValues.Organization.dataValues.name);
+        const returnObj = {
+          userId: staff.dataValues.id,
+          userType: staff.dataValues.role,
+          name: staff.dataValues.name,
+          orgName: staff.dataValues.Organization.dataValues.name,
+          orgId: staff.dataValues.Organization.dataValues.id
+        };
+        // console.log(returnObj);
+        res.json(returnObj);
+      });
+    } else if (req.session.user.role == "parent") {
+      db.Parent.findOne({
+        where: {
+          id: req.session.user.id
+        },
+        include: [
+          {
+            model: db.Student
+          }
+        ]
+      }).then(parent => {
+        console.log("SESSION CHECKER PARENT ", parent);
+        // console.log("session checked");
+        // console.log("STUDNET DATAVALUES",parent.dataValues.Student.dataValues);
+        const returnObj = {
+          userId: parent.dataValues.id,
+          userType: parent.dataValues.role,
+          name: parent.dataValues.name,
+          student: parent.dataValues.Students
+        };
+        // console.log(returnObj);
+        res.json(returnObj);
+      });
+    }
+  }
+  else {
     next();
   }
-};
+}
 
 // route for Home-Page
 // router.get('/', sessionChecker, (req, res) => {
@@ -49,8 +77,8 @@ router.route("/Organization").post((req, res) => {
   db.Organization.create({
     name: req.body.orgName,
     phone: req.body.orgPhoneNum,
-    openTime:req.body.openTime,
-    closeTime:req.body.closeTime,
+    openTime: req.body.openTime,
+    closeTime: req.body.closeTime,
     address: req.body.orgAddress
   }).then(org => {
     res.json(org);
@@ -72,6 +100,13 @@ router.route("/getallstaff").get((req, res) => {
     }
   }).then(data => res.send(data));
 });
+router.route("/getallparent").get((req, res) => {
+  db.Parent.findAll({
+    include: {
+      all: true
+    }
+  }).then(data => res.send(data));
+});
 
 // route for staff signup
 router.route("/signup/staff").post((req, res) => {
@@ -83,8 +118,8 @@ router.route("/signup/staff").post((req, res) => {
     OrganizationId: req.body.orgId
   })
     .then(staff => {
-      req.session.staff = staff.dataValues;
-      let { email, id, name } = req.session.staff;
+      req.session.user = staff.dataValues;
+      let { email, id, name } = req.session.user;
       let obj = { email, id, name };
       res.json(obj);
     })
@@ -104,19 +139,21 @@ router
     // console.log("in the post", req.body);
     var email = req.body.email,
       password = req.body.password;
-
-    db[req.params.role]
+    let role = req.params.role
+    console.log('ROLE==========================', req.params.role)
+    db[role]
       .findOne({ where: { email: email } })
-      .then(function(staff) {
+      .then(function (user) {
         // console.log("validate function", staff.validPassword(password));
         // console.log(staff);
-        if (!staff) {
+        console.log("logging in", user);
+        if (!user) {
           res.send("Email does not exist in our database");
-        } else if (!staff.validPassword(password)) {
+        } else if (!user.validPassword(password)) {
           console.log("incorrect password");
           res.send("Incorrect Password");
-        } else if (staff.validPassword(password)) {
-          req.session.staff = staff.dataValues;
+        } else if (user.validPassword(password)) {
+          req.session.user = user.dataValues;
           // console.log("REQ.SESSION.STAFF", req.session.staff);
           res.send("Success");
         }
@@ -141,8 +178,8 @@ router.route("/signup/parent").post((req, res) => {
     phone: req.body.phone
   })
     .then(parent => {
-      req.session.parent = parent.dataValues;
-      let { email, id, name } = req.session.parent;
+      req.session.user = parent.dataValues;
+      let { email, id, name } = req.session.user;
       let obj = { email, id, name };
       res.json(obj);
     })
@@ -152,32 +189,32 @@ router.route("/signup/parent").post((req, res) => {
 });
 
 // route for parent Login
-router
-  .route("/login/parent")
-  .get(sessionChecker, (req, res) => {
-    res.send("go to parent login");
-  })
-  .post((req, res) => {
-    var email = req.body.email,
-      password = req.body.password;
+// router
+//   .route("/login/parent")
+//   .get(sessionChecker, (req, res) => {
+//     res.send("go to parent login");
+//   })
+//   .post((req, res) => {
+//     var email = req.body.email,
+//       password = req.body.password;
 
-    db.Parent.findOne({ where: { email: email } })
-      .then(function(parent) {
-        if (!parent) {
-          res.redirect("/login");
-        } else if (!parent.validPassword(password)) {
-          res.redirect("/login");
-        } else {
-          req.session.parent = parent.dataValues;
-          res.send("parent logged in");
-        }
-      })
-      .catch(err => console.log(err));
-  });
+//     db.Parent.findOne({ where: { email: email } })
+//       .then(function (parent) {
+//         if (!parent) {
+//           res.redirect("/login");
+//         } else if (!parent.validPassword(password)) {
+//           res.redirect("/login");
+//         } else {
+//           req.session.parent = parent.dataValues;
+//           res.send("parent logged in");
+//         }
+//       })
+//       .catch(err => console.log(err));
+//   });
 
 // logout
 router.get("/logout", (req, res) => {
-  if (req.session.parent || req.session.staff) {
+  if (req.session.user) {
     req.session.destroy();
     res.clearCookie("user_sid");
     res.json("Logged out.");
@@ -226,7 +263,7 @@ router.post("/forgot/:role", (req, res) => {
                 <h2><code contenteditable="false" style="font-weight:200;font-size:1.5rem;padding:5px 10px; background: #EEEEEE; border:0"><a href='${baseUrl}resetpassword/${role}/${passResetKey}'>Click here to reset your password.</a></code></h2>
                 <p>Please ignore if you didn't try to reset your password on our platform</p>`
           };
-          transporter.sendMail(mailOptions, function(error, info) {
+          transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
               console.log(error);
             } else {
@@ -304,7 +341,7 @@ function changedPassword(name, email, role, baseUrl, passResetKey) {
         <p>If you did not make this change please reset your password.</p>
         <h2><code contenteditable="false" style="font-weight:200;font-size:1.5rem;padding:5px 10px; background: #EEEEEE; border:0"><a href='${baseUrl}resetpassword/${role}/${passResetKey}'>Click here to reset your password.</a></code></h2>`
   };
-  transporter.sendMail(mailOptions, function(error, info) {
+  transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
       console.log(error);
     } else {
@@ -320,9 +357,9 @@ router.post("/changepass", (req, res) => {
   let passResetKey = shortid.generate();
   let passKeyExpires = new Date().getTime() + 20 * 60 * 1000;
   if (req.session) {
-    if (req.session.staff) {
-      if (req.session.staff.email) {
-        let email = req.session.staff.email;
+    if (req.session.user.role === "Staff") {
+      if (req.session.user.email) {
+        let email = req.session.user.email;
         db.Staff.findOne({
           where: {
             email: email
@@ -357,9 +394,9 @@ router.post("/changepass", (req, res) => {
         // })
       }
     }
-    if (req.session.parent) {
-      if (req.session.parent.email === email) {
-        let email = req.session.parent.email;
+    if (req.session.user.role === "Parent") {
+      if (req.session.user.email === email) {
+        let email = req.session.user.email;
         db.Parent.findOne({
           where: {
             email: email
@@ -413,7 +450,7 @@ function changedEmail(name, email, newEmail) {
         <h2>Your new email is now ${newEmail}.</h2>
         <h3>Thank you for using Snack Time</h3>`
   };
-  transporter.sendMail(mailOptions, function(error, info) {
+  transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
       console.log(error);
     } else {
@@ -429,9 +466,9 @@ router.post("/changeemail", (req, res) => {
   // let passResetKey = shortid.generate();
   // let passKeyExpires = new Date().getTime() + 20 * 60 * 1000;
   if (req.session) {
-    if (req.session.staff) {
-      if (req.session.staff.email) {
-        let email = req.session.staff.email;
+    if (req.session.user.role === "Staff") {
+      if (req.session.user.email) {
+        let email = req.session.user.email;
         db.Staff.findOne({
           where: {
             email: email
@@ -466,16 +503,16 @@ router.post("/changeemail", (req, res) => {
         // })
       }
     }
-    if (req.session.parent) {
-      if (req.session.parent.email === email) {
-        let email = req.session.parent.email;
+    if (req.session.user.role === "Parent") {
+      if (req.session.user.email === email) {
+        let email = req.session.user.email;
         db.Parent.findOne({
           where: {
             email: email
           }
         }).then(parent => {
           // parent.getHash(newPassword);
-          if(parent.validPassword(password)) {
+          if (parent.validPassword(password)) {
             parent.update({
               email: newEmail
             });
