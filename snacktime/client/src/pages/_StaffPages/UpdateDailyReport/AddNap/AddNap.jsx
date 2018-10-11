@@ -77,17 +77,6 @@ class AddNap extends React.Component {
 
     this.state.studentIdsToSubmit.map(id => this.postNap(id));
   };
-  logState=()=>{
-  console.log(this.state)
-  }
-
-  handleChange = event => {
-    console.log(event.target);
-    // this.setState({
-    //   [name]: event.target.value,
-    // });
-    console.log('NAP START, END', this.state.napStart, this.state.napEnd);
-  };
 
   setNapStart = time => {
     this.setState({ napStart: time });
@@ -115,10 +104,7 @@ class AddNap extends React.Component {
         date: date,
       }),
     })
-      .then(resp => {
-        console.log(resp);
-        return resp.json();
-      })
+      .then(resp => resp.json())
       .then(resp => console.log(resp));
   };
 
@@ -172,7 +158,7 @@ class AddNap extends React.Component {
         <Redirect
           to={{
             pathname: '/notAuthorized',
-            state: { type: 'Staff' },
+            state: { type: 'Staff', location: '/addnap' },
           }}
         />
       );

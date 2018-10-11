@@ -40,6 +40,7 @@ class AddMeds extends React.Component {
     medName: '',
     multiline: 'Controlled',
   };
+
    componentWillMount() {
     Auth.StaffAuthorize(this);
   }
@@ -60,10 +61,6 @@ class AddMeds extends React.Component {
 
     this.state.studentIdsToSubmit.map(id => this.postMeds(id));
   };
-  logState=()=>{
-  console.log(this.state)
-  }
-
 
   handleChange = name => event => {
     this.setState({
@@ -93,10 +90,7 @@ class AddMeds extends React.Component {
         date: date,
       })
     })
-      .then(resp => {
-        console.log(resp);
-        return resp.json();
-      })
+      .then(resp =>resp.json())
       .then(resp => console.log(resp));
   };
 
@@ -111,7 +105,6 @@ class AddMeds extends React.Component {
             allStudents={this.state.allStudents}
             updateStudents={this.updateStudents}
           />
-          <button onClick={this.logState}/>
 
       <form className={classes.container} noValidate autoComplete="off">
         <DateTimeSelector
@@ -143,7 +136,16 @@ class AddMeds extends React.Component {
       </form>
       </div>
     );
-    }else{
+    } else if (this.state.loginRejected) {
+      return (
+        <Redirect
+          to={{
+            pathname: '/notAuthorized',
+            state: { type: 'Staff', location: '/addmeds' },
+          }}
+        />
+      );
+    } else{
       return <div/>
     }
   }

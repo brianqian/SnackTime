@@ -32,7 +32,7 @@ class ParentContainer extends Component {
 
   componentDidMount() {
     this.getExistingParent();
-    console.log(this.props.studentId, "STUDENT ID");
+    console.log(this.props.studentId, 'STUDENT ID');
   }
 
   getExistingParent = () => {
@@ -76,13 +76,13 @@ class ParentContainer extends Component {
       });
   };
 
-  capitalize = name =>{
-    const names = name.split(" ");
-    for(var i =0;i<names.length;i++){
-      names[i]=names[i].charAt(0).toUpperCase()+ names[i].slice(1)
+  capitalize = name => {
+    const names = name.split(' ');
+    for (var i = 0; i < names.length; i++) {
+      names[i] = names[i].charAt(0).toUpperCase() + names[i].slice(1);
     }
-    return names.join(" ")
-  }
+    return names.join(' ');
+  };
 
   handleSubmitNewParent = e => {
     e.preventDefault();
@@ -97,13 +97,12 @@ class ParentContainer extends Component {
       address: this.state.addAddress,
       phone: this.state.addPhone,
       name: this.capitalize(this.state.addName),
-      baseUrl: url
-
+      baseUrl: url,
     };
     console.log(newObj);
     this.setState({ addParentForm: newObj });
     console.log('ADD PARENT FORM', this.state.addParentForm);
-    console.log("STudnet IDDddddddd", this.props.studentId);
+    console.log('STudnet IDDddddddd', this.props.studentId);
     fetch(`/api/student/${this.props.studentId}/parent`, {
       method: 'POST',
       headers: { 'Content-type': 'application/json' },
@@ -173,29 +172,27 @@ class ParentContainer extends Component {
     return (
       <div>
         <div className={classes.root}>
-        <ExpansionPanel>
+          <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <Typography className={classes.heading}>Info</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-            <Typography paragraph>
-                Address: {this.props.address}
-              </Typography>
-              <Typography paragraph>
-                Allergies: {this.props.allergies}
-              </Typography>
-              <Typography paragraph>
-                Medication: {this.props.medication}
-              </Typography>
-              <Typography>
-                Birthday: {this.props.dob}
-              </Typography>
-              {this.props.notes && <Typography>
-                Additional Notes: {this.props.notes}
-              </Typography>}
-              {this.props.doctor && <Typography>
-                Doctor: {this.props.doctor}
-              </Typography>}
+              <div className="student-info-container">
+                <Typography paragraph>Address: {this.props.address}</Typography>
+                <Typography paragraph>
+                  Allergies: {this.props.allergies}
+                </Typography>
+                <Typography paragraph>
+                  Medication: {this.props.medication}
+                </Typography>
+                <Typography>Birthday: {this.props.dob}</Typography>
+                {this.props.notes && (
+                  <Typography>Additional Notes: {this.props.notes}</Typography>
+                )}
+                {this.props.doctor && (
+                  <Typography>Doctor: {this.props.doctor}</Typography>
+                )}
+              </div>
             </ExpansionPanelDetails>
           </ExpansionPanel>
           <ExpansionPanel>

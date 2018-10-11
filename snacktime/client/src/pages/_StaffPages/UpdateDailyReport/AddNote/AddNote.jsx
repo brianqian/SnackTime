@@ -7,10 +7,9 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import HeaderBar from '../../../../components/HeaderBar/HeaderBar';
 // import Label from '@material-ui/core/Label';
-import DateTimeSelector from '../../../../components/DateTimeSelector/DateTimeSelector'
-import { Redirect } from "react-router-dom";
-import Auth from '../../../../utils/Auth'
-
+import DateTimeSelector from '../../../../components/DateTimeSelector/DateTimeSelector';
+import { Redirect } from 'react-router-dom';
+import Auth from '../../../../utils/Auth';
 
 const styles = theme => ({
   container: {
@@ -31,7 +30,6 @@ const styles = theme => ({
   },
 });
 
-
 class AddNote extends React.Component {
   state = {
     time: '',
@@ -39,7 +37,7 @@ class AddNote extends React.Component {
     id: this.props.location.state.id,
     reportId: '',
     multiline: 'Controlled',
-    noteExists:false
+    noteExists: false,
   };
   componentWillMount() {
     console.log(this.state.id);
@@ -53,41 +51,44 @@ class AddNote extends React.Component {
     });
   };
 
-  getNote= () =>{
+  getNote = () => {
     let today = new Date();
     let date =
       today.getFullYear() +
-      "-" +
+      '-' +
       (today.getMonth() + 1) +
-      "-" +
+      '-' +
       today.getDate();
     fetch(`/api/student/${this.state.id}/report/${date}`)
-    .then(resp=>resp.json())
-    .then(resp=>{
-      console.log(resp);
-      if(resp !== "No Notes"){
-        this.setState({note:resp.noteForParents, noteExists:true, reportId: resp.id})
-      }
-    })
-  }
+      .then(resp => resp.json())
+      .then(resp => {
+        console.log(resp);
+        if (resp !== 'No Notes') {
+          this.setState({
+            note: resp.noteForParents,
+            noteExists: true,
+            reportId: resp.id,
+          });
+        }
+      });
+  };
 
   postNote = id => {
     let today = new Date();
     let date =
       today.getFullYear() +
-      "-" +
+      '-' +
       (today.getMonth() + 1) +
-      "-" +
+      '-' +
       today.getDate();
-    console.log(date);
     fetch(`/api/student/${this.state.id}/report`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         studentId: this.state.id,
         noteForParents: this.state.note,
-        date: date
-      })
+        date: date,
+      }),
     })
       .then(resp => {
         console.log(resp);
@@ -100,17 +101,17 @@ class AddNote extends React.Component {
     let today = new Date();
     let date =
       today.getFullYear() +
-      "-" +
+      '-' +
       (today.getMonth() + 1) +
-      "-" +
+      '-' +
       today.getDate();
     console.log(date);
     fetch(`/api/report/${this.state.reportId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         noteForParents: this.state.note,
-      })
+      }),
     })
       .then(resp => {
         console.log(resp);
@@ -119,39 +120,45 @@ class AddNote extends React.Component {
       .then(resp => console.log(resp));
   };
 
-
   handleSubmit = event => {
     event.preventDefault();
-    if(this.state.noteExists)
-      this.updateNote(this.state.id)
-    else
-      this.postNote(this.state.id);
-  };  
+    if (this.state.noteExists) this.updateNote(this.state.id);
+    else this.postNote(this.state.id);
+  };
 
   render() {
-    const { classes } = this.props;
-    return (
-      <div>  
-      <HeaderBar />  
-      <form className={classes.container} noValidate autoComplete="off">
-        <TextField
-          required
-          label="Note"
-          className={classes.textField}
-          value={this.state.note}
-          onChange={this.handleChange('note')}
-          margin="normal"
-          variant="outlined"  
+    if (this.state.loggedIn) {
+      const { classes } = this.props;
+      return (
+        <div>
+          <HeaderBar />
+          <form className={classes.container} noValidate autoComplete="off">
+            <TextField
+              required
+              label="Note"
+              className={classes.textField}
+              value={this.state.note}
+              onChange={this.handleChange('note')}
+              margin="normal"
+              variant="outlined"
+            />
+            <hr />
+            <Button onClick={this.handleSubmit}>Add Activity</Button>
+          </form>
+        </div>
+      );
+    } else if (this.state.loginRejected) {
+      return (
+        <Redirect
+          to={{
+            pathname: '/notAuthorized',
+            state: { type: 'Staff', location: '/addnote' },
+          }}
         />
-        <hr/>
-        <Button
-        onClick={this.handleSubmit}
-        >
-        Add Activity
-        </Button>
-      </form>
-      </div>
-    );
+      );
+    } else {
+      return <div />;
+    }
   }
 }
 

@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 200px));
   /* grid-auto-flow: column; */
-  background-color: #eaeaea;
+  background-color: #88d3ff73;
   padding: 1rem;
   justify-content: center;
   overflow: auto;
@@ -18,5 +18,5 @@
 
 .selected {
   color: white;
-  background-color: rgb(65, 176, 245);
+  background-color: rgb(32, 104, 148);
 }

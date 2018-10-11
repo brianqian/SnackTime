@@ -1,33 +1,33 @@
-import React from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
-import { withStyles } from "@material-ui/core/styles";
-import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import HeaderBar from "../../../../components/HeaderBar/HeaderBar";
+import React from 'react';
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import { withStyles } from '@material-ui/core/styles';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import HeaderBar from '../../../../components/HeaderBar/HeaderBar';
 // import Label from '@material-ui/core/Label';
-import DateTimeSelector from "../../../../components/DateTimeSelector/DateTimeSelector";
-import { Redirect } from "react-router-dom";
-import Auth from "../../../../utils/Auth";
-import MultiSelectContainer from "../MultiSelect/MultiSelectContainer";
+import DateTimeSelector from '../../../../components/DateTimeSelector/DateTimeSelector';
+import { Redirect } from 'react-router-dom';
+import Auth from '../../../../utils/Auth';
+import MultiSelectContainer from '../MultiSelect/MultiSelectContainer';
 
 const styles = theme => ({
   container: {
-    display: "flex",
-    flexWrap: "wrap"
+    display: 'flex',
+    flexWrap: 'wrap',
   },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: 200
+    width: 200,
   },
   dense: {
-    marginTop: 19
+    marginTop: 19,
   },
   menu: {
-    width: 200
-  }
+    width: 200,
+  },
 });
 
 class AddPotty extends React.Component {
@@ -35,10 +35,10 @@ class AddPotty extends React.Component {
     //selectedStudents: this.props.location.state.selectedStudents,
     allStudents: [],
     studentIdsToSubmit: [],
-    pottyTime: "",
-    place: "",
-    type: "",
-    multiline: "Controlled"
+    pottyTime: '',
+    place: '',
+    type: '',
+    multiline: 'Controlled',
   };
 
   async componentWillMount() {
@@ -48,9 +48,9 @@ class AddPotty extends React.Component {
   updateStudents = newArray => {
     this.setState({ allStudents: newArray });
   };
-  handleSubmit = async (event) => {
+  handleSubmit = async event => {
     event.preventDefault();
-    let idArray = []
+    let idArray = [];
     this.state.allStudents.map(student => {
       if (student.selected === true) {
         idArray.push(student.id);
@@ -61,21 +61,10 @@ class AddPotty extends React.Component {
 
     this.state.studentIdsToSubmit.map(id => this.postPotty(id));
   };
-  logState = () => {
-    console.log(this.state);
-  };
   handleClick = (name, value) => {
-    console.log("Sasha says this has been clicked");
+    console.log('Sasha says this has been clicked');
     this.setState({ [name]: value });
   };
-  // handleClick = event => {
-  //   console.log(event.target);
-  //   const name = event.target.name
-  //   event.preventDefault();
-  //   this.setState({
-  //     [name]: event.target.value,
-  //   });
-  // };
 
   setPottyTime = time => {
     this.setState({ pottyTime: time });
@@ -85,22 +74,22 @@ class AddPotty extends React.Component {
     let today = new Date();
     let date =
       today.getFullYear() +
-      "-" +
+      '-' +
       (today.getMonth() + 1) +
-      "-" +
+      '-' +
       today.getDate();
     console.log(date);
     console.log(`PLACE`, this.state.place);
     console.log(`TYPE`, this.state.type);
     fetch(`/api/student/${id}/diapering`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         time: this.state.pottyTime,
         place: this.state.place,
         type: this.state.type,
-        date: date
-      })
+        date: date,
+      }),
     })
       .then(resp => {
         console.log(resp);
@@ -120,7 +109,6 @@ class AddPotty extends React.Component {
             allStudents={this.state.allStudents}
             updateStudents={this.updateStudents}
           />
-          <button onClick={this.logState} />
 
           <form className={classes.container} noValidate autoComplete="off">
             <DateTimeSelector
@@ -138,21 +126,21 @@ class AddPotty extends React.Component {
             <Button
               name="place"
               value="Diaper"
-              onClick={() => this.handleClick("place", "Diaper")}
+              onClick={() => this.handleClick('place', 'Diaper')}
             >
               Diaper
             </Button>
             <Button
               name="place"
               value="Potty"
-              onClick={() => this.handleClick("place", "Potty")}
+              onClick={() => this.handleClick('place', 'Potty')}
             >
               Potty
             </Button>
             <Button
               name="place"
               value="Accident"
-              onClick={() => this.handleClick("place", "Accident")}
+              onClick={() => this.handleClick('place', 'Accident')}
             >
               Accident
             </Button>
@@ -160,21 +148,21 @@ class AddPotty extends React.Component {
             <Button
               name="type"
               value="Wet"
-              onClick={() => this.handleClick("type", "Wet")}
+              onClick={() => this.handleClick('type', 'Wet')}
             >
               Wet
             </Button>
             <Button
               name="type"
               value="BM"
-              onClick={() => this.handleClick("type", "BM")}
+              onClick={() => this.handleClick('type', 'BM')}
             >
               BM
             </Button>
             <Button
               name="type"
               value="Dry"
-              onClick={() => this.handleClick("type", "Dry")}
+              onClick={() => this.handleClick('type', 'Dry')}
             >
               Dry
             </Button>
@@ -183,6 +171,15 @@ class AddPotty extends React.Component {
           </form>
         </div>
       );
+    } else if (this.state.loginRejected) {
+      return (
+        <Redirect
+          to={{
+            pathname: '/notAuthorized',
+            state: { type: 'Staff', location: '/addpotty' },
+          }}
+        />
+      );
     } else {
       return <div />;
     }
@@ -190,7 +187,7 @@ class AddPotty extends React.Component {
 }
 
 AddPotty.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(AddPotty);
