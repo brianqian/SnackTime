@@ -3,6 +3,7 @@ import Card from './components/Card';
 import './SingleStudent.css';
 import ParentContainer from './components/ParentContainer';
 import Auth from '../../utils/Auth';
+import HeaderBar from '../../components/HeaderBar/HeaderBar';
 import {Redirect} from 'react-router-dom'
 
 export default class SingleStudent extends Component {
@@ -21,16 +22,17 @@ export default class SingleStudent extends Component {
     orgUserCheck: true
   };
 
-  async componentWillMount() {
-    await this.getSingleStudent();
+  componentWillMount() {
+    console.log("single student page did will mount");
+     this.getSingleStudent();
   }
   
   async getSingleStudent() {
     let result = await (await fetch(
       `/api/allinfo/student/${this.props.match.params.student}`
       )).json();
-    await Auth.StaffAuthorize(this, result.OrganizationId);
-    await this.setState(result);
+      await this.setState(result);
+      await Auth.StaffAuthorize(this, result.OrganizationId);
     return result.OrganizationId;
   }
 
@@ -45,12 +47,21 @@ export default class SingleStudent extends Component {
   render() {
     if (this.state.loggedIn) {
       return (
+        <div>
+          {this.state.userType === 'staff' && 
+            <HeaderBar/>
+          }   
         <div className="student-container">
+
           <Card
+            id={this.state.id}
+            name={this.state.name}
+          />
+          <ParentContainer
             className="student__item"
             name={this.state.name}
             destination="DailyReportPage"
-            id={this.state.id}
+            studentId={this.state.id}
             address={this.state.address}
             allergies={this.state.allergies}
             medication={this.state.medication}
@@ -60,8 +71,8 @@ export default class SingleStudent extends Component {
 
             // image={this.state.image}
           />
-          <ParentContainer studentId={this.props.match.params.student} />
         </div>
+        </div> 
       );
     } else if (this.state.loginRejected) {
       return (

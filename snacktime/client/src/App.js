@@ -42,7 +42,7 @@ class App extends Component {
             <Route exact path="/dailyreport/addpotty" component={AddPotty} />
             <Route exact path="/dailyreport/addmeds" component={AddMeds} />
             <Route exact path="/dailyreport/addmeal" component={AddMeal} />
-            <Route exact path="/dailyreport/addnote" component={AddNote} />
+            <Route exact path="/addnote" component={AddNote} />
             <Route exact path="/dailyreport/addincident" component={AddIncident} />
             <Route exact path="/notauthorized" component={notAuthorized} />
             <Route exact path="/addstudent" component={AddStudent} />

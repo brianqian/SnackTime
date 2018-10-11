@@ -10,6 +10,8 @@ import HeaderBar from '../../../../components/HeaderBar/HeaderBar';
 import DateTimeSelector from '../../../../components/DateTimeSelector/DateTimeSelector'
 import { Redirect } from "react-router-dom";
 import Auth from '../../../../utils/Auth'
+import MultiSelectContainer from "../MultiSelect/MultiSelectContainer";
+
 
 const styles = theme => ({
   container: {
@@ -32,14 +34,36 @@ const styles = theme => ({
 
 class AddMeds extends React.Component {
   state = {
-    selectedStudents: this.props.location.state.selectedStudents,
+    allStudents: [],
+    studentIdsToSubmit: [],
     time: '',
     medName: '',
     multiline: 'Controlled',
   };
-  async componentWillMount() {
+   componentWillMount() {
     Auth.StaffAuthorize(this);
   }
+
+  updateStudents = (newArray) => {
+    this.setState({ allStudents: newArray });
+  };
+  handleSubmit = async (event) => {
+    event.preventDefault();
+    let idArray = []
+    this.state.allStudents.map(student=> {
+      if (student.selected === true){
+         idArray.push(student.id)
+      }
+    })
+    console.log(idArray);
+    await this.setState({studentIdsToSubmit: idArray})
+
+    this.state.studentIdsToSubmit.map(id => this.postMeds(id));
+  };
+  logState=()=>{
+  console.log(this.state)
+  }
+
 
   handleChange = name => event => {
     this.setState({
@@ -76,22 +100,20 @@ class AddMeds extends React.Component {
       .then(resp => console.log(resp));
   };
 
-  handleSubmit = event => {
-    event.preventDefault();
-
-    this.state.selectedStudents.map(id => this.postMeds(id));
-  };  
-
   render() {
     const { classes } = this.props;
-    if(!this.state.selectedStudents){
-      return <Redirect to='/dailyreportmenu'/>
-    }
+    if(this.state.loggedIn){
     return (
       <div>  
       <HeaderBar />  
-      <form className={classes.container} noValidate autoComplete="off">
+      <MultiSelectContainer
+            orgId={this.state.orgId}
+            allStudents={this.state.allStudents}
+            updateStudents={this.updateStudents}
+          />
+          <button onClick={this.logState}/>
 
+      <form className={classes.container} noValidate autoComplete="off">
         <DateTimeSelector
           label="Time: "
           name="time"
@@ -121,6 +143,9 @@ class AddMeds extends React.Component {
       </form>
       </div>
     );
+    }else{
+      return <div/>
+    }
   }
 }
 

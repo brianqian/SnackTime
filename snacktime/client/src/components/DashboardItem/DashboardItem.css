@@ -1,4 +1,4 @@
-img {
+.dashboard__item > img {
     height: 50px;
     width: 50px;
 }

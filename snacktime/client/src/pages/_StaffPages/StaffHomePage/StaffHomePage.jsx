@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
-import DashboardItem from '../../../components/DashboardItem/DashboardItem';
-import './StaffHomePage.css';
-import { Redirect } from 'react-router';
-import Auth from '../../../utils/Auth';
-import HeaderBar from "../../../components/HeaderBar/HeaderBar"
+import React, { Component } from "react";
+import DashboardItem from "../../../components/DashboardItem/DashboardItem";
+import "./StaffHomePage.css";
+import { Redirect } from "react-router";
+import Auth from "../../../utils/Auth";
+import HeaderBar from "../../../components/HeaderBar/HeaderBar";
 
 class StaffHomePage extends Component {
   state = {
-    name: '',
-    userId: '',
-    orgName: '',
-    orgId: '',
+    userName: "",
+    userId: "",
+    orgName: "",
+    orgId: "",
     loggedIn: false,
-    loginRejected: false,
+    loginRejected: false
   };
 
   componentDidMount() {
@@ -25,7 +25,9 @@ class StaffHomePage extends Component {
         <div>
           <HeaderBar />
           <header>
-            <p><strong>Welcome {this.state.name}</strong></p>
+            <p>
+              <strong>Welcome {this.state.userName}</strong>
+            </p>
             <p>School: {this.state.orgName}</p>
           </header>
           <div className="dashboard-container">
@@ -57,8 +59,13 @@ class StaffHomePage extends Component {
               image="/img/calendar.png"
             />
             <DashboardItem
+              title="E-mail All Parents"
+              destination="/messageparents"
+              image="/img/message.png"
+            />
+            <DashboardItem
               title="Settings"
-              destination="/settings"
+              destination="/staffsettings"
               image="/img/settings.png"
             />
           </div>
@@ -69,13 +76,13 @@ class StaffHomePage extends Component {
       return (
         <Redirect
           to={{
-            pathname: '/notAuthorized',
-            state: { type: 'Staff' },
+            pathname: "/notAuthorized",
+            state: { type: "Staff" }
           }}
         />
       );
     }
-    return <div>Logging in</div>;
+    return <div />;
   }
 }
 

@@ -57,12 +57,13 @@ class MultiStudentSelect extends React.Component {
     await Auth.StaffAuthorize(this);
     if (this.state.orgId) this.getAllStudents();
   }
-
+  
   async getAllStudents() {
     let data = await (await fetch(`/api/student/${this.state.orgId}`)).json();
     const nameArray = [];
-    data.forEach(elem => nameArray.push(elem.name));
+    data.forEach(elem => nameArray.push({name: elem.name, id: elem.id}));
     this.setState({ students: nameArray });
+    console.log(this.state)
   }
 
   // getAllStudents = () => {

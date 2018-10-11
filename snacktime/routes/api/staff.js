@@ -50,6 +50,9 @@ router.route('/student/:studentId/reportconsolidated/:date')
 router.route('/student/:studentId/report')
   .post(staffController.saveReport) //saves report of a student for current date
 
+router.route('/student/:studentId/report/:date')
+  .get(staffController.getReport)
+
 router.route('/report/:reportId')
   .put(staffController.updateReport); //updates report of a student for current date
 /******Report***********/
@@ -107,5 +110,10 @@ router.route("/fixedsnack/:snackId").put(staffController.updateSnacks) //updates
 /******Email All Parents***********/
 router.route("/emailparents").post(staffController.emailParents)
 /******Email All Parents***********/
+
+/******change org info***********/
+router.route("/changeorg").post(staffController.changeOrg)
+/******change org info***********/
+
 
 module.exports = router;

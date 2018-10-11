@@ -39,6 +39,14 @@ export default class SignUp extends React.Component {
     });
   };
 
+  capitalize = name =>{
+    const names = name.split(" ");
+    for(var i =0;i<names.length;i++){
+      names[i]=names[i].charAt(0).toUpperCase()+ names[i].slice(1)
+    }
+    return names.join(" ")
+  }
+
   handleSubmit = e => {
     e.preventDefault();
     console.log(this.state);
@@ -49,7 +57,7 @@ export default class SignUp extends React.Component {
         "Content-type": 'application/json'
       },
       credentials: 'include',
-      body: JSON.stringify({orgName: this.state.orgName, orgPhoneNum: this.state.orgPhoneNum, closeTime: this.state.closeTime, openTime: this.state.openTime, orgAddress: this.state.streetAddress+ ", "+this.state.city+", "+ this.state.zipCode}),
+      body: JSON.stringify({orgName: this.capitalize(this.state.orgName), orgPhoneNum: this.state.orgPhoneNum, closeTime: this.state.closeTime, openTime: this.state.openTime, orgAddress: this.state.streetAddress+ ", "+this.state.city+", "+ this.state.zipCode}),
     })
       .then(res => res.json())
       .then(res => {
@@ -61,7 +69,7 @@ export default class SignUp extends React.Component {
           },
           credentials: 'include',
           body: JSON.stringify({
-            name: this.state.firstName + " " + this.state.lastName,
+            name: this.capitalize(this.state.firstName + " " + this.state.lastName),
             email: this.state.adminEmail,
             password: this.state.password,
             orgId: res.id,
@@ -112,6 +120,7 @@ export default class SignUp extends React.Component {
                   name="orgName"
                   type="text"
                 />
+                <br/>
                 <label htmlFor="orgSignup-phoneNum">Phone Number: </label>
                 <input
                   onChange={this.handleChange}
@@ -120,6 +129,7 @@ export default class SignUp extends React.Component {
                   name="orgPhoneNum"
                   type="number"
                 />
+                <br/>
                 {/* <label htmlFor="orgSignup-email">Email: </label>
                 <input
                   onChange={this.handleChange}
@@ -136,7 +146,7 @@ export default class SignUp extends React.Component {
                   name="streetAddress"
                   type="text"
                 />
-
+                <br/>
                 <label htmlFor="orgSignup-City">City: </label>
                 <input
                   onChange={this.handleChange}
@@ -145,6 +155,7 @@ export default class SignUp extends React.Component {
                   name="city"
                   type="text"
                 />
+                <br/>
                 <label htmlFor="orgSignup-Zip">Zip Code: </label>
                 <input
                   onChange={this.handleChange}
@@ -153,6 +164,7 @@ export default class SignUp extends React.Component {
                   name="zipCode"
                   type="number"
                 />
+         
                 <label htmlFor="orgSignup-openTime">Open Time: </label>
                 <DateTimeSelector
                   //onChange={this.handleChange}
@@ -162,6 +174,7 @@ export default class SignUp extends React.Component {
                   name="openTime"
                   type="time"
                 />
+         
                 <label htmlFor="orgSignup-closeTime">Close Time: </label>
                 <DateTimeSelector
                   //onChange={this.handleChange}
@@ -186,6 +199,7 @@ export default class SignUp extends React.Component {
                   name="firstName"
                   type="text"
                 />
+                <br/>
                 <label htmlFor="adminSignup-lastName">Last Name: </label>
                 <input
                   onChange={this.handleChange}
@@ -194,6 +208,7 @@ export default class SignUp extends React.Component {
                   name="lastName"
                   type="text"
                 />
+                <br/>
                 <label htmlFor="adminSignup-email">Email: </label>
                 <input
                   onChange={this.handleChange}
@@ -202,6 +217,7 @@ export default class SignUp extends React.Component {
                   name="adminEmail"
                   type="text"
                 />
+                <br/>
                 <label htmlFor="adminSignup-Zip">Password: </label>
                 <input
                   onChange={this.handleChange}
@@ -210,6 +226,7 @@ export default class SignUp extends React.Component {
                   name="password"
                   type="password"
                 />
+                <br/>
                 <input onClick={this.handleSubmitClose} id="signup-submit" type="submit" />
               </form>
             </DialogContent>
