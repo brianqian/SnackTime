@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import Send from '@material-ui/icons/Send';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Auth from '../../../utils/Auth';
+import Auth from '../../utils/Auth';
 import {Redirect} from 'react-router-dom'
 
 const styles = theme => ({
@@ -54,16 +54,17 @@ class ChangePassword extends Component {
   componentDidMount() {
     Auth.StaffAuthorize(this);
     let url = window.location.href;
-    url = url.substring(0, url.length - 14);
+    // console.log(url);
+    url = url.substring(0, url.length - 13);
+    // console.log(url);
     this.setState({ baseUrl: url });
   }
 
   state = {
     baseUrl: '',
-    password: '',
-    newPassword: '',
+    password: "",
     showPassword: false,
-    status: 'Please enter your current password.',
+    status: 'Please enter your new email.',
   };
 
   handleChange = name => event => {
@@ -82,12 +83,12 @@ class ChangePassword extends Component {
     // console.log("event", this.state.email);
     let validPassword = this.checkPassword(this.state.newPassword);
     if (validPassword) {
-      fetch('/auth/changepass', {
+      fetch('/auth/changeemail', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           password: this.state.password,
-          newPassword: this.state.newPassword,
+          newEmail: this.state.newEmail,
           baseUrl: this.state.baseUrl,
         })
       })
@@ -117,36 +118,20 @@ class ChangePassword extends Component {
                 
                 className={classNames(classes.margin, classes.textField)}
                 variant="outlined"
-                type={this.state.showPassword ? 'text' : 'password'}
-                label="Current password"
-                value={this.state.password}
-                onChange={this.handleChange('password')}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="Toggle password visibility"
-                        onClick={this.handleClickShowPassword}
-                      >
-                        {this.state.showPassword ? (
-                          <VisibilityOff />
-                        ) : (
-                          <Visibility />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
+                label="New Email"
+                value={this.state.newEmail}
+                onChange={this.handleChange('newEmail')}
+                
               />
-              <h3>Please enter your new password.</h3>
+              <h3>Please enter your password.</h3>
               <TextField
                 
                 className={classNames(classes.margin, classes.textField)}
                 variant="outlined"
                 type={this.state.showPassword ? 'text' : 'password'}
-                label="New Password"
-                value={this.state.newPassword}
-                onChange={this.handleChange('newPassword')}
+                label="Password"
+                value={this.state.password}
+                onChange={this.handleChange('password')}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">

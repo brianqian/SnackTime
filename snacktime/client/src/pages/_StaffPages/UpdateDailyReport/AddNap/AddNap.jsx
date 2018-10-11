@@ -22,6 +22,9 @@ import Chip from '@material-ui/core/Chip';
 //import Button from '@material-ui/core/Button';
 //import HeaderBar from '../../../components/HeaderBar/HeaderBar';
 import Auth from '../../../../utils/Auth';
+import MultiSelectContainer from "../MultiSelect/MultiSelectContainer";
+
+
 
 const styles = theme => ({
   container: {
@@ -47,16 +50,35 @@ class AddNap extends React.Component {
     napStart: '',
     napEnd: '',
     multiline: 'Controlled',
-
-    students: [],
-    selectedStudents: [],
-    orgId: '',
+    allStudents: [],
+    studentIdsToSubmit:[],
     loginRejected: false,
     loggedIn: false,
   };
 
   async componentWillMount() {
-    Auth.StaffAuthorize(this);
+    await Auth.StaffAuthorize(this);
+    console.log(this.state.orgId)
+  }
+
+  updateStudents = (newArray) => {
+    this.setState({ allStudents: newArray });
+  };
+  handleSubmit = async (event) => {
+    event.preventDefault();
+    let idArray = []
+    this.state.allStudents.map(student=> {
+      if (student.selected === true){
+         idArray.push(student.id)
+      }
+    })
+    console.log(idArray);
+    await this.setState({studentIdsToSubmit: idArray})
+
+    this.state.studentIdsToSubmit.map(id => this.postNap(id));
+  };
+  logState=()=>{
+  console.log(this.state)
   }
 
   handleChange = event => {
@@ -65,24 +87,6 @@ class AddNap extends React.Component {
     //   [name]: event.target.value,
     // });
     console.log('NAP START, END', this.state.napStart, this.state.napEnd);
-  };
-
-  getAllStudents = () => {
-    console.log('get all students running');
-    console.log(this.state);
-    fetch(`/api/student/${this.state.orgId}`)
-      .then(res => res.json())
-      .then(result => {
-        console.log('Res:', result);
-        this.setState({ students: result }, function() {});
-      });
-  };
-
-  handleMultiChange = event => {
-    console.log('Multiselect :', event.target.value);
-    this.setState({ selectedStudents: event.target.value }, function() {
-      console.log(this.state.selectedStudents);
-    });
   };
 
   setNapStart = time => {
@@ -118,48 +122,20 @@ class AddNap extends React.Component {
       .then(resp => console.log(resp));
   };
 
-  handleSubmit = event => {
-    event.preventDefault();
-    this.state.selectedStudents.map(id => this.postNap(id));
-  };
 
   render() {
     const { classes, theme } = this.props;
 
     if (this.state.loggedIn) {
-      if (this.props.location.state) {
         return (
           <div>
             <HeaderBar />
-            <div className={classes.root}>
-              <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="select-multiple-chip">
-                  Select Students
-                </InputLabel>
-                <Select
-                  multiple
-                  value={this.state.selectedStudents}
-                  onChange={this.handleMultiChange}
-                  input={<Input id="select-multiple-chip" />}
-                  //MenuProps={MenuProps}
-                >
-                  {this.state.students.map(student => (
-                    <MenuItem
-                      key={student.id}
-                      value={student.id}
-                      // style={{
-                      //   fontWeight:
-                      //     this.state.students.indexOf(student.name) === -1
-                      //       ? theme.typography.fontWeightRegular
-                      //       : theme.typography.fontWeightMedium,
-                      // }}
-                    >
-                      {student.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
+            <MultiSelectContainer
+            orgId={this.state.orgId}
+            allStudents={this.state.allStudents}
+            updateStudents={this.updateStudents}
+          />
+          <button onClick={this.logState}/>
             <div>
               <Paper className={classes.root} elevation={1} />
               <form className={classes.container} noValidate autoComplete="off">
@@ -190,10 +166,7 @@ class AddNap extends React.Component {
             </div>
           </div>
         );
-      } else {
-        console.log('hello');
-        window.location.href = '/dailyreportmenu';
-      }
+      
     } else if (this.state.loginRejected) {
       return (
         <Redirect

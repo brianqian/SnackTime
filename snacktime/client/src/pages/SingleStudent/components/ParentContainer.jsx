@@ -32,6 +32,7 @@ class ParentContainer extends Component {
 
   componentDidMount() {
     this.getExistingParent();
+    console.log(this.props.studentId, "STUDENT ID");
   }
 
   getExistingParent = () => {
@@ -102,6 +103,7 @@ class ParentContainer extends Component {
     console.log(newObj);
     this.setState({ addParentForm: newObj });
     console.log('ADD PARENT FORM', this.state.addParentForm);
+    console.log("STudnet IDDddddddd", this.props.studentId);
     fetch(`/api/student/${this.props.studentId}/parent`, {
       method: 'POST',
       headers: { 'Content-type': 'application/json' },
@@ -171,6 +173,31 @@ class ParentContainer extends Component {
     return (
       <div>
         <div className={classes.root}>
+        <ExpansionPanel>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography className={classes.heading}>Info</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+            <Typography paragraph>
+                Address: {this.props.address}
+              </Typography>
+              <Typography paragraph>
+                Allergies: {this.props.allergies}
+              </Typography>
+              <Typography paragraph>
+                Medication: {this.props.medication}
+              </Typography>
+              <Typography>
+                Birthday: {this.props.dob}
+              </Typography>
+              {this.props.notes && <Typography>
+                Additional Notes: {this.props.notes}
+              </Typography>}
+              {this.props.doctor && <Typography>
+                Doctor: {this.props.doctor}
+              </Typography>}
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <Typography className={classes.heading}>Parents</Typography>
@@ -252,6 +279,90 @@ class ParentContainer extends Component {
                     Create New Parent Account
                   </button>
                 )}
+              </Typography>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography className={classes.heading}>Pickup Info</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Typography>
+                {/* {this.state.parents.map(parent => {
+                  return (
+                    <div className="existing-parent-info">
+                      <p>Name: {parent.name}</p>
+                      <p>Phone: {parent.phone}</p>
+                      <p>Email: {parent.email}</p>
+                      <p>Address: {parent.address}</p>
+                      <button name={parent.id} onClick={this.deleteAssociation}>
+                        X
+                      </button>
+                      <button name={parent.id} onClick={this.editParentInfo}>
+                        Edit
+                      </button>
+                    </div>
+                  );
+                })}
+                <form>
+                  <label htmlFor="existing">Add Parent by Email: </label>
+                  <input
+                    name="email"
+                    value={this.state.email}
+                    onChange={this.handleChange}
+                  />
+                  <button onClick={this.handleSearch} type="submit">
+                    Search
+                  </button>
+                </form>
+                {this.state.addParentForm && (
+                  <form>
+                    <label htmlFor="name">Name: </label>
+                    <input
+                      onChange={this.handleChange}
+                      value={this.state.addName}
+                      name="addName"
+                      type="text"
+                    />
+                    <label htmlFor="phone">Phone: </label>
+                    <input
+                      onChange={this.handleChange}
+                      value={this.state.addPhone}
+                      name="addPhone"
+                      type="text"
+                    />
+                    <label htmlFor="email">Email: </label>
+                    <input
+                      onChange={this.handleChange}
+                      value={this.state.addEmail}
+                      name="addEmail"
+                      type="text"
+                    />
+                    <label htmlFor="address">Address: </label>
+                    <input
+                      onChange={this.handleChange}
+                      value={this.state.addAddress}
+                      name="addAddress"
+                      type="text"
+                    />
+                    <input
+                      onClick={this.handleSubmitNewParent}
+                      value="Register and Email New Parent"
+                      type="submit"
+                    />
+                  </form>
+                )}
+                <p>{this.state.status}</p>
+                {this.state.existingParent && (
+                  <button onClick={this.makeAssociation}>
+                    Add Existing Parent to Child
+                  </button>
+                )}
+                {this.state.showAddNewParent && (
+                  <button name="new" onClick={this.handleAddNewParent}>
+                    Create New Parent Account
+                  </button>
+                )} */}
               </Typography>
             </ExpansionPanelDetails>
           </ExpansionPanel>

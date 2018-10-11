@@ -45,7 +45,7 @@ export default class AllStudentsPage extends Component {
             ? this.state.allStudents.map(student => (
                 <Link to={`/allstudentspage/${student.id}`}>
                   <Chip
-                    id={student.id}
+                    studentId={student.id}
                     avatar={<FaceIcon />}
                     label={student.name}
                     clickable

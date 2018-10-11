@@ -51,7 +51,7 @@ export default {
     ) {
       console.log('USER AUTHORIZED');
       page.setState({
-        name: data.name,
+        userName: data.name,
         userId: data.userId,
         userType: data.userType,
         orgName: data.orgName,

@@ -392,5 +392,119 @@ router.post("/changepass", (req, res) => {
     return res.json("Unauthorized");
   }
 });
+
+function changedEmail(name, email, newEmail) {
+  var transporter = nodemailer.createTransport({
+    service: "gmail",
+    type: "SMTP",
+    host: "smtp.gmail.com",
+    secure: true,
+    auth: {
+      user: "snacktimeemail@gmail.com",
+      pass: process.env.EMAIL_PASSWORD
+    }
+  });
+  let mailOptions = {
+    subject: `Snack Time | Password reset`,
+    to: email,
+    from: `Snack Time <snacktimeemail@gmail.com>`,
+    html: `
+        <h1>Hi, ${name}</h1>
+        <h2>Your email was successfully changed.</h2>
+        <h2>Your new email is now ${newEmail}.</h2>
+        <h3>Thank you for using Snack Time</h3>`
+  };
+  transporter.sendMail(mailOptions, function(error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+      res.json("Please check your email.");
+    }
+  });
+}
+
+router.post("/changeemail", (req, res) => {
+  console.log("route hit");
+  let { password, newEmail, baseUrl } = req.body;
+  // let passResetKey = shortid.generate();
+  // let passKeyExpires = new Date().getTime() + 20 * 60 * 1000;
+  if (req.session) {
+    if (req.session.staff) {
+      if (req.session.staff.email) {
+        let email = req.session.staff.email;
+        db.Staff.findOne({
+          where: {
+            email: email
+          }
+        }).then(staff => {
+          if (staff.validPassword(password)) {
+            // staff.getHash(newPassword);
+            staff.update({
+              email: newEmail
+            });
+          } else {
+            return res.json("Invalid password");
+          }
+          try {
+            console.log("trying to email");
+            // changedPassword(
+            //   staff.name,
+            //   staff.email,
+            //   "Staff",
+            //   baseUrl,
+            //   passResetKey
+            // );
+            changedEmail(staff.name, staff.email, newEmail);
+          } catch (error) {
+            console.log(error);
+            console.log("email failed");
+          }
+          return res.json("Email successfully changed!");
+        });
+        // .catch(err => {
+        //   res.json("Something went wrong, please relog to try again.");
+        // })
+      }
+    }
+    if (req.session.parent) {
+      if (req.session.parent.email === email) {
+        let email = req.session.parent.email;
+        db.Parent.findOne({
+          where: {
+            email: email
+          }
+        }).then(parent => {
+          // parent.getHash(newPassword);
+          if(parent.validPassword(password)) {
+            parent.update({
+              email: newEmail
+            });
+          } else {
+            res.json("Invalid Password");
+          }
+          try {
+            console.log("trying to email");
+            // changedPassword(
+            //   parent.name,
+            //   parent.email,
+            //   "Parent",
+            //   baseUrl,
+            //   passResetKey
+            // );
+            changedEmail(parent.name, parent.email, newEmail);
+          } catch (error) {
+            console.log(error);
+            console.log("email failed");
+          }
+          return res.json("Email successfully changed!");
+        });
+      }
+    }
+  } else {
+    return res.json("Unauthorized");
+  }
+});
+
 //
 module.exports = router;

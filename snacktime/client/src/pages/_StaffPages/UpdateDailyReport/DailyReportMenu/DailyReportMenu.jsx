@@ -1,22 +1,22 @@
-import React, { Component } from 'react';
-import DashboardItem from '../../../../components/DashboardItem/DashboardItem';
-import HeaderBar from '../../../../components/HeaderBar/HeaderBar';
-import './DailyReportMenu.css';
-import Auth from '../../../../utils/Auth';
-import {Redirect} from 'react-router-dom'
+import React, { Component } from "react";
+import DashboardItem from "../../../../components/DashboardItem/DashboardItem";
+import HeaderBar from "../../../../components/HeaderBar/HeaderBar";
+import "./DailyReportMenu.css";
+import Auth from "../../../../utils/Auth";
+import { Redirect } from "react-router-dom";
 
 class DailyReport extends Component {
   state = {
-    orgId: '',
+    orgId: "",
     loggedIn: false,
-    loginRejected: false,
+    loginRejected: false
   };
 
   componentDidMount = () => {
-    console.log('mounted');
+    console.log("mounted");
     // this.getUserId();
     Auth.StaffAuthorize(this);
-    console.log('test');
+    console.log("test");
   };
 
   // getUserId = () => {
@@ -47,38 +47,27 @@ class DailyReport extends Component {
             <DashboardItem
               title="Meal"
               destination="/dailyreport/addmeal"
-              activity="/dailyreport/addmeal"
               image="/img/bottle.png"
             />
             <DashboardItem
               title="Nap"
               //destination="/studentselect"
               destination="/dailyreport/addnap"
-              activity="/dailyreport/addnap"
               image="/img/sleep.png"
             />
             <DashboardItem
               title="Potty"
-              destination="/studentselect"
-              activity="/dailyreport/addpotty"
+              destination="/dailyreport/addpotty"
               image="/img/toilet.png"
             />
             <DashboardItem
               title="Meds"
-              destination="/studentselect"
-              activity="/dailyreport/addmeds"
+              destination="/dailyreport/addmeds"
               image="/img/medication.png"
             />
             <DashboardItem
-              title="Note"
-              destination="/studentselect"
-              activity="/dailyreport/addnote"
-              image="/img/message.png"
-            />
-            <DashboardItem
               title="Incident"
-              destination="/studentselect"
-              activity="/dailyreport/addincident"
+              destination="/dailyreport/addincident"
               image="/img/incident.png"
             />
           </div>
@@ -88,8 +77,11 @@ class DailyReport extends Component {
       return (
         <Redirect
           to={{
-            pathname: '/notAuthorized',
-            state: { type: 'Staff' },
+            pathname: "/notAuthorized",
+            state: {
+              type: "Staff",
+              location: '/dailyreportmenu'
+            }
           }}
         />
       );

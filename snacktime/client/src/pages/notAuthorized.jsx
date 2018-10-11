@@ -5,6 +5,7 @@ import {Link } from 'react-router-dom'
 class notAuthorized extends Component {
   componentDidMount() {
     console.log('autho props', this.props);
+    console.log(this.props);
   }
   render() {
     if (!this.props.location.state) {
@@ -20,7 +21,7 @@ class notAuthorized extends Component {
       <div>
         <h1>Oops</h1>
         <p>Something went wrong... Please try logging in again</p>
-        <Login type={this.props.location.state.type} />
+        <Login oldLocation= {this.props.location.state.location} type={this.props.location.state.type} />
       </div>
     );
   }
