@@ -142,7 +142,7 @@ module.exports = {
             }
           });
           let mailOptions = {
-            subject: `Snack Time | Password reset`,
+            subject: `Snack Time | Thank you for signing up!`,
             to: req.body.email,
             from: `Snack Time <snacktimeemail@gmail.com>`,
             html: `

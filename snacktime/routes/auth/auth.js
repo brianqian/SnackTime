@@ -52,7 +52,6 @@ router.route("/Organization").post((req, res) => {
     openTime:req.body.openTime,
     closeTime:req.body.closeTime,
     address: req.body.orgAddress
-
   }).then(org => {
     res.json(org);
   });
@@ -405,7 +404,7 @@ function changedEmail(name, email, newEmail) {
     }
   });
   let mailOptions = {
-    subject: `Snack Time | Password reset`,
+    subject: `Snack Time | Email Change`,
     to: email,
     from: `Snack Time <snacktimeemail@gmail.com>`,
     html: `
