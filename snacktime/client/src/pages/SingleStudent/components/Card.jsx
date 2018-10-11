@@ -60,7 +60,8 @@ const styles = theme => ({
       date: '',
       status: '',   
       noteForStaff:null ,
-      noteForParents:null         
+      noteForParents:null,
+      role:"staff"     
     };
 
     componentWillMount(){
@@ -238,37 +239,40 @@ const styles = theme => ({
     }
 
 
-  //this needs a check for the role
     renderNoteForStaff() {
-      if(!this.state.noteForStaff) {
-        return <div></div>;
-      } else {
-        return (
-          <div>
-          <strong>Note from Parents:</strong>
-            <Typography component="p">
-               {this.state.noteForStaff}   
-            </Typography>
-            <hr />
-            </div>
-        );
+      if(this.state.role =="staff"){
+        if(!this.state.noteForStaff && this.state.role=="staff") {
+          return <div></div>;
+        } else {
+          return (
+            <div>
+            <strong>Note from Parents:</strong>
+              <Typography component="p">
+                 {this.state.noteForStaff}   
+              </Typography>
+              <hr />
+              </div>
+          );
+        }
       }
     }
 
-      //this needs a check for the role
+
     renderNoteForParents() {
-      if(!this.state.noteForParents) {
-        return <div></div>;
-      } else {
-        return (
-          <div>
-          <strong>Note for Parents:</strong>
-            <Typography component="p">
-               {this.state.noteForParents}   
-            </Typography>
-            <hr />
-            </div>
-        );
+      if(this.state.role=="parent"){
+        if(!this.state.noteForParents) {
+          return <div></div>;
+        } else {
+          return (
+            <div>
+            <strong>Note for Parents:</strong>
+              <Typography component="p">
+                {this.state.noteForParents}   
+              </Typography>
+              <hr />
+              </div>
+          );
+        }
       }
     }
 
@@ -373,6 +377,27 @@ const styles = theme => ({
       }
     }
 
+    renderNoteButton(){
+      if(this.state.role=="staff")
+      return (<DashboardItem
+        destination="/addnote"
+        title="Note to Parents"
+        image="/img/message.png"
+        id={this.props.id}
+        name={this.props.name}
+        role="staff"
+        />)
+      else if(this.state.role=="parent")
+      return (<DashboardItem
+        destination="/addnote"
+        title="Note to Staff"
+        image="/img/message.png"
+        id={this.props.id}
+        name={this.props.name}
+        role="parent"
+        />)
+    }
+
 
   
     render() {
@@ -388,13 +413,7 @@ const styles = theme => ({
             }
             title={this.props.name}
             subheader={this.state.date}
-            action={<DashboardItem
-            destination="/addnote"
-            title="Note"
-            image="/img/message.png"
-            id={this.props.id}
-            name={this.props.name}
-            />}
+            action={this.renderNoteButton()}
           />
           {/* <CardMedia
             className={classes.media}
