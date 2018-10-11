@@ -178,13 +178,13 @@ class ParentContainer extends Component {
               <Typography className={classes.heading}>Info</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-            <Typography paragraph>
+            <Typography>
                 Address: {this.props.address}
               </Typography>
-              <Typography paragraph>
+              <Typography>
                 Allergies: {this.props.allergies}
               </Typography>
-              <Typography paragraph>
+              <Typography>
                 Medication: {this.props.medication}
               </Typography>
               <Typography>

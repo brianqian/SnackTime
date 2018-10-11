@@ -58,7 +58,9 @@ const styles = theme => ({
       medicines:[],
       incidents:[],
       date: '',
-      status: '',             
+      status: '',   
+      noteForStaff:null ,
+      noteForParents:null         
     };
 
     componentWillMount(){
@@ -68,6 +70,7 @@ const styles = theme => ({
       this.getNaps();
       this.getMedicines();
       this.getIncidents();
+      this.getNotes();
     }
 
     
@@ -205,6 +208,172 @@ const styles = theme => ({
         }
       });
     }
+
+    
+    getNotes = () =>{
+      console.log("start of get note for staff function");
+      let today = new Date();
+      let date =
+        today.getFullYear() +
+        '-' +
+        (today.getMonth() + 1) +
+        '-' +
+        today.getDate();
+   
+      this.setState({date: date});
+
+      fetch(`/api/student/${this.props.id}/report/${date}`)
+      .then(resp => resp.json())
+      .then(resp => {
+        console.log("Resp from notes: ",resp)
+        if (resp) {
+          if (resp === 'No Notes') {
+            this.setState({ status: 'No report found :(' });
+          } else {
+            console.log(resp)
+            this.setState({ noteForStaff: resp.noteForStaff, noteForParents: resp.noteForParents });
+          }
+        }
+      });
+    }
+
+
+  //this needs a check for the role
+    renderNoteForStaff() {
+      if(!this.state.noteForStaff) {
+        return <div></div>;
+      } else {
+        return (
+          <div>
+          <strong>Note from Parents:</strong>
+            <Typography component="p">
+               {this.state.noteForStaff}   
+            </Typography>
+            <hr />
+            </div>
+        );
+      }
+    }
+
+      //this needs a check for the role
+    renderNoteForParents() {
+      if(!this.state.noteForParents) {
+        return <div></div>;
+      } else {
+        return (
+          <div>
+          <strong>Note for Parents:</strong>
+            <Typography component="p">
+               {this.state.noteForParents}   
+            </Typography>
+            <hr />
+            </div>
+        );
+      }
+    }
+
+    renderDiaperings() {
+      if(this.state.diaperings.length===0) {
+        return <div></div>;
+      } else {
+        return (
+          <div>
+          <strong>Diapering:</strong>
+          {this.state.diaperings.map(diapering => (
+
+            <Typography component="p">
+              Time: {diapering.time} &emsp;  
+              Type: {diapering.type} &emsp;
+              Place: {diapering.place} 
+            </Typography>
+          ))}
+          <hr/>
+            </div>
+        );
+      }
+    }
+
+    renderMeals(){
+      if(this.state.meals.length===0) {
+        return <div></div>;
+      } else {
+        return (
+          <div>
+           <strong>Meals:</strong>
+          {this.state.meals.map(meal => (
+
+            <Typography component="p">
+              Time:{meal.time} &emsp;
+              Had {meal.food} for {meal.type} 
+            </Typography>
+          ))}
+          <hr/>   
+            </div>
+        );
+      }
+    }
+
+    renderNaps(){
+      if(this.state.naps.length===0) {
+        return <div></div>;
+      } else {
+        return (
+          <div>
+           <strong>Naps:</strong>
+          {this.state.naps.map(nap => (
+
+            <Typography component="p">
+              Started: {nap.startTime} &emsp;
+              Ended: {nap.endTime}
+            </Typography>
+          ))}
+          <hr/>
+            </div>
+        );
+      }
+    }
+
+    renderMeds(){
+      if(this.state.medicines.length===0) {
+        return <div></div>;
+      } else {
+        return (
+          <div>
+           <strong>Meds Administered:</strong>
+          {this.state.medicines.map(medicine => (
+
+            <Typography component="p">
+              Time: {medicine.time} &emsp;
+              Med: {medicine.medName}
+            </Typography>
+          ))}
+          <hr/>
+            </div>
+        );
+      }
+    }
+
+    renderIncidents(){
+      if(this.state.incidents.length===0) {
+        return <div></div>;
+      } else {
+        return (
+          <div>
+           <strong>Incidents:</strong>
+          {this.state.incidents.map(incident => (
+
+            <Typography component="p">
+              Time: {incident.time} &emsp;
+              Incident: {incident.incident}
+            </Typography>
+          ))}
+          <hr/>
+            </div>
+        );
+      }
+    }
+
+
   
     render() {
       const { classes } = this.props;
@@ -224,6 +393,7 @@ const styles = theme => ({
             title="Note"
             image="/img/message.png"
             id={this.props.id}
+            name={this.props.name}
             />}
           />
           {/* <CardMedia
@@ -232,52 +402,15 @@ const styles = theme => ({
             title="Contemplative Reptile"
           /> */}
           <CardContent>
-            <strong>Diapering:</strong>
-          {this.state.diaperings.map(diapering => (
-
-            <Typography component="p">
-              Time: {diapering.time} &emsp;  
-              Type: {diapering.type} &emsp;
-              Place: {diapering.place} 
-            </Typography>
-          ))}
-          <hr/>
-          <strong>Meals:</strong>
-          {this.state.meals.map(meal => (
-
-            <Typography component="p">
-              Time: {meal.time} &emsp;
-              Meal Type: {meal.type} &emsp;
-              Food: {meal.food}
-            </Typography>
-          ))}
-          <hr/>   
-          <strong>Naps:</strong>
-          {this.state.naps.map(nap => (
-
-            <Typography component="p">
-              Nap Started: {nap.startTime} &emsp;
-              Nap Ended: {nap.endTime}
-            </Typography>
-          ))}
-          <hr/>
-          <strong>Meds Administered:</strong>
-          {this.state.medicines.map(medicine => (
-
-            <Typography component="p">
-              Time: {medicine.time} &emsp;
-              Type: {medicine.medName}
-            </Typography>
-          ))}
-          <hr/>
-          <strong>Incidents:</strong>
-          {this.state.incidents.map(incident => (
-
-            <Typography component="p">
-              Time: {incident.time} &emsp;
-              Incident: {incident.incident}
-            </Typography>
-          ))}               
+            {this.renderNoteForStaff()}
+            {this.renderNoteForParents()}
+            {this.renderDiaperings()}
+            {this.renderMeals()}
+            {this.renderNaps()}
+            {this.renderMeds()}
+            {this.renderIncidents()}
+            
+                    
           </CardContent>
         </Card>
       );

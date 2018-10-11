@@ -37,6 +37,7 @@ class AddNote extends React.Component {
     time: '',
     note: '',
     id: this.props.location.state.id,
+    name:this.props.location.state.name,
     reportId: '',
     multiline: 'Controlled',
     noteExists:false
@@ -136,7 +137,7 @@ class AddNote extends React.Component {
       <form className={classes.container} noValidate autoComplete="off">
         <TextField
           required
-          label="Note"
+          label={this.state.name}
           className={classes.textField}
           value={this.state.note}
           onChange={this.handleChange('note')}
