@@ -12,12 +12,25 @@ import { Redirect } from "react-router-dom";
 import Auth from "../../../../utils/Auth";
 import MultiSelectContainer from "../MultiSelect/MultiSelectContainer";
 import Timepicker from "../../../../components/TimePicker/TimePicker";
+import "./AddPotty.css";
 
+var bgColors = {
+  Default: "#81b71a",
+  Blue: "#00B1E1",
+  Cyan: "#37BC9B",
+  Green: "#8CC152",
+  Red: "#E9573F",
+  Yellow: "#F6BB42"
+};
 
 const styles = theme => ({
   container: {
     display: "flex",
     flexWrap: "wrap"
+  },
+  submitbutton: {
+    marginTop: 25,
+    height: 10
   },
   textField: {
     marginLeft: theme.spacing.unit,
@@ -29,6 +42,12 @@ const styles = theme => ({
   },
   menu: {
     width: 200
+  },
+  clicked: {
+    backgroundColor: bgColors.Blue
+  },
+  notclicked: {
+    backgroundColor: bgColors.Red
   }
 });
 
@@ -40,19 +59,48 @@ class AddPotty extends React.Component {
     pottyTime: "",
     place: "",
     type: "",
-    multiline: "Controlled"
+    multiline: "Controlled",
+    variant: "",
+    clickedDiaper: "classes.notclickked",
+    clickedPotty: "classes.notclicked",
+    clickedAccident: "classes.notclicked"
   };
 
   async componentWillMount() {
     Auth.StaffAuthorize(this);
   }
 
+  clickedDiaper = () => {
+    console.log("diaper");
+    this.setState({
+      clickedAccident: "classes.notclicked",
+      clickedDiaper: "classes.clicked",
+      clickedPotty: "classes.notclicked"
+    }, function()  {
+      console.log(this.state.clickedDiaper)
+    });
+  };
+  clickedAccident = () => {
+    this.setState({
+      clickedAccident: "classes.clicked",
+      clickedDiaper: "classes.notclicked",
+      clickedPotty: "classes.notclicked"
+    });
+  };
+  clickedPotty = () => {
+    this.setState({
+      clickedAccident: "classes.notclicked",
+      clickedDiaper: "classes.notclicked",
+      clickedPotty: "classes.clicked"
+    });
+  };
+
   updateStudents = newArray => {
     this.setState({ allStudents: newArray });
   };
-  handleSubmit = async (event) => {
+  handleSubmit = async event => {
     event.preventDefault();
-    let idArray = []
+    let idArray = [];
     this.state.allStudents.map(student => {
       if (student.selected === true) {
         idArray.push(student.id);
@@ -60,24 +108,26 @@ class AddPotty extends React.Component {
     });
     console.log(idArray);
     await this.setState({ studentIdsToSubmit: idArray });
-
-    this.state.studentIdsToSubmit.map(id => this.postPotty(id));
+    if (this.state.studentIdsToSubmit.length === 0)
+      alert("No student selected");
+    else this.state.studentIdsToSubmit.map(id => this.postPotty(id));
   };
   logState = () => {
     console.log(this.state);
   };
-  handleClick = (name, value) => {
-    // console.log("Sasha says this has been clicked");
+
+  handleClick = (event, name, value) => {
     this.setState({ [name]: value });
+    this.handleSelect(event);
   };
-  // handleClick = event => {
-  //   console.log(event.target);
-  //   const name = event.target.name
-  //   event.preventDefault();
-  //   this.setState({
-  //     [name]: event.target.value,
-  //   });
-  // };
+
+  handleSelect = async e => {
+    const name = e.target.getAttribute("class");
+    console.log("Name", name);
+    const prevSelect = document.querySelectorAll(`.${name}`);
+    prevSelect.forEach(num => num.classList.remove("active"));
+    e.target.classList.add("textPrimary");
+  };
 
   setPottyTime = time => {
     this.setState({ pottyTime: time });
@@ -122,35 +172,46 @@ class AddPotty extends React.Component {
             allStudents={this.state.allStudents}
             updateStudents={this.updateStudents}
           />
-          <button onClick={this.logState} />
 
           <form className={classes.container} noValidate autoComplete="off">
-
-            <Timepicker setTime={this.setPottyTime}/> 
+            <Timepicker setTime={this.setPottyTime} />
             <hr />
             <Button
+              className={this.state.clickedDiaper}
               name="place"
               value="Diaper"
-              onClick={() => this.handleClick("place", "Diaper")}
+              onClick={e => {
+                this.handleClick(e, "place", "Diaper");
+                this.clickedDiaper();
+              }}
             >
               Diaper
             </Button>
             <Button
+              className="PottyPlace"
               name="place"
               value="Potty"
-              onClick={() => this.handleClick("place", "Potty")}
+              onClick={e => {
+                this.handleClick(e, "place", "Potty");
+                this.clickedPotty();
+              }}
             >
               Potty
             </Button>
             <Button
+              className="PottyPlace"
               name="place"
               value="Accident"
-              onClick={() => this.handleClick("place", "Accident")}
+              onClick={e => {
+                this.handleClick(e, "place", "Accident");
+                this.clickedAccident();
+              }}
             >
               Accident
             </Button>
             <hr />
             <Button
+              className="pottyType"
               name="type"
               value="Wet"
               onClick={() => this.handleClick("type", "Wet")}
@@ -158,6 +219,7 @@ class AddPotty extends React.Component {
               Wet
             </Button>
             <Button
+              className="pottyType"
               name="type"
               value="BM"
               onClick={() => this.handleClick("type", "BM")}
@@ -165,6 +227,7 @@ class AddPotty extends React.Component {
               BM
             </Button>
             <Button
+              className="pottyType"
               name="type"
               value="Dry"
               onClick={() => this.handleClick("type", "Dry")}
@@ -172,7 +235,12 @@ class AddPotty extends React.Component {
               Dry
             </Button>
             <hr />
-            <Button onClick={this.handleSubmit}>Add Activity</Button>
+            <Button
+              className={classes.submitbutton}
+              onClick={this.handleSubmit}
+            >
+              Add Activity
+            </Button>
           </form>
         </div>
       );

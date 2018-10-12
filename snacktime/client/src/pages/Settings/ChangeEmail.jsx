@@ -47,7 +47,7 @@ const styles = theme => ({
   },
   button: {
     marginBottom: "5%"
-  }
+  },
 });
 
 class ChangePassword extends Component {
@@ -116,7 +116,7 @@ class ChangePassword extends Component {
       return (
         <div>
           <Card>
-            <CardContent>
+            <CardContent >
               <h3>{this.state.status}</h3>
               <TextField
                 className={classNames(classes.margin, classes.textField)}

@@ -113,9 +113,9 @@ class ChangePassword extends Component {
     const { classes } = this.props;
     if (this.state.loggedIn) {
       return (
-        <div>
+        <div >
           <Card>
-            <CardContent>
+            <CardContent className={classes.root}>
               <h3>{this.state.status}</h3>
               <TextField
                 className={classNames(classes.margin, classes.textField)}

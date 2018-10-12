@@ -15,7 +15,7 @@ module.exports = function(sequelize, DataTypes) {
       },
     },
     notes: {
-      type: DataTypes.TEXT,
+      type: DataTypes.TEXT
     },
     dob: {
       type: DataTypes.STRING, 

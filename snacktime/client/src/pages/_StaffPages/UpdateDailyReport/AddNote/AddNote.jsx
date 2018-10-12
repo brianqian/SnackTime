@@ -17,6 +17,10 @@ const styles = theme => ({
     display: 'flex',
     flexWrap: 'wrap',
   },
+  submitbutton:{
+    marginTop:25,
+    height:10
+  },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
@@ -233,7 +237,7 @@ class AddNote extends React.Component {
       <form className={classes.container} noValidate autoComplete="off">
       {this.renderTexField()}
         
-        <Button
+        <Button className={classes.submitbutton}
         onClick={this.handleSubmit}
         >
         Add Activity
