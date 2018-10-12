@@ -11,6 +11,8 @@ import DateTimeSelector from "../../../../components/DateTimeSelector/DateTimeSe
 import { Redirect } from "react-router-dom";
 import Auth from "../../../../utils/Auth";
 import MultiSelectContainer from "../MultiSelect/MultiSelectContainer";
+import Timepicker from "../../../../components/TimePicker/TimePicker";
+
 
 const styles = theme => ({
   container: {
@@ -123,17 +125,8 @@ class AddPotty extends React.Component {
           <button onClick={this.logState} />
 
           <form className={classes.container} noValidate autoComplete="off">
-            <DateTimeSelector
-              label="Potty Time: "
-              name="pottyTime"
-              className={classes.textField}
-              value={this.state.pottyTime}
-              setTime={this.setPottyTime}
-              //onChange={this.handleChange}
-              //   onChange={this.handleSelectorChange}
-              //   margin="normal"
-              //   variant="outlined"
-            />
+
+            <Timepicker setTime={this.setPottyTime}/> 
             <hr />
             <Button
               name="place"

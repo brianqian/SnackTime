@@ -52,7 +52,11 @@ const styles = theme => ({
 
 class ChangePassword extends Component {
   componentDidMount() {
-    Auth.StaffAuthorize(this);
+    if (this.props.role === "staff") {
+      Auth.StaffAuthorize(this);
+    } else if (this.props.role === "parent") {
+      Auth.ParentAuthorize(this);
+    }
     let url = window.location.href;
     // console.log(url);
     url = url.substring(0, url.length - 13);

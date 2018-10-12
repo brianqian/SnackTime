@@ -5,6 +5,7 @@ import { Redirect } from "react-router";
 import Auth from "../../../utils/Auth";
 import HeaderBar from "../../../components/HeaderBar/HeaderBar";
 
+
 class StaffHomePage extends Component {
   state = {
     userName: "",
