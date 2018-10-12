@@ -8,10 +8,29 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TextField from '@material-ui/core/TextField';
 import './ParentContainer.css';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import indigo from '@material-ui/core/colors/indigo';
+
+const CustomTableCell = withStyles(theme => ({
+  head: {
+    backgroundColor: indigo[500],
+    color: theme.palette.common.white,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
 
 const styles = theme => ({
   root: {
-    width: '75vw',
+    width: '100%',
+    marginTop: theme.spacing.unit * 3,
+    overflowX: 'auto',
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -19,7 +38,15 @@ const styles = theme => ({
   },
   childInfo: {
     margin: "15px",
-  }
+  },
+  table: {
+    minWidth: 700,
+  },
+  row: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.background.default,
+    },
+  },
 });
 
 class ParentContainer extends Component {
@@ -437,23 +464,33 @@ class ParentContainer extends Component {
     if(this.state.role === "parent")
       return(
         <div>
-        <div className={classes.root}></div>
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <Typography className={classes.heading}>School</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <Typography>
-    
-                    <div className="existing-parent-info">
-                      <p><strong>Name:</strong> {this.state.orgName}</p>
-                      <p><strong>Phone:</strong> {this.state.orgPhone}</p>
-                      <p><strong>Address:</strong> {this.state.orgAddress}</p>
-                      <p><strong>Open Time:</strong> {this.state.orgOpenTime}</p>
-                      <p><strong>Close Time:</strong> {this.state.orgCloseTime}</p>
-                    </div>
-               
-              </Typography>
+            <Paper className={classes.root}>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      <CustomTableCell>Name</CustomTableCell>
+                      <CustomTableCell>Phone</CustomTableCell>
+                      <CustomTableCell>Address</CustomTableCell>
+                      <CustomTableCell>Open Time</CustomTableCell>
+                      <CustomTableCell>Close Time</CustomTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <CustomTableCell>{this.state.orgName}</CustomTableCell>
+                      <CustomTableCell>{this.state.orgPhone}</CustomTableCell>
+                      <CustomTableCell>{this.state.orgAddress}</CustomTableCell>
+                      <CustomTableCell>{this.state.orgOpenTime}</CustomTableCell>
+                      <CustomTableCell>{this.state.orgCloseTime}</CustomTableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+            </Paper>
             </ExpansionPanelDetails>
           </ExpansionPanel>
           </div>)
@@ -464,22 +501,31 @@ class ParentContainer extends Component {
     if(this.state.role==="parent")
       return (
         <div>
-        <div className={classes.root}></div>
     <ExpansionPanel>
     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
       <Typography className={classes.heading}>Staff</Typography>
     </ExpansionPanelSummary>
     <ExpansionPanelDetails>
-      <Typography>
-      {this.state.staffs.map(staff => {
-                  return (
-                    <div className="existing-parent-info">
-                      <p><strong>Name:</strong> {staff.name}</p>
-                      <p><strong>Email:</strong> {staff.email}</p>
-                    </div>
-                  );
-                })}
-      </Typography>
+      <Paper className={classes.root}>
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>
+                <CustomTableCell>Name</CustomTableCell>
+                <CustomTableCell>Email</CustomTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+            {this.state.staffs.map(staff => {
+            return (
+              <TableRow>
+                <CustomTableCell>{staff.name}</CustomTableCell>
+                <CustomTableCell>{staff.email}</CustomTableCell>
+              </TableRow>
+            );
+            })}
+            </TableBody>
+          </Table>
+      </Paper>
     </ExpansionPanelDetails>
   </ExpansionPanel>
   </div>)
@@ -494,28 +540,36 @@ class ParentContainer extends Component {
         <div className={classes.root}>
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>Info</Typography>
+              <Typography className={classes.heading}>Student Information</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-
-              <Typography className={classes.childInfo}>
-                <strong>Address:</strong> {this.props.address}
-              </Typography>
-              <Typography className={classes.childInfo}>
-                <strong>Allergies:</strong> {this.props.allergies}
-              </Typography>
-              <Typography className={classes.childInfo}>
-                <strong>Medication:</strong> {this.props.medication}
-              </Typography>
-              <Typography className={classes.childInfo}>
-                <strong>Birthday:</strong> {this.props.dob}
-              </Typography>
-              {this.props.notes && <Typography className={classes.childInfo}>
-              <strong>Additional Notes:</strong> {this.props.notes}
-              </Typography>}
-              {this.props.doctor && <Typography className={classes.childInfo}>
-              <strong>Doctor:</strong> {this.props.doctor}
-              </Typography>}
+            <Paper className={classes.root}>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      <CustomTableCell>Address</CustomTableCell>
+                      <CustomTableCell>DOB</CustomTableCell>
+                      <CustomTableCell>Allergies</CustomTableCell>
+                      <CustomTableCell>Medications</CustomTableCell>
+                      <CustomTableCell>Note</CustomTableCell>
+                      <CustomTableCell>Doctor</CustomTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                  
+                    <TableRow>
+                      <CustomTableCell>{this.props.address}</CustomTableCell>
+                      <CustomTableCell>{this.props.dob}</CustomTableCell>
+                      <CustomTableCell>{this.props.allergies}</CustomTableCell>
+                      <CustomTableCell>{this.props.medication}</CustomTableCell>
+                      <CustomTableCell>{this.props.notes}</CustomTableCell>
+                      <CustomTableCell>{this.props.doctor}</CustomTableCell>
+                    </TableRow>
+                  
+                 
+                  </TableBody>
+                </Table>
+            </Paper>
 
             </ExpansionPanelDetails>
           </ExpansionPanel>
@@ -524,21 +578,34 @@ class ParentContainer extends Component {
               <Typography className={classes.heading}>Parents</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <Typography>
-                {this.state.parents.map(parent => {
+            <Paper className={classes.root}>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      <CustomTableCell>Name</CustomTableCell>
+                      <CustomTableCell>Phone</CustomTableCell>
+                      <CustomTableCell>Email</CustomTableCell>
+                      <CustomTableCell>Address</CustomTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                  {this.state.parents.map(parent => {
                   return (
-                    <div className="existing-parent-info">
-                      <p><strong>Name:</strong> {parent.name}</p>
-                      <p><strong>Phone:</strong> {parent.phone}</p>
-                      <p><strong>Email:</strong> {parent.email}</p>
-                      <p><strong>Address:</strong> {parent.address}</p>
-                    </div>
+                    <TableRow>
+                      <CustomTableCell>{parent.name}</CustomTableCell>
+                      <CustomTableCell>{parent.phone}</CustomTableCell>
+                      <CustomTableCell>{parent.email}</CustomTableCell>
+                      <CustomTableCell>{parent.address}</CustomTableCell>
+                    </TableRow>
                   );
-                })}
-
+                  })}
+                  </TableBody>
+                </Table>
+            </Paper>
+                  
                 {this.renderAddParentForm()}
 
-              </Typography>
+              {/* </Typography> */}
             </ExpansionPanelDetails>
           </ExpansionPanel>
           <ExpansionPanel>
@@ -546,20 +613,33 @@ class ParentContainer extends Component {
               <Typography className={classes.heading}>Guardians</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <Typography>
-                {this.state.guardians.map(guardian => {
+            <Paper className={classes.root}>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      <CustomTableCell>Name</CustomTableCell>
+                      <CustomTableCell>Phone</CustomTableCell>
+                      <CustomTableCell>Email</CustomTableCell>
+                      <CustomTableCell>Address</CustomTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                  {this.state.guardians.map(guardian => {
                   return (
-                    <div className="existing-guardian-info">
-                      <p><strong>Name:</strong> {guardian.name}</p>
-                      <p><strong>Phone:</strong> {guardian.phone}</p>
-                      <p><strong>Email:</strong> {guardian.email}</p>
-                      <p><strong>Address:</strong> {guardian.address}</p>
-                    </div>
+                    <TableRow>
+                      <CustomTableCell>{guardian.name}</CustomTableCell>
+                      <CustomTableCell>{guardian.phone}</CustomTableCell>
+                      <CustomTableCell>{guardian.email}</CustomTableCell>
+                      <CustomTableCell>{guardian.address}</CustomTableCell>
+                    </TableRow>
                   );
-                })}
+                  })}
+                  </TableBody>
+                </Table>
+            </Paper>
 
                 {this.renderGuardianForm()}
-              </Typography>
+
             </ExpansionPanelDetails>
           </ExpansionPanel>
                 
