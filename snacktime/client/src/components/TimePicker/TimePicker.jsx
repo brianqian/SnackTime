@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import './TimePicker.css';
+import './TimePicker.css';
 import moment from 'moment';
 
 class TimePicker extends Component {
@@ -25,17 +25,15 @@ class TimePicker extends Component {
     this.populateState();
   }
 
-
-  returnTime=()=>{
-    if (this.state.selectedAmpm === 'AM'){
-      return `${this.state.selectedHour}:${this.state.selectedMin}:00`
-    }else{
+  returnTime = () => {
+    if (this.state.selectedAmpm === 'AM') {
+      return `${this.state.selectedHour}:${this.state.selectedMin}:00`;
+    } else {
       let hour = parseInt(this.state.selectedHour);
-      hour+=12;
-      return `${hour}:${this.state.selectedMin}:00`
-    } 
-
-  }
+      hour += 12;
+      return `${hour}:${this.state.selectedMin}:00`;
+    }
+  };
 
   populateState = () => {
     const hourArray = [];
@@ -54,38 +52,32 @@ class TimePicker extends Component {
   };
   openCloseSelector = () => {
     let toggle = this.state.hide;
-    this.setState({hide: !toggle})
-    
-  }
-handleSelect = async e => {
-
+    this.setState({ hide: !toggle });
+  };
+  handleSelect = async e => {
     const value = e.target.getAttribute('value');
     const name = e.target.getAttribute('class');
     console.log(value, name);
     const prevSelect = document.querySelectorAll(`.${name}`);
-    prevSelect.forEach(num=>num.classList.remove('timepicker__selected'));
+    prevSelect.forEach(num => num.classList.remove('timepicker__selected'));
     e.target.classList.add('timepicker__selected');
     await this.setState({ [name]: value });
-    this.props.setTime(this.returnTime())
-
+    this.props.setTime(this.returnTime());
   };
-  handleButton = () => {
-    console.log('hour', this.state.selectedHour);
-    console.log('min', this.state.selectedMin);
-    console.log('ampm', this.state.selectedAmpm);
-  };
-
   render() {
     return (
       <div className="timepicker-container">
-        <div className="timepicker-display">
+        <div onClick={this.openCloseSelector} className="timepicker-display">
           <div className="tp-display-hour">{this.state.selectedHour}</div>
           <div>:</div>
           <div className="tp-display-min">{this.state.selectedMin}</div>
           <div className="tp-display-ampm">{this.state.selectedAmpm}</div>
-          <button onClick={this.openCloseSelector}>Open/Close</button>
         </div>
-        <div className={`${this.state.hide ? 'timepicker__hidden' : ''} timepicker timepicker-Hour`}>
+        <div
+          className={`${
+            this.state.hide ? 'timepicker__hidden' : ''
+          } timepicker timepicker-Hour`}
+        >
           {this.state.hours.map(hour => {
             return (
               <div
@@ -98,7 +90,11 @@ handleSelect = async e => {
             );
           })}
         </div>
-        <div className={`${this.state.hide ? 'timepicker__hidden' : ''}  timepicker timepicker-Min`}>
+        <div
+          className={`${
+            this.state.hide ? 'timepicker__hidden' : ''
+          }  timepicker timepicker-Min`}
+        >
           {this.state.minutes.map(minute => {
             return (
               <div
@@ -111,7 +107,11 @@ handleSelect = async e => {
             );
           })}
         </div>
-        <div className={`${this.state.hide ? 'timepicker__hidden' : ''} timepicker timepicker-Ampm`}>
+        <div
+          className={`${
+            this.state.hide ? 'timepicker__hidden' : ''
+          } timepicker timepicker-Ampm`}
+        >
           {this.state.ampm.map(ampm => {
             return (
               <div
@@ -124,8 +124,6 @@ handleSelect = async e => {
             );
           })}
         </div>
-
-        {/* <button onClick={this.handleButton}>CONSOLE LOG STATE</button> */}
       </div>
     );
   }
