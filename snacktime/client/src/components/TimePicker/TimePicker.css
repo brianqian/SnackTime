@@ -1,0 +1,22 @@
+.timepicker-container{
+  display: flex;
+}
+
+.timepicker{
+  padding: 1rem;
+  height: 20vh;
+  overflow: auto;
+  /* display: none; */
+}
+
+.timepicker-hour{
+  border-right: 1px black solid
+}
+.timepicker-min{
+  border-right: 1px black solid
+}
+
+.timepicker__selected{
+  background-color: black;
+  color: white;
+}

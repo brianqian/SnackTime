@@ -27,6 +27,7 @@ import Settings from "./pages/_StaffPages/StaffSettings/StaffSettingsPage";
 import UpdateCalendar from './pages/_StaffPages/UpdateCalendar/UpdateCalendar';
 import MessageParents from './pages/_StaffPages/MessageParents/MessageParents';
 import AddHighlight from './pages/_StaffPages/UpdateDailyReport/AddHighlight/AddHighlight';
+import Timepicker from './components/TimePicker/TimePicker'
 
 
 class App extends Component {
@@ -61,6 +62,7 @@ class App extends Component {
             <Route exact path="/multiselect" component={MultiSelectContainer} /> {/*TEST ROUTE*/}
             <Route exact path="/staffsettings" component={Settings} />
             <Route exact path="/updatecalendar" component={UpdateCalendar} />
+            <Route exact path="/picker" component={Timepicker} /> {/*TEST ROUTE*/}
             <Route component={notFound} />
           </Switch>
         </Router>
