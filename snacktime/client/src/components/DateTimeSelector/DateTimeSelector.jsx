@@ -25,7 +25,7 @@ var d = new Date(); //
 var n = toJSONLocal(d);
 // console.log(n);
 
-class DateTimeSelector extends React.Component {
+class TimePicker extends React.Component {
   state = {
     time: n
   };
@@ -60,8 +60,8 @@ class DateTimeSelector extends React.Component {
   }
 }
 
-DateTimeSelector.propTypes = {
+TimePicker.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(DateTimeSelector);
+export default withStyles(styles)(TimePicker);

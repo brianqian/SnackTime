@@ -15,15 +15,17 @@ class StaffHomePage extends Component {
     loginRejected: false
   };
 
-  componentDidMount() {
-    Auth.StaffAuthorize(this);
+   componentWillMount() {
+     Auth.StaffAuthorize(this);
+
   }
 
   render() {
     if (this.state.loggedIn) {
+      // if (true){
       return (
         <div>
-          <HeaderBar />
+          <HeaderBar type={this.state.userType} />
           <header>
             <p>
               <strong>Welcome {this.state.userName}</strong>
@@ -35,44 +37,44 @@ class StaffHomePage extends Component {
               title="Students"
               destination="/allstudentspage"
               image="/img/group.png"
+              role="staff"
               // notifications={this.state.studentNotifications}
             />
             <DashboardItem
               title="Add Activity"
               destination="/dailyreportmenu"
               image="/img/report.png"
+              role="staff"
               // notifications={this.state.studentNotifications}
-            />
-            <DashboardItem
-              title="Add Staff"
-              destination="/addstaff"
-              image="/img/addStaff.png"
             />
             <DashboardItem
               title="Add Students"
               destination="/addstudent"
               image="/img/addStudent.png"
+              role="staff"
             />
             <DashboardItem
               title="School Schedule"
               destination="/calendar"
               image="/img/calendar.png"
+              role="staff"
             />
             <DashboardItem
               title="E-mail All Parents"
               destination="/messageparents"
               image="/img/message.png"
+              role="staff"
             />
             <DashboardItem
               title="Settings"
               destination="/staffsettings"
               image="/img/settings.png"
+              role="staff"
             />
           </div>
         </div>
       );
-    }
-    if (this.state.loginRejected) {
+    }else if (this.state.loginRejected) {
       return (
         <Redirect
           to={{

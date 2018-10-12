@@ -14,6 +14,7 @@ const styles = theme => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
+    justifyContent: "center"
   },
   textField: {
     marginLeft: theme.spacing.unit,
@@ -60,12 +61,11 @@ class OutlinedTextFields extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     console.log('in the click event', this.state.orgId);
-    fetch(`/auth/signup/staff`, {
+    fetch(`/auth/signup/staff/add`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name: this.capitalize(this.state.firstName + " " + this.state.lastName),
-
         email: this.state.email,
         password: this.state.password,
         orgId: this.state.orgId,
@@ -75,10 +75,9 @@ class OutlinedTextFields extends React.Component {
 
   render() {
     const { classes } = this.props;
-
     return (
       <div>
-        <HeaderBar />
+        {/* <HeaderBar type={this.state.userType} /> */}
         <form className={classes.container} noValidate autoComplete="off">
           <TextField
             required

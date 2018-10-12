@@ -60,10 +60,6 @@ class AddMeds extends React.Component {
 
     this.state.studentIdsToSubmit.map(id => this.postMeds(id));
   };
-  logState=()=>{
-  console.log(this.state)
-  }
-
 
   handleChange = name => event => {
     this.setState({
@@ -105,13 +101,12 @@ class AddMeds extends React.Component {
     if(this.state.loggedIn){
     return (
       <div>  
-      <HeaderBar />  
+      <HeaderBar type={this.state.userType} />  
       <MultiSelectContainer
             orgId={this.state.orgId}
             allStudents={this.state.allStudents}
             updateStudents={this.updateStudents}
           />
-          <button onClick={this.logState}/>
 
       <form className={classes.container} noValidate autoComplete="off">
         <DateTimeSelector
@@ -131,6 +126,7 @@ class AddMeds extends React.Component {
           className={classes.textField}
           value={this.state.medName}
           onChange={this.handleChange('medName')}
+          multiline
           margin="normal"
           variant="outlined" 
         />

@@ -65,7 +65,7 @@ class AddPotty extends React.Component {
     console.log(this.state);
   };
   handleClick = (name, value) => {
-    console.log("Sasha says this has been clicked");
+    // console.log("Sasha says this has been clicked");
     this.setState({ [name]: value });
   };
   // handleClick = event => {
@@ -114,7 +114,7 @@ class AddPotty extends React.Component {
     if (this.state.loggedIn) {
       return (
         <div>
-          <HeaderBar />
+          <HeaderBar type={this.state.userType} />
           <MultiSelectContainer
             orgId={this.state.orgId}
             allStudents={this.state.allStudents}

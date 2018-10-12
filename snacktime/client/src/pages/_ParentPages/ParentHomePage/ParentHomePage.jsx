@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import DashboardItem from '../../../components/DashboardItem/DashboardItem';
 import './ParentHomePage.css';
 import { Redirect } from 'react-router';
+import Auth from '../../../utils/Auth'
 
 class ParentHomePage extends Component {
   state = {
@@ -14,71 +15,44 @@ class ParentHomePage extends Component {
     loginRejected: false,
   };
 
-  componentDidMount = () => {
-    this.getUserId();
+   componentWillMount = async () => {
+    console.log('test');
+    await Auth.ParentAuthorize(this);
+    console.log(this.state)
   };
 
-  getUserId = () => {
-    fetch('/auth/loggedin').then(res =>
-      res.json().then(data => {
-        if (data.userId) {
-          console.log('USER AUTHORIZED');
-          this.setState({
-            name: data.name,
-            userId: data.userId,
-            userType: data.role,
-            orgName: data.orgName,
-            orgId: data.orgId,
-            loginRejected: false,
-            loggedIn: true,
-          });
-        } else {
-          this.setState({
-            loginRejected: true,
-          });
-        }
-      })
-    );
-  };
+
 
   
   render() {
-    if (this.state.loggedIn) {
+    // if (this.state.loggedIn) {
+      if (true){
       return (
         <div>
           <header>
-            <p>Welcome {this.state.name}</p>
-            <p>School: {this.state.orgName}</p>
+            <p>Welcome {this.state.userName}</p>
           </header>
           <div className="dashboard-container">
             <DashboardItem
               title="My Kids"
               destination="/allstudentspage"
               image="/img/group.png"
+              role="parent"
               // notifications={this.state.studentNotifications}
-            />
-            <DashboardItem
-              title="Daily Report"
-              destination="DailyReportPage"
-              image="/img/report.png"
-              // notifications={this.state.studentNotifications}
-            />
-            <DashboardItem title="Add Staff" destination="" image="" />
-            <DashboardItem
-              title="Add Students"
-              destination="/addstudent"
-              // image=""
             />
             <DashboardItem
               title="Student Schedule"
               destination=""
-              // image=""
+              image="/img/calendar.png"
+              role="parent"
             />
             <DashboardItem
               title="Settings"
               destination=""
               image="/img/settings.png"
+              role="parent"
             />
+            
           </div>
         </div>
       );
@@ -88,7 +62,7 @@ class ParentHomePage extends Component {
         <Redirect
           to={{
             pathname: '/notAuthorized',
-            state: { type: 'Staff' }
+            state: { type: 'Parent' }
           }}
         />
       );

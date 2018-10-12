@@ -91,7 +91,7 @@ class MultiStudentSelect extends React.Component {
       if (this.props.location.state) {
         return (
           <div>
-            <HeaderBar />
+            <HeaderBar type={this.state.userType} />
             <div className={classes.root}>
               <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="select-multiple-chip">

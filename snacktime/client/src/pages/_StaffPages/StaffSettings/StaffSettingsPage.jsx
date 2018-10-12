@@ -16,6 +16,9 @@ import Button from "@material-ui/core/Button";
 import Send from "@material-ui/icons/Send";
 import ChangePassword from "../../ForgotPassword/components/ChangePassword";
 import ChangeEmail from "../../Settings/ChangeEmail";
+import AddStaff from "../AddStaff/AddStaff";
+import DeleteStaff from "./components/DeleteStaff";
+import Auth from '../../../utils/Auth'
 // import InputMask from "react-input-mask";
 
 function TabContainer({ children, dir }) {
@@ -67,17 +70,22 @@ class Settings extends React.Component {
     value: 0
   };
 
+  componentWillMount=()=>{
+    Auth.StaffAuthorize(this);
+  }
+
   handlePanelChange = panel => (event, expanded) => {
     this.setState({
       expanded: expanded ? panel : false
     });
   };
 
+
   handleTab = (event, value) => {
     this.setState({ value });
   };
 
-  handleClick = () => {};
+  handleClick = () => { };
 
   handleChange = e => {
     let name = e.target.name;
@@ -94,7 +102,7 @@ class Settings extends React.Component {
   changeOrg = () => {
     let address = `${this.state.orgaddress}, ${this.state.orgcity}, ${
       this.state.orgstate
-    } ${this.state.orgzip}`;
+      } ${this.state.orgzip}`;
     fetch("/api/changeorg", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -120,7 +128,7 @@ class Settings extends React.Component {
     const { value } = this.state;
     return (
       <div>
-        <HeaderBar />
+        <HeaderBar type={this.state.userType} />
         <div className={classes.root}>
           <ExpansionPanel
             expanded={expanded === "panel1"}
@@ -227,8 +235,8 @@ class Settings extends React.Component {
                       name="orgphone"
                       type="number"
                       onChange={this.handleChange}
-                      // value={this.state.phone}
-                      // onChange={this.onChange}
+                    // value={this.state.phone}
+                    // onChange={this.onChange}
                     >
                       {/* <InputMask mask="(999)999-9999" maskChar=" " /> */}
                     </TextField>
@@ -270,14 +278,12 @@ class Settings extends React.Component {
                   scrollable
                   scrollButtons="auto"
                 >
-                  <Tab label="" />
-                  <Tab label="Item Two" />
-                  <Tab label="Item Three" />
+                  <Tab label="Add Staff" />
+                  <Tab label="Remove Staff" />
                 </Tabs>
               </AppBar>
-              {value === 0 && <TabContainer>Item One</TabContainer>}
-              {value === 1 && <TabContainer>Item Two</TabContainer>}
-              {value === 2 && <TabContainer>Item Three</TabContainer>}
+              {value === 0 && <TabContainer><AddStaff /></TabContainer>}
+              {value === 1 && <TabContainer><DeleteStaff /></TabContainer>}
             </ExpansionPanelDetails>
           </ExpansionPanel>
           <ExpansionPanel
@@ -309,38 +315,6 @@ class Settings extends React.Component {
                     noValidate
                     autoComplete="off"
                   >
-                    {/* <TextField
-                      
-                      label="New Email"
-                      placeholder="example@email.com"
-                      className={classes.textField}
-                      margin="normal"
-                      variant="outlined"
-                    />
-                    <br />
-                    <TextField
-                      
-                      label="Current Password"
-                      placeholder="Password"
-                      className={classes.textField}
-                      margin="normal"
-                      variant="outlined"
-                    />
-                    <br></br>
-                    <Button
-                      onClick={this.handleSubmit}
-                      variant="contained"
-                      size="small"
-                      className={classes.button}
-                    >
-                      Send
-                      <Send
-                        className={classNames(
-                          classes.leftIcon,
-                          classes.iconSmall
-                        )}
-                      />
-                    </Button> */}
                     <ChangeEmail />
                   </form>
                 </TabContainer>
@@ -352,38 +326,6 @@ class Settings extends React.Component {
                     noValidate
                     autoComplete="off"
                   >
-                    {/* <TextField
-                      
-                      label="Current Password"
-                      placeholder="Password"
-                      className={classes.textField}
-                      margin="normal"
-                      variant="outlined"
-                    />
-                    <br />
-                    <TextField
-                      
-                      label="New Password"
-                      placeholder="Password"
-                      className={classes.textField}
-                      margin="normal"
-                      variant="outlined"
-                    />
-                    <br></br>
-                    <Button
-                      onClick={this.handleSubmit}
-                      variant="contained"
-                      size="small"
-                      className={classes.button}
-                    >
-                      Send
-                      <Send
-                        className={classNames(
-                          classes.leftIcon,
-                          classes.iconSmall
-                        )}
-                      />
-                    </Button> */}
                     <ChangePassword />
                   </form>
                 </TabContainer>

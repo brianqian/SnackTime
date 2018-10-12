@@ -64,7 +64,7 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: false,
       },
     });
-    Student.belongsToMany(models.Parent, {
+    models.Student.belongsToMany(models.Parent, {
       through: "ParentStudent"
     });
 
