@@ -39,13 +39,45 @@ class ParentContainer extends Component {
     guardianEmail: '',
     guardianAddress: '',
     guardianPhone: '',
-    role: this.props.role
+    role: this.props.role,
+    staffs:[],
+    orgName:'',
+    orgAddress:'',
+    orgPhone:'',
+    orgOpenTime:'',
+    orgCloseTime:''
   };
 
   componentDidMount() {
     this.getExistingParent();
     this.getExistingPickup();
+    this.getSchoolInfo();
+    this.getStaffInfo();
     console.log(this.props.studentId, "STUDENT ID");
+  }
+
+  getSchoolInfo = () =>{
+    //use this.props.orgId as parameter to fetch and assign it to appropriate states
+    fetch(`/api/parent/org/${this.props.orgId}`)
+      .then(resp => resp.json())
+      .then(resp => this.setState({ orgName:resp.name, orgAddress: resp.address, orgPhone: resp.phone, orgOpenTime: resp.openTime, orgCloseTime: resp.closeTime  }))
+  }
+
+  getStaffInfo = () => {
+    //use this.props.orgId as parameter to fetch and assign to state staffs
+    fetch(`/api/parent/orgstaff/${this.props.orgId}`)
+      .then(resp => resp.json())
+      .then(resp => {
+        if (resp) {
+          if (resp === 'No staffs found') {
+            this.setState({ status: 'No staffs found :(' });
+          } else {
+            const staffs = [];
+            resp.map(staff => staffs.push(staff));
+            this.setState({ staffs });
+          }
+        }
+      });
   }
 
   getExistingPickup = () => {
@@ -400,6 +432,58 @@ class ParentContainer extends Component {
       return (<div></div>)
   }
 
+  renderSchoolInfo(){
+    const { classes } = this.props;
+    if(this.state.role === "parent")
+      return(
+        <div>
+        <div className={classes.root}></div>
+          <ExpansionPanel>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography className={classes.heading}>School</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Typography>
+    
+                    <div className="existing-parent-info">
+                      <p><strong>Name:</strong> {this.state.orgName}</p>
+                      <p><strong>Phone:</strong> {this.state.orgPhone}</p>
+                      <p><strong>Address:</strong> {this.state.orgAddress}</p>
+                      <p><strong>Open Time:</strong> {this.state.orgOpenTime}</p>
+                      <p><strong>Close Time:</strong> {this.state.orgCloseTime}</p>
+                    </div>
+               
+              </Typography>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          </div>)
+  }
+
+  renderStaffInfo(){
+    const { classes } = this.props;
+    if(this.state.role==="parent")
+      return (
+        <div>
+        <div className={classes.root}></div>
+    <ExpansionPanel>
+    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+      <Typography className={classes.heading}>Staff</Typography>
+    </ExpansionPanelSummary>
+    <ExpansionPanelDetails>
+      <Typography>
+      {this.state.staffs.map(staff => {
+                  return (
+                    <div className="existing-parent-info">
+                      <p><strong>Name:</strong> {staff.name}</p>
+                      <p><strong>Email:</strong> {staff.email}</p>
+                    </div>
+                  );
+                })}
+      </Typography>
+    </ExpansionPanelDetails>
+  </ExpansionPanel>
+  </div>)
+  }
 
 
   render() {
@@ -478,6 +562,12 @@ class ParentContainer extends Component {
               </Typography>
             </ExpansionPanelDetails>
           </ExpansionPanel>
+                
+          {this.renderSchoolInfo()}
+          {this.renderStaffInfo()}
+
+         
+          
         </div>
       </div>
     );

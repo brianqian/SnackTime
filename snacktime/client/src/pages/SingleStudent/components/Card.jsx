@@ -18,8 +18,24 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { Link } from 'react-router-dom';
 import DashboardItem from "../../../components/DashboardItem/DashboardItem";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import indigo from '@material-ui/core/colors/indigo';
 import './Card.css';
 
+const CustomTableCell = withStyles(theme => ({
+  head: {
+    backgroundColor: indigo[500],
+    color: theme.palette.common.white,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
 
 const styles = theme => ({
     card: {
@@ -47,6 +63,19 @@ const styles = theme => ({
     },
     avatar: {
       backgroundColor: red[500],
+    },
+    root: {
+      width: '100%',
+      marginTop: theme.spacing.unit * 3,
+      overflowX: 'auto',
+    },
+    table: {
+      minWidth: 700,
+    },
+    row: {
+      '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.background.default,
+      },
     },
   });
 
@@ -272,67 +301,120 @@ const styles = theme => ({
 
     renderNoteForStaff() {
       if(this.props.role =="staff"){
-        if(!this.state.noteForStaff) {
-          return <div></div>;
-        } else {
-          return (
-            <div>
-            <strong>Note for Staff:</strong>
-              <Typography component="p">
-                 {this.state.noteForStaff}   
-              </Typography>
-              <hr />
-              </div>
-          );
-        }
+        const { classes } = this.props;
+      if(!this.state.noteForStaff) {
+        return <div></div>;
+      } else {
+        return (
+          <div>
+            <strong>Note from Parents</strong>
+            <Paper className={classes.root}>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      <CustomTableCell>Note</CustomTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <CustomTableCell>{this.state.noteForStaff}</CustomTableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+            </Paper>
+            <br/>
+          </div>);
 
       }
     }
+  }
 
 
     renderNoteForParents() {
       if(this.props.role=="parent"){
+        const { classes } = this.props;
         if(!this.state.noteForParents && !this.state.highlight) {
           return <div></div>;
-        } else {
+        } 
+        if(this.state.noteForParents && this.state.highlight) {
           return (
             <div>
-            <strong>Note for Parents:</strong>
-              <Typography component="p">
-                {this.state.noteForParents}   
-              </Typography>
-              <hr />
-              <strong>Highlight:</strong>
-              <Typography component="p">
-                 {this.state.highlight}   
-              </Typography>
-              <hr />
+            <strong>Note for Parents</strong>
+            <Paper className={classes.root}>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      <CustomTableCell>Note</CustomTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <CustomTableCell>{this.state.noteForParents}</CustomTableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+            </Paper>
+            <br/>
+            <strong>Highlight</strong>
+            <Paper className={classes.root}>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      <CustomTableCell>Highlight</CustomTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <CustomTableCell>{this.state.highlight}</CustomTableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+            </Paper>
+            <br/>
               </div>
           );
         }
-        if(!this.state.highlight) {
-          return <div></div>;
-        } else {
+        if(this.state.highlight) {
           return (
             <div>
-            <strong>Highlight:</strong>
-              <Typography component="p">
-                 {this.state.highlight}   
-              </Typography>
-              <hr />
+            <strong>Highlight</strong>
+            <Paper className={classes.root}>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      <CustomTableCell>Highlight</CustomTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <CustomTableCell>{this.state.highlight}</CustomTableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+            </Paper>
+            <br/>
               </div>
           );
         }
-        if(!this.state.noteForParents) {
-          return <div></div>;
-        } else {
+        if(this.state.noteForParents) {
           return (
             <div>
-            <strong>Note for Parents:</strong>
-              <Typography component="p">
-                {this.state.noteForParents}   
-              </Typography>
-              <hr />
+            <strong>Note for Parents</strong>
+            <Paper className={classes.root}>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      <CustomTableCell>Note</CustomTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <CustomTableCell>{this.state.noteForParents}</CustomTableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+            </Paper>
+            <br/>
               </div>
           );
         }
@@ -340,102 +422,175 @@ const styles = theme => ({
     }
 
     renderDiaperings() {
+      const { classes } = this.props;
       if(this.state.diaperings.length===0) {
         return <div></div>;
       } else {
         return (
           <div>
-          <strong>Diapering:</strong>
-          {this.state.diaperings.map(diapering => (
-
-            <Typography component="p">
-              Time: {diapering.time} &emsp;  
-              Type: {diapering.type} &emsp;
-              Place: {diapering.place} 
-            </Typography>
-          ))}
-          <hr/>
-            </div>
+            <strong>Diapering/Toilet</strong>
+            <Paper className={classes.root}>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      <CustomTableCell>Time</CustomTableCell>
+                      <CustomTableCell>Place</CustomTableCell>
+                      <CustomTableCell>Type</CustomTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                  {this.state.diaperings.map(diapering => {
+                  return (
+                    <TableRow>
+                      <CustomTableCell>{diapering.time}</CustomTableCell>
+                      <CustomTableCell>{diapering.place}</CustomTableCell>
+                      <CustomTableCell>{diapering.type}</CustomTableCell>
+                    </TableRow>
+                  );
+                  })}
+                  </TableBody>
+                </Table>
+            </Paper>
+            <br/>
+          </div>
         );
       }
     }
 
     renderMeals(){
+      const { classes } = this.props;
       if(this.state.meals.length===0) {
         return <div></div>;
       } else {
         return (
           <div>
-           <strong>Meals:</strong>
-          {this.state.meals.map(meal => (
-
-            <Typography component="p">
-              Time:{meal.time} &emsp;
-              Had {meal.food} for {meal.type} 
-            </Typography>
-          ))}
-          <hr/>   
-            </div>
+            <strong>Meals</strong>
+            <Paper className={classes.root}>
+              <Table className={classes.table}>
+                <TableHead>
+                  <TableRow>
+                    <CustomTableCell>Time</CustomTableCell>
+                    <CustomTableCell>Meal</CustomTableCell>
+                    <CustomTableCell>Food</CustomTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                {this.state.meals.map(meal => {
+                    return (
+                      <TableRow>
+                        <CustomTableCell>{meal.time}</CustomTableCell>
+                        <CustomTableCell>{meal.type}</CustomTableCell>
+                        <CustomTableCell>{meal.food}</CustomTableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </Paper>
+            <br/>
+          </div>
         );
       }
     }
 
     renderNaps(){
+      const { classes } = this.props;
       if(this.state.naps.length===0) {
         return <div></div>;
       } else {
         return (
           <div>
-           <strong>Naps:</strong>
-          {this.state.naps.map(nap => (
-
-            <Typography component="p">
-              Started: {nap.startTime} &emsp;
-              Ended: {nap.endTime}
-            </Typography>
-          ))}
-          <hr/>
-            </div>
+            <strong>Naps</strong>
+            <Paper className={classes.root}>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      <CustomTableCell>Start Time</CustomTableCell>
+                      <CustomTableCell>End Time</CustomTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                  {this.state.naps.map(nap => {
+                  return (
+                    <TableRow>
+                      <CustomTableCell>{nap.startTime}</CustomTableCell>
+                      <CustomTableCell>{nap.endTime}</CustomTableCell>
+                    </TableRow>
+                  );
+                  })}
+                  </TableBody>
+                </Table>
+            </Paper>
+            <br/>
+          </div>
         );
       }
     }
 
     renderMeds(){
+      const { classes } = this.props;
       if(this.state.medicines.length===0) {
         return <div></div>;
       } else {
         return (
           <div>
-           <strong>Meds Administered:</strong>
-          {this.state.medicines.map(medicine => (
-
-            <Typography component="p">
-              Time: {medicine.time} &emsp;
-              Med: {medicine.medName}
-            </Typography>
-          ))}
-          <hr/>
-            </div>
+            <strong>Medicines Administered</strong>
+            <Paper className={classes.root}>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      <CustomTableCell>Time</CustomTableCell>
+                      <CustomTableCell>Medicine</CustomTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                  {this.state.medicines.map(medicine => {
+                  return (
+                    <TableRow>
+                      <CustomTableCell>{medicine.time}</CustomTableCell>
+                      <CustomTableCell>{medicine.medName}</CustomTableCell>
+                    </TableRow>
+                  );
+                  })}
+                  </TableBody>
+                </Table>
+            </Paper>
+            <br/>
+          </div>
         );
       }
     }
 
     renderIncidents(){
+      const { classes } = this.props;
       if(this.state.incidents.length===0) {
         return <div></div>;
       } else {
         return (
           <div>
-           <strong>Incidents:</strong>
-          {this.state.incidents.map(incident => (
-
-            <Typography component="p">
-              Time: {incident.time} &emsp;
-              Incident: {incident.incident}
-            </Typography>
-          ))}
-          <hr/>
-            </div>
+            <strong>Incidents</strong>
+            <Paper className={classes.root}>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      <CustomTableCell>Time</CustomTableCell>
+                      <CustomTableCell>Incident</CustomTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                  {this.state.incidents.map(incident => {
+                  return (
+                    <TableRow>
+                      <CustomTableCell>{incident.time}</CustomTableCell>
+                      <CustomTableCell>{incident.incident}</CustomTableCell>
+                    </TableRow>
+                  );
+                  })}
+                  </TableBody>
+                </Table>
+            </Paper>
+            <br/>
+          </div>
         );
       }
     }
@@ -473,9 +628,7 @@ const styles = theme => ({
         />)
     }
 
-    renderHighlight(){
 
-    }
 
 
   
@@ -496,8 +649,7 @@ const styles = theme => ({
           />
           <CardContent>
             {this.renderNoteForStaff()}
-            {this.renderNoteForParents()}
-            {this.renderHighlight()}            
+            {this.renderNoteForParents()}          
             {this.renderDiaperings()}
             {this.renderMeals()}
             {this.renderNaps()}
