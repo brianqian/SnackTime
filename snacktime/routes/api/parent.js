@@ -39,7 +39,7 @@ router.route('/parent/pickup/:pickupId')
 router.route('/parent/orgstaff/:orgId')
     .get(parentController.getOrgStaff); //get all staff info of org + org info
 
-router.route('/parent/org/:studentId')
+router.route('/parent/org/:orgId')
     .get(parentController.getChildOrg)  //get org info of child
 /**************Organization & Staff*****************/
 module.exports = router;

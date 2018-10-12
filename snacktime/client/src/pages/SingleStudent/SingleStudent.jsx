@@ -78,6 +78,7 @@ export default class SingleStudent extends Component {
             dob={this.state.dob}
             notes={this.state.notes}
             role={this.state.role}
+            orgId={this.state.OrganizationId}
 
             // image={this.state.image}
           />
