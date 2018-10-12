@@ -1,81 +1,131 @@
 import React, { Component } from 'react';
-import './TimePicker.css'
-import moment from 'moment'
+// import './TimePicker.css';
+import moment from 'moment';
 
 class TimePicker extends Component {
-  state ={
+  state = {
     hours: [],
-    minutes : [],
+    minutes: [],
     ampm: ['AM', 'PM'],
     selectedHour: '',
     selectedMin: '',
     selectedAmpm: '',
-    now: moment().format('LT')
+    hide: false,
+  };
+  componentWillMount() {
+    let now = moment().format('LT');
+    now = now.split(':');
+    now = [now[0], ...now[1].split(' ')];
+    console.log(now);
+    this.setState({
+      selectedHour: now[0],
+      selectedMin: now[1],
+      selectedAmpm: now[2],
+    });
+    this.populateState();
+  }
+
+
+  returnTime=()=>{
+    if (this.state.selectedAmpm === 'AM'){
+      return `${this.state.selectedHour}:${this.state.selectedMin}:00`
+    }else{
+      let hour = parseInt(this.state.selectedHour);
+      hour+=12;
+      return `${hour}:${this.state.selectedMin}:00`
+    } 
 
   }
-  componentDidMount() {
-   this.populateState();
-  }
-  
-  populateState=()=>{
+
+  populateState = () => {
     const hourArray = [];
     const minArray = [];
-    for (let i=1; i<13; i++){
-      let num=i+'';
-      if (num.length===1) num='0'+num;
-      hourArray.push(num)
+    for (let i = 1; i < 13; i++) {
+      let num = i + '';
+      if (num.length === 1) num = '0' + num;
+      hourArray.push(num);
     }
-    for (let i=0; i<60; i++){
-      let num=i+'';
-      if (num.length===1) num='0'+num;
-      minArray.push(num)
-
+    for (let i = 0; i < 60; i++) {
+      let num = i + '';
+      if (num.length === 1) num = '0' + num;
+      minArray.push(num);
     }
-    this.setState({hours: hourArray, minutes: minArray})
-    const now = moment().format('LT');
-    console.log(now);
+    this.setState({ hours: hourArray, minutes: minArray });
+  };
+  openCloseSelector = () => {
+    let toggle = this.state.hide;
+    this.setState({hide: !toggle})
+    
   }
+handleSelect = async e => {
 
-  handleSelect = (e) => {
+    const value = e.target.getAttribute('value');
+    const name = e.target.getAttribute('class');
+    console.log(value, name);
+    const prevSelect = document.querySelectorAll(`.${name}`);
+    prevSelect.forEach(num=>num.classList.remove('timepicker__selected'));
+    e.target.classList.add('timepicker__selected');
+    await this.setState({ [name]: value });
+    this.props.setTime(this.returnTime())
 
-    console.log(e.target.getAttribute('value'))
-    console.log(e.target.getAttribute('name'));
-    const value = e.target.getAttribute('value')
-    const name = e.target.getAttribute('name')
-    e.target.classList.add('timepicker__selected')
-    this.setState({ [name]: value })
-  }
+  };
   handleButton = () => {
     console.log('hour', this.state.selectedHour);
     console.log('min', this.state.selectedMin);
     console.log('ampm', this.state.selectedAmpm);
-  }
+  };
 
   render() {
     return (
-      <div className='timepicker-container'>
-      <div className="timepicker-display">
-        <div className='tp-display-hour'></div>
-        <div className='tp-display-min'></div>
-        <div className='tp-display-ampm'></div>
-      </div>
-        <div className='timepicker timepicker-hour'>
-        {this.state.hours.map(hour=>{
-          return <div name='selectedHour' onClick={this.handleSelect} value={hour}>{hour}</div>
-        })}
+      <div className="timepicker-container">
+        <div className="timepicker-display">
+          <div className="tp-display-hour">{this.state.selectedHour}</div>
+          <div>:</div>
+          <div className="tp-display-min">{this.state.selectedMin}</div>
+          <div className="tp-display-ampm">{this.state.selectedAmpm}</div>
+          <button onClick={this.openCloseSelector}>Open/Close</button>
         </div>
-        <div className='timepicker timepicker-min'>
-        {this.state.minutes.map(minute=>{
-          return <div name='selectedMin' onClick={this.handleSelect} value={minute}>{minute}</div>
-        })}
+        <div className={`${this.state.hide ? 'timepicker__hidden' : ''} timepicker timepicker-Hour`}>
+          {this.state.hours.map(hour => {
+            return (
+              <div
+                className="selectedHour"
+                onClick={this.handleSelect}
+                value={hour}
+              >
+                {hour}
+              </div>
+            );
+          })}
         </div>
-        <div className='timepicker timepicker-ampm'>
-        {this.state.ampm.map(ampm=>{
-          return <div name='selectedAmpm' onClick={this.handleSelect} value={ampm}>{ampm}</div>
-        })}
+        <div className={`${this.state.hide ? 'timepicker__hidden' : ''}  timepicker timepicker-Min`}>
+          {this.state.minutes.map(minute => {
+            return (
+              <div
+                className="selectedMin"
+                onClick={this.handleSelect}
+                value={minute}
+              >
+                {minute}
+              </div>
+            );
+          })}
         </div>
-        <button onClick={this.handleButton}></button>
+        <div className={`${this.state.hide ? 'timepicker__hidden' : ''} timepicker timepicker-Ampm`}>
+          {this.state.ampm.map(ampm => {
+            return (
+              <div
+                className="selectedAmpm"
+                onClick={this.handleSelect}
+                value={ampm}
+              >
+                {ampm}
+              </div>
+            );
+          })}
+        </div>
 
+        {/* <button onClick={this.handleButton}>CONSOLE LOG STATE</button> */}
       </div>
     );
   }
