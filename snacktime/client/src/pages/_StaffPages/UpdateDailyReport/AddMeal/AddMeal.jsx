@@ -151,7 +151,6 @@ class AddMeal extends React.Component {
             updateStudents={this.updateStudents}
           />
           <button onClick={this.logState} />
-
           <form className={classes.container} noValidate autoComplete="off">
             <DateTimeSelector
               name="mealTime"
@@ -163,32 +162,9 @@ class AddMeal extends React.Component {
               //   margin="normal"
               //   variant="outlined"
             />
-            {/* <hr/>
-        <Button
-          onClick={this.handleClick}
-          name 
-          value="food">
-          Food
-        </Button> 
-        <Button
-          onClick={this.handleClick} 
-          value="bottle">
-          Bottle
-        </Button>  */}
+           
             <hr />
-            {/* <Button value="all">
-          All
-        </Button> 
-        <Button value="most">
-          Most
-        </Button> 
-        <Button value="some">
-          Some
-        </Button> 
-        <Button value="none">
-          None
-        </Button> 
-        <hr/> */}
+            
             <TextField
               id="standard-select-type-native"
               select

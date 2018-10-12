@@ -240,12 +240,23 @@ module.exports = {
   },
 
   getStudentPickupInfo: function (req, res) {
-    db.Pickup.findAll({
+    db.Student.findOne({
       where: {
-        StudentId: req.params.studentId
-      }
+        id: req.params.studentId
+      },
+      include: [
+        {
+          model: db.Pickup
+        }
+      ]
     })
-      .then(dbPickup => res.json(dbPickup))
+      .then(dbPickup => {
+        if (dbPickup) {
+          return res.json(dbPickup);
+        } else {
+          return res.json("No pickup found");
+        }
+      })
       .catch(err => res.status(422).json(err));
   },
 
@@ -361,6 +372,22 @@ module.exports = {
       .then(dbReport => res.json(dbReport))
       .catch(err => res.status(422).json(err));
   },
+
+  updateReportHighlight: function (req, res) {
+    db.Report.update(
+      {
+        highlight: req.body.highlight
+      },
+      {
+        where: {
+          id: req.params.reportId
+        }
+      }
+    )
+      .then(dbReport => res.json(dbReport))
+      .catch(err => res.status(422).json(err));
+  },
+
   /************report**************/
 
   /************diapering**************/
@@ -582,7 +609,7 @@ module.exports = {
         }
       });
       let mailOptions = {
-        subject: `Snack Time | Message to all parents`,
+        subject: `Snack Time | ${req.body.subject}`,
         to: req.body.emails,
         from: `Snack Time <snacktimeemail@gmail.com>`,
         html: `
@@ -622,12 +649,17 @@ module.exports = {
 
   /************remove staff to org**************/
   removeStaff: function (req, res) {
+    console.log("REMOVE STAFF", req.body);
     db.Staff.destroy({
       where: {
         id: req.body.staffId
       }
     }).then(result => {
-      res.json("Staff Destroyed!!");
+      if (result) {
+        res.json("Staff Destroyed!!");
+      } else {
+        res.json("failed");
+      }
     })
   },
   /************add staff to org**************/
@@ -635,10 +667,11 @@ module.exports = {
   /************get all staff**************/
   getAllStaff: function (req, res) {
     console.log("get all staff backend", req.session.user.OrganizationId);
-      db.Staff.findAll({
+    db.Staff.findAll({
       where: {
         OrganizationId: req.session.user.OrganizationId
-      }
+      },
+      order:[['createdAt','DESC']]
     }).then(staffs => {
       res.json(staffs);
     })

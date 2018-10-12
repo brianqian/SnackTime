@@ -21,12 +21,12 @@ export default class AllStudentsPage extends Component {
 
   async componentWillMount() {
     let data = await (await fetch('/auth/loggedin')).json();
-    if (data.userType === 'staff'){
+    if (data.userType === 'staff') {
       await Auth.StaffAuthorize(this);
-    }else{
+    } else {
       await Auth.ParentAuthorize(this);
+      console.log(this.state);
     }
-    console.log(this.state.userType)
     if (this.state.userType === 'staff') {
       this.getOrgStudents();
     } else {
@@ -37,12 +37,12 @@ export default class AllStudentsPage extends Component {
   getUserStudents = () => {
     console.log(this.state.userId);
     fetch(`/api/parent/parentinfo/${this.state.userId}`)
-    .then(resp=> resp.json())
-    .then(resp=>{
-      console.log(resp);
-      this.setState({ allStudents: resp})
-    })
-    .catch(err=> console.log(err))
+      .then(resp => resp.json())
+      .then(resp => {
+        console.log(resp);
+        this.setState({ allStudents: resp })
+      })
+      .catch(err => console.log(err))
   }
 
   getOrgStudents = () => {
@@ -59,11 +59,11 @@ export default class AllStudentsPage extends Component {
     if (this.state.loggedIn) {
       return (
         <div className="students-container">
-          <HeaderBar type={this.state.userType}/>
+          <HeaderBar type={this.state.userType} />
 
           {this.state.allStudents.length > 0
             ? this.state.allStudents.map(student => (
-              <Link to={{ pathname: `/allstudentspage/${student.id}`, state: { role: this.props.location.state.role } }}>
+              <Link to={{ pathname: `/allstudentspage/${student.id}`, state: { role: this.state.userType } }}>
                 <Chip
                   studentId={student.id}
                   avatar={<FaceIcon />}

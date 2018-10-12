@@ -60,10 +60,6 @@ class AddMeds extends React.Component {
 
     this.state.studentIdsToSubmit.map(id => this.postMeds(id));
   };
-  logState=()=>{
-  console.log(this.state)
-  }
-
 
   handleChange = name => event => {
     this.setState({
@@ -111,7 +107,6 @@ class AddMeds extends React.Component {
             allStudents={this.state.allStudents}
             updateStudents={this.updateStudents}
           />
-          <button onClick={this.logState}/>
 
       <form className={classes.container} noValidate autoComplete="off">
         <DateTimeSelector

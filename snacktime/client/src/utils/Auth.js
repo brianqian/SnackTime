@@ -12,8 +12,6 @@ export default {
       });
     } else if (data.userType !== 'staff'){
       console.log('LOGIN REJECTED user type')
-
-
       page.setState({
         orgUserCheck: false,
       });

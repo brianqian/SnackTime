@@ -30,6 +30,7 @@
     "mysql2": "^1.6.1",
     "nodemailer": "^4.6.8",
     "passport": "^0.4.0",
+    "rc-time-picker": "^3.4.0",
     "react-input-mask": "^2.0.4",
     "react-swipeable-views": "^0.13.0",
     "sequelize": "^4.39.0",

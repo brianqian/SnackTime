@@ -55,6 +55,9 @@ router.route('/student/:studentId/report/:date')
 
 router.route('/report/:reportId')
   .put(staffController.updateReport); //updates report of a student for current date
+
+router.route('/report/highlight/:reportId')
+  .put(staffController.updateReportHighlight);
 /******Report***********/
 
 /******Diapering***********/

@@ -52,6 +52,7 @@ class ParentHomePage extends Component {
               image="/img/settings.png"
               role="parent"
             />
+            
           </div>
         </div>
       );

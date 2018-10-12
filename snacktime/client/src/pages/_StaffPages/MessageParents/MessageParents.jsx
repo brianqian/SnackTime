@@ -52,9 +52,9 @@ class MessageParents extends React.Component {
     });
   };
 
-
   handleSubmit = event => {
     event.preventDefault();
+    this.sendEmail();
   };  
 
   getParentEmailAddress = () => {
@@ -72,6 +72,22 @@ class MessageParents extends React.Component {
       this.setState({allEmails: emailArray})
     })    
   }
+
+  sendEmail = () => {
+    fetch(`/api/emailparents`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        emails: this.state.allEmails,
+        subject: this.state.subject,
+        body: this.state.messageBody,
+      })
+    })
+    .then(resp =>
+      resp.json()
+    )
+    .then(resp => console.log(resp));
+  }  
  
   render() {
     const { classes } = this.props;

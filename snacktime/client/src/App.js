@@ -26,6 +26,7 @@ import MultiSelectContainer from './pages/_StaffPages/UpdateDailyReport/MultiSel
 import Settings from "./pages/_StaffPages/StaffSettings/StaffSettingsPage";
 import UpdateCalendar from './pages/_StaffPages/UpdateCalendar/UpdateCalendar';
 import MessageParents from './pages/_StaffPages/MessageParents/MessageParents';
+import AddHighlight from './pages/_StaffPages/UpdateDailyReport/AddHighlight/AddHighlight';
 
 
 class App extends Component {
@@ -47,6 +48,7 @@ class App extends Component {
             <Route exact path="/dailyreport/addmeds" component={AddMeds} />
             <Route exact path="/dailyreport/addmeal" component={AddMeal} />
             <Route exact path="/addnote" component={AddNote} />
+            <Route exact path="/addhighlight" component={AddHighlight} />
             <Route exact path="/dailyreport/addincident" component={AddIncident} />
             <Route exact path="/notauthorized" component={notAuthorized} />
             <Route exact path="/addstudent" component={AddStudent} />

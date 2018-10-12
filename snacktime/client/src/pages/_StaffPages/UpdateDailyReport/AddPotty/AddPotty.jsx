@@ -65,7 +65,7 @@ class AddPotty extends React.Component {
     console.log(this.state);
   };
   handleClick = (name, value) => {
-    console.log("Sasha says this has been clicked");
+    // console.log("Sasha says this has been clicked");
     this.setState({ [name]: value });
   };
   // handleClick = event => {

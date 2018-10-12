@@ -14,8 +14,9 @@ export default class SingleStudent extends Component {
     createdAt: '',
     dob: '',
     doctor: '',
-    id: '',
+    studentId: '',
     medication: '',
+    name: '',
     name: '',
     notes: '',
     updatedAt: '',
@@ -24,7 +25,7 @@ export default class SingleStudent extends Component {
   };
 
   componentWillMount() {
-    console.log("single student page did will mount");
+    console.log("single student page will mount");
      this.getSingleStudent();
   }
   
@@ -33,7 +34,13 @@ export default class SingleStudent extends Component {
       `/api/allinfo/student/${this.props.match.params.student}`
       )).json();
       await this.setState(result);
+      if (this.props.location.state.role === 'staff'){
       await Auth.StaffAuthorize(this, result.OrganizationId);
+      }else{
+        await Auth.ParentAuthorize(this); 
+        console.log('STATE', this.state);
+      }
+      console.log(this.state)
     return result.OrganizationId;
   }
 
@@ -47,15 +54,15 @@ export default class SingleStudent extends Component {
 
   render() {
     if (this.state.loggedIn) {
+      // if (true){
       return (
         <div>
-          {this.state.userType === 'staff' && 
-            <HeaderBar/>
-          }   
+            <HeaderBar type={`${this.state.userType}`}/>
+          
         <div className="student-container">
 
           <Card
-            id={this.state.id}
+            studentId={this.props.match.params.student}
             name={this.state.name}
             role={this.state.role}
           />
@@ -63,7 +70,7 @@ export default class SingleStudent extends Component {
             className="student__item"
             name={this.state.name}
             destination="DailyReportPage"
-            studentId={this.state.id}
+            studentId={this.props.match.params.student}
             address={this.state.address}
             allergies={this.state.allergies}
             medication={this.state.medication}

@@ -18,6 +18,7 @@ import ChangePassword from "../../ForgotPassword/components/ChangePassword";
 import ChangeEmail from "../../Settings/ChangeEmail";
 import AddStaff from "../AddStaff/AddStaff";
 import DeleteStaff from "./components/DeleteStaff";
+import Auth from '../../../utils/Auth'
 // import InputMask from "react-input-mask";
 
 function TabContainer({ children, dir }) {
@@ -70,7 +71,7 @@ class Settings extends React.Component {
   };
 
   componentWillMount=()=>{
-    Auth.StaffAuthorize();
+    Auth.StaffAuthorize(this);
   }
 
   handlePanelChange = panel => (event, expanded) => {
