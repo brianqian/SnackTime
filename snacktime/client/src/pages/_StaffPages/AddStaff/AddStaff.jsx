@@ -81,7 +81,7 @@ class OutlinedTextFields extends React.Component {
         <form className={classes.container} noValidate autoComplete="off">
           <TextField
             required
-            id="outlined-name"
+            id="outlined-firstname"
             label="firstName"
             name="firstName"
             className={classes.textField}
@@ -92,7 +92,7 @@ class OutlinedTextFields extends React.Component {
           />
           <TextField
             required
-            id="outlined-name"
+            id="outlined-lastname"
             label="lastName"
             name="lastName"
             className={classes.textField}
@@ -118,6 +118,7 @@ class OutlinedTextFields extends React.Component {
             onChange={this.handleChange('password')}
             margin="normal"
             variant="outlined"
+            type="password"
           />
 
           <Button

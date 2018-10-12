@@ -1,0 +1,41 @@
+.timepicker-container {
+  display: grid;
+  grid-template-columns: repeat(3, 70px);
+  grid-template-rows: 20px, 12rem;
+  justify-items: center;
+  grid-gap: 1em;
+
+}
+
+.timepicker {
+  height: 25vh;
+  overflow: auto;
+  width: 100%;
+
+}
+.timepicker-display {
+  grid-column: 1/4;
+  grid-row: 1;
+  display: flex;
+  justify-content: center;
+
+}
+
+.timepicker__selected {
+  background-color: rgb(31, 117, 245);
+  color: white;
+}
+
+.selectedHour,
+.selectedMin,
+.selectedAmpm {
+  margin: 5px 0;
+  height: 30px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.timepicker__hidden{
+  display:none;
+}

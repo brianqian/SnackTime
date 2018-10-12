@@ -129,7 +129,7 @@ router.route("/signup/staff").post((req, res) => {
     });
 });
 // route for add staff
-router.route("/signup/staff/add ").post((req, res) => {
+router.route("/signup/staff/add").post((req, res) => {
   console.log("orgID", req.body.orgId);
   db.Staff.create({
     name: req.body.name,
