@@ -11,3 +11,11 @@
   width: 70vw;
   grid-gap: 2em;
 }
+
+.existing-guardian-info{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, 1fr);
+  grid-auto-flow: column;
+  width: 70vw;
+  grid-gap: 2em;
+}

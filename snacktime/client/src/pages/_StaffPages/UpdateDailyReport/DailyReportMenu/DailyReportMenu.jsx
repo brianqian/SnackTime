@@ -42,7 +42,7 @@ class DailyReport extends Component {
     if (this.state.loggedIn) {
       return (
         <div>
-          <HeaderBar />
+          <HeaderBar type={this.state.userType} />
           <div className="dashboard-container">
             <DashboardItem
               title="Meal"

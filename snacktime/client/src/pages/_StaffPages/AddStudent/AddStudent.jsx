@@ -109,7 +109,7 @@ class OutlinedTextFields extends React.Component {
 
     return (
       <div>
-        <HeaderBar />
+        <HeaderBar type={this.state.userType} />
         <form className={classes.container} noValidate autoComplete="off">
           <TextField
             required
@@ -150,6 +150,7 @@ class OutlinedTextFields extends React.Component {
             className={classes.textField}
             value={this.state.notes}
             onChange={this.handleChange('notes')}
+            multiline
             margin="normal"
             variant="outlined"
           />
@@ -160,6 +161,7 @@ class OutlinedTextFields extends React.Component {
             className={classes.textField}
             value={this.state.allergies}
             onChange={this.handleChange('allergies')}
+            multiline
             margin="normal"
             variant="outlined"
           />
@@ -170,6 +172,7 @@ class OutlinedTextFields extends React.Component {
             className={classes.textField}
             value={this.state.meds}
             onChange={this.handleChange('meds')}
+            multiline
             margin="normal"
             variant="outlined"
           />

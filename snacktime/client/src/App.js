@@ -4,6 +4,7 @@ import './App.css';
 import WelcomePage from './pages/WelcomePage/WelcomePage';
 import notFound from './pages/notFound';
 import StaffHomePage from './pages/_StaffPages/StaffHomePage/StaffHomePage';
+import ParentHomePage from './pages/_ParentPages/ParentHomePage/ParentHomePage';
 import notAuthorized from './pages/notAuthorized';
 import AddStudent from './pages/_StaffPages/AddStudent/AddStudent';
 import AddStaff from './pages/_StaffPages/AddStaff/AddStaff';
@@ -24,6 +25,8 @@ import ChangePassword from './pages/ForgotPassword/components/ChangePassword';
 import MultiSelectContainer from './pages/_StaffPages/UpdateDailyReport/MultiSelect/MultiSelectContainer';
 import Settings from "./pages/_StaffPages/StaffSettings/StaffSettingsPage";
 import UpdateCalendar from './pages/_StaffPages/UpdateCalendar/UpdateCalendar';
+import MessageParents from './pages/_StaffPages/MessageParents/MessageParents';
+import AddHighlight from './pages/_StaffPages/UpdateDailyReport/AddHighlight/AddHighlight';
 
 
 class App extends Component {
@@ -34,15 +37,18 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={WelcomePage} />
             <Route exact path="/staffhomepage" component={StaffHomePage} />
+            <Route exact path="/parenthomepage" component={ParentHomePage} />
             <Route exact path="/staffhome" component={StaffHomePage} />
             <Route exact path="/addstaff" component={AddStaff} />
             <Route exact path="/dailyreportmenu" component={DailyReportMenu} />
+            <Route exact path="/messageparents" component={MessageParents} />
             <Route exact path="/studentselect" component={MultiStudentSelect} />
             <Route exact path="/dailyreport/addnap" component={AddNap} />
             <Route exact path="/dailyreport/addpotty" component={AddPotty} />
             <Route exact path="/dailyreport/addmeds" component={AddMeds} />
             <Route exact path="/dailyreport/addmeal" component={AddMeal} />
             <Route exact path="/addnote" component={AddNote} />
+            <Route exact path="/addhighlight" component={AddHighlight} />
             <Route exact path="/dailyreport/addincident" component={AddIncident} />
             <Route exact path="/notauthorized" component={notAuthorized} />
             <Route exact path="/addstudent" component={AddStudent} />

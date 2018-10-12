@@ -3,9 +3,11 @@ const db = require('../models');
 module.exports = {
 
 getStudentInfo : function(req,res){
+    console.log(req.body)
+    console.log(req.params.parentId)
     db.Student.findAll({
         include : [{
-            model: db.ParentStudent,
+            model: db.Parent,
             as :'Parents'
         }],
         where:
@@ -143,4 +145,5 @@ saveReport: function(req, res) {
       .then(dbReport => res.json(dbReport))
       .catch(err => res.status(422).json(err));
   },
+  
 };

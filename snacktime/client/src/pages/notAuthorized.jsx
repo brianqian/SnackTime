@@ -20,7 +20,8 @@ class notAuthorized extends Component {
     return (
       <div>
         <h1>Oops</h1>
-        <p>Something went wrong... Please try logging in again</p>
+        <p>Something went wrong... Please try logging in again </p>
+        <h2>{this.props.location.state.type} Login</h2>
         <Login oldLocation= {this.props.location.state.location} type={this.props.location.state.type} />
       </div>
     );

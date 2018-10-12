@@ -32,11 +32,10 @@ const styles = theme => ({
 });
 
 
-class AddNote extends React.Component {
+class AddHighlight extends React.Component {
   state = {
     time: '',
-    noteForStaff: '',
-    noteForParents: '',
+    highlight: '',
     id: this.props.location.state.id,
     name:this.props.location.state.name,
     role:this.props.location.state.role,
@@ -49,9 +48,7 @@ class AddNote extends React.Component {
     Auth.StaffAuthorize(this);
 
     if(this.state.role ==="staff")
-      this.getNoteForParent();
-    else if(this.state.role ==="parent")
-    this.getNoteForStaff(); 
+      this.getHighlights();
     console.log("Log:" ,this.state.id, this.state.name, this.state.role)
   }
 
@@ -61,7 +58,7 @@ class AddNote extends React.Component {
     });
   };
 
-  getNoteForParent= () =>{
+  getHighlights= () =>{
     let today = new Date();
     let date =
       today.getFullYear() +
@@ -75,34 +72,13 @@ class AddNote extends React.Component {
       console.log(resp);
       if(resp !== "No Notes"){
         
-        this.setState({noteForParents:resp.noteForParents, noteExists:true, reportId: resp.id},
-          console.log("Log:note for parents ",this.state.noteForParents))
+        this.setState({highlight:resp.highlight, noteExists:true, reportId: resp.id})
       }
     })
   }
 
-  getNoteForStaff =()=>{
-    let today = new Date();
-    let date =
-      today.getFullYear() +
-      "-" +
-      (today.getMonth() + 1) +
-      "-" +
-      today.getDate();
-    fetch(`/api/student/${this.state.id}/report/${date}`)
-    .then(resp=>resp.json())
-    .then(resp=>{
-      console.log(resp);
-      if(resp !== "No Notes"){
-        
-        this.setState({noteForStaff:resp.noteForStaff, noteExists:true, reportId: resp.id},
-          console.log("Log:note for staff ", this.state.noteForStaff))
-      }
-    })
-  }
-
-  postNote =() => {
-    console.log("In post note")
+  postHighlight =() => {
+    console.log("In post highlight")
     let today = new Date();
     let date =
       today.getFullYear() +
@@ -117,8 +93,8 @@ class AddNote extends React.Component {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         studentId: this.state.id,
-        noteForParents: this.state.noteForParents,
-        highlight:'',
+        highlight: this.state.highlight,
+        noteForParents:'',
         date: date
       })
     })
@@ -128,26 +104,10 @@ class AddNote extends React.Component {
       })
       .then(resp => console.log(resp));
     }
-    else if(this.state.role === "parent"){
-      fetch(`/api/parent/student/${this.state.id}/report`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          studentId: this.state.id,
-          noteForStaff: this.state.noteForStaff,
-          date: date
-        })
-      })
-        .then(resp => {
-          console.log(resp);
-          return resp.json();
-        })
-        .then(resp => console.log(resp));
-      }
   };
 
-  updateNote = () => {
-    console.log("In update note")
+  updateHighlight = () => {
+    console.log("In update highlight")
     let today = new Date();
     let date =
       today.getFullYear() +
@@ -157,25 +117,11 @@ class AddNote extends React.Component {
       today.getDate();
     console.log(date);
     if(this.state.role === "staff"){
-      fetch(`/api/report/${this.state.reportId}`, {
+      fetch(`/api/report/highlight/${this.state.reportId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          noteForParents: this.state.noteForParents,
-        })
-      }).then(resp => {
-        console.log(resp);
-        return resp.json();
-      })
-      .then(resp => console.log(resp));
-    }
-    else if (this.state.role === "parent"){
-      console.log("inside update note parent")
-      fetch(`/api/parent/report/${this.state.reportId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          noteForStaff: this.state.noteForStaff,
+          highlight: this.state.highlight,
         })
       }).then(resp => {
         console.log(resp);
@@ -189,9 +135,9 @@ class AddNote extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     if(this.state.noteExists)
-      this.updateNote()
+      this.updateHighlight()
     else
-      this.postNote();
+      this.postHighlight();
   };  
 
   renderTexField(){
@@ -200,30 +146,16 @@ class AddNote extends React.Component {
       return(<div>
         <TextField
           required
-          name="noteForParents"
+          name="highlight"
           label={this.state.name}
           className={classes.textField}
-          value={this.state.noteForParents}
-          onChange={this.handleChange('noteForParents')}
+          value={this.state.highlight}
+          onChange={this.handleChange('highlight')}
           margin="normal"
           variant="outlined"  
         />
         <hr/>
       </div>)
-    else if(this.state.role==="parent")
-    return(<div>
-      <TextField
-        required
-        name="noteForStaff"
-        label={this.state.name}
-        className={classes.textField}
-        value={this.state.noteForStaff}
-        onChange={this.handleChange('noteForStaff')}
-        margin="normal"
-        variant="outlined"  
-      />
-      <hr/>
-    </div>)
   }
   render() {
     const { classes } = this.props;
@@ -244,8 +176,8 @@ class AddNote extends React.Component {
   }
 }
 
-AddNote.propTypes = {
+AddHighlight.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AddNote);
+export default withStyles(styles)(AddHighlight);

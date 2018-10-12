@@ -18,6 +18,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { Link } from 'react-router-dom';
 import DashboardItem from "../../../components/DashboardItem/DashboardItem";
+import './Card.css';
 
 
 const styles = theme => ({
@@ -51,23 +52,30 @@ const styles = theme => ({
 
   class SingleStudentCard extends React.Component {
     state = { 
-      expanded: false,
       diaperings:[],
       meals: [],
       naps: [],
       medicines:[],
       incidents:[],
       date: '',
-      status: '',             
+      status: '',   
+      noteForStaff:null ,
+      noteForParents:null,   
+      highlight:null
     };
 
     componentWillMount(){
+      console.log('ID', this.props.studentId)
       console.log("component will mount log")
       this.getDiapering();
       this.getMeals();
       this.getNaps();
       this.getMedicines();
       this.getIncidents();
+      if(this.props.role =="staff")
+        this.getNotesForStaff();
+      else if(this.props.role === "parent")
+        this.getNotesForParents();
     }
 
     
@@ -87,9 +95,9 @@ const styles = theme => ({
         '-' +
         today.getDate();
       console.log("Date:",date);
-      console.log("Id",this.props.id)
+      console.log("Id",this.props.studentId)
       this.setState({date: date});
-      fetch(`/api/student/${this.props.id}/diapering/${date}`)
+      fetch(`/api/student/${this.props.studentId}/diapering/${date}`)
       .then(resp => resp.json())
       .then(resp => {
         if (resp) {
@@ -114,8 +122,8 @@ const styles = theme => ({
         '-' +
         today.getDate();
       console.log("Date:",date);
-      console.log("Id",this.props.id)
-      fetch(`/api/student/${this.props.id}/meal/${date}`)
+      console.log("Id",this.props.studentId)
+      fetch(`/api/student/${this.props.studentId}/meal/${date}`)
       .then(resp => resp.json())
       .then(resp => {
         if (resp) {
@@ -139,8 +147,8 @@ const styles = theme => ({
         '-' +
         today.getDate();
       console.log("Date:",date);
-      console.log("Id",this.props.id)
-      fetch(`/api/student/${this.props.id}/nap/${date}`)
+      console.log("Id",this.props.studentId)
+      fetch(`/api/student/${this.props.studentId}/nap/${date}`)
       .then(resp => resp.json())
       .then(resp => {
         if (resp) {
@@ -164,9 +172,9 @@ const styles = theme => ({
         '-' +
         today.getDate();
       console.log("Date:",date);
-      console.log("Id",this.props.id)
+      console.log("Id",this.props.studentId)
       this.setState({date: date});
-      fetch(`/api/student/${this.props.id}/medicine/${date}`)
+      fetch(`/api/student/${this.props.studentId}/medicine/${date}`)
       .then(resp => resp.json())
       .then(resp => {
         if (resp) {
@@ -190,9 +198,9 @@ const styles = theme => ({
         '-' +
         today.getDate();
       console.log("Date:",date);
-      console.log("Id",this.props.id)
+      console.log("Id",this.props.studentId)
       this.setState({date: date});
-      fetch(`/api/student/${this.props.id}/incident/${date}`)
+      fetch(`/api/student/${this.props.studentId}/incident/${date}`)
       .then(resp => resp.json())
       .then(resp => {
         if (resp) {
@@ -205,10 +213,275 @@ const styles = theme => ({
         }
       });
     }
+
+    
+    getNotesForStaff = () =>{
+      console.log("start of get note for staff function");
+      let today = new Date();
+      let date =
+        today.getFullYear() +
+        '-' +
+        (today.getMonth() + 1) +
+        '-' +
+        today.getDate();
+   
+      this.setState({date: date});
+
+      fetch(`/api/student/${this.props.studentId}/report/${date}`)
+      .then(resp => resp.json())
+      .then(resp => {
+        console.log("Resp from notes: ",resp)
+        if (resp) {
+          if (resp === 'No Notes') {
+            this.setState({ status: 'No report found :(' });
+          } else {
+            console.log(resp)
+            this.setState({ noteForStaff: resp.noteForStaff});
+          }
+        }
+      });
+    }
+
+    getNotesForParents = () =>{
+      console.log("start of get note for parents function");
+      let today = new Date();
+      let date =
+        today.getFullYear() +
+        '-' +
+        (today.getMonth() + 1) +
+        '-' +
+        today.getDate();
+   
+      this.setState({date: date});
+
+      fetch(`/api/student/${this.props.studentId}/report/${date}`)
+      .then(resp => resp.json())
+      .then(resp => {
+        console.log("Resp from notes: ",resp)
+        if (resp) {
+          if (resp === 'No Notes') {
+            this.setState({ status: 'No report found :(' });
+          } else {
+            console.log(resp)
+            this.setState({noteForParents: resp.noteForParents, highlight:resp.highlight });
+          }
+        }
+      });
+    }
+
+
+    renderNoteForStaff() {
+      if(this.props.role =="staff"){
+        if(!this.state.noteForStaff) {
+          return <div></div>;
+        } else {
+          return (
+            <div>
+            <strong>Note for Staff:</strong>
+              <Typography component="p">
+                 {this.state.noteForStaff}   
+              </Typography>
+              <hr />
+              </div>
+          );
+        }
+
+      }
+    }
+
+
+    renderNoteForParents() {
+      if(this.props.role=="parent"){
+        if(!this.state.noteForParents && !this.state.highlight) {
+          return <div></div>;
+        } else {
+          return (
+            <div>
+            <strong>Note for Parents:</strong>
+              <Typography component="p">
+                {this.state.noteForParents}   
+              </Typography>
+              <hr />
+              <strong>Highlight:</strong>
+              <Typography component="p">
+                 {this.state.highlight}   
+              </Typography>
+              <hr />
+              </div>
+          );
+        }
+        if(!this.state.highlight) {
+          return <div></div>;
+        } else {
+          return (
+            <div>
+            <strong>Highlight:</strong>
+              <Typography component="p">
+                 {this.state.highlight}   
+              </Typography>
+              <hr />
+              </div>
+          );
+        }
+        if(!this.state.noteForParents) {
+          return <div></div>;
+        } else {
+          return (
+            <div>
+            <strong>Note for Parents:</strong>
+              <Typography component="p">
+                {this.state.noteForParents}   
+              </Typography>
+              <hr />
+              </div>
+          );
+        }
+      }
+    }
+
+    renderDiaperings() {
+      if(this.state.diaperings.length===0) {
+        return <div></div>;
+      } else {
+        return (
+          <div>
+          <strong>Diapering:</strong>
+          {this.state.diaperings.map(diapering => (
+
+            <Typography component="p">
+              Time: {diapering.time} &emsp;  
+              Type: {diapering.type} &emsp;
+              Place: {diapering.place} 
+            </Typography>
+          ))}
+          <hr/>
+            </div>
+        );
+      }
+    }
+
+    renderMeals(){
+      if(this.state.meals.length===0) {
+        return <div></div>;
+      } else {
+        return (
+          <div>
+           <strong>Meals:</strong>
+          {this.state.meals.map(meal => (
+
+            <Typography component="p">
+              Time:{meal.time} &emsp;
+              Had {meal.food} for {meal.type} 
+            </Typography>
+          ))}
+          <hr/>   
+            </div>
+        );
+      }
+    }
+
+    renderNaps(){
+      if(this.state.naps.length===0) {
+        return <div></div>;
+      } else {
+        return (
+          <div>
+           <strong>Naps:</strong>
+          {this.state.naps.map(nap => (
+
+            <Typography component="p">
+              Started: {nap.startTime} &emsp;
+              Ended: {nap.endTime}
+            </Typography>
+          ))}
+          <hr/>
+            </div>
+        );
+      }
+    }
+
+    renderMeds(){
+      if(this.state.medicines.length===0) {
+        return <div></div>;
+      } else {
+        return (
+          <div>
+           <strong>Meds Administered:</strong>
+          {this.state.medicines.map(medicine => (
+
+            <Typography component="p">
+              Time: {medicine.time} &emsp;
+              Med: {medicine.medName}
+            </Typography>
+          ))}
+          <hr/>
+            </div>
+        );
+      }
+    }
+
+    renderIncidents(){
+      if(this.state.incidents.length===0) {
+        return <div></div>;
+      } else {
+        return (
+          <div>
+           <strong>Incidents:</strong>
+          {this.state.incidents.map(incident => (
+
+            <Typography component="p">
+              Time: {incident.time} &emsp;
+              Incident: {incident.incident}
+            </Typography>
+          ))}
+          <hr/>
+            </div>
+        );
+      }
+    }
+
+    renderNoteButton(){
+      if(this.props.role=="staff")
+      return (
+        <div>
+          <DashboardItem
+          destination="/addnote"
+          title="Note to Parents"
+          image="/img/message.png"
+          id={this.props.studentId}
+          name={this.props.name}
+          role="staff"
+          />
+          <DashboardItem
+          destination="/addhighlight"
+          title="Today's Highlight"
+          image="/img/highlight.png"
+          id={this.props.studentId}
+          name={this.props.name}
+          role="staff"
+          />
+        </div>
+        )
+      else if(this.props.role=="parent")
+      return (<DashboardItem
+        destination="/addnote"
+        title="Note to Staff"
+        image="/img/message.png"
+        id={this.props.studentId}
+        name={this.props.name}
+        role="parent"
+        />)
+    }
+
+    renderHighlight(){
+
+    }
+
+
   
     render() {
       const { classes } = this.props;
-      if (this.props.id){
+      if (this.props.studentId){
       return (
         <Card className={classes.card}>
           <CardHeader
@@ -219,65 +492,19 @@ const styles = theme => ({
             }
             title={this.props.name}
             subheader={this.state.date}
-            action={<DashboardItem
-            destination="/addnote"
-            title="Note"
-            image="/img/message.png"
-            id={this.props.id}
-            />}
+            action={this.renderNoteButton()}
           />
-          {/* <CardMedia
-            className={classes.media}
-            image="/static/images/cards/paella.jpg"
-            title="Contemplative Reptile"
-          /> */}
           <CardContent>
-            <strong>Diapering:</strong>
-          {this.state.diaperings.map(diapering => (
-
-            <Typography component="p">
-              Time: {diapering.time} &emsp;  
-              Type: {diapering.type} &emsp;
-              Place: {diapering.place} 
-            </Typography>
-          ))}
-          <hr/>
-          <strong>Meals:</strong>
-          {this.state.meals.map(meal => (
-
-            <Typography component="p">
-              Time: {meal.time} &emsp;
-              Meal Type: {meal.type} &emsp;
-              Food: {meal.food}
-            </Typography>
-          ))}
-          <hr/>   
-          <strong>Naps:</strong>
-          {this.state.naps.map(nap => (
-
-            <Typography component="p">
-              Nap Started: {nap.startTime} &emsp;
-              Nap Ended: {nap.endTime}
-            </Typography>
-          ))}
-          <hr/>
-          <strong>Meds Administered:</strong>
-          {this.state.medicines.map(medicine => (
-
-            <Typography component="p">
-              Time: {medicine.time} &emsp;
-              Type: {medicine.medName}
-            </Typography>
-          ))}
-          <hr/>
-          <strong>Incidents:</strong>
-          {this.state.incidents.map(incident => (
-
-            <Typography component="p">
-              Time: {incident.time} &emsp;
-              Incident: {incident.incident}
-            </Typography>
-          ))}               
+            {this.renderNoteForStaff()}
+            {this.renderNoteForParents()}
+            {this.renderHighlight()}            
+            {this.renderDiaperings()}
+            {this.renderMeals()}
+            {this.renderNaps()}
+            {this.renderMeds()}
+            {this.renderIncidents()}
+            
+                    
           </CardContent>
         </Card>
       );

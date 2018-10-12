@@ -4,7 +4,7 @@ const nodemailer = require("nodemailer");
 
 module.exports = {
   /************student**************/
-  getAllStudents: function(req, res) {
+  getAllStudents: function (req, res) {
     db.Student.findAll({
       order: [["name", "ASC"]],
       where: {
@@ -29,7 +29,7 @@ module.exports = {
       });
   },
 
-  saveStudent: function(req, res) {
+  saveStudent: function (req, res) {
     db.Student.create({
       name: req.body.name,
       address: req.body.address,
@@ -44,7 +44,7 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
-  deleteStudent: function(req, res) {
+  deleteStudent: function (req, res) {
     db.Student.destroy({
       where: {
         id: req.params.studentId
@@ -54,7 +54,7 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
-  updateStudent: function(req, res) {
+  updateStudent: function (req, res) {
     db.Student.update(
       {
         name: req.body.name,
@@ -75,22 +75,10 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
-  getStudentInfo: function(req, res) {
+  getStudentInfo: function (req, res) {
     db.Student.findOne({
       where: {
         id: req.params.studentId
-      }
-    })
-      .then(dbStudent => res.json(dbStudent))
-      .catch(err => res.status(422).json(err));
-  },
-
-  getStudentsInfo: function(req, res) {
-    console.log("I am here");
-    db.Student.findAll({
-      attributes: ["name"],
-      where: {
-        id: req.params.users
       }
     })
       .then(dbStudent => res.json(dbStudent))
@@ -101,7 +89,7 @@ module.exports = {
 
   /************parents**************/
 
-  getAllParentsEmail: function(req, res) {
+  getAllParentsEmail: function (req, res) {
     db.Parent.findAll({
       attributes: ["email"],
       include: [
@@ -117,7 +105,7 @@ module.exports = {
     });
   },
 
-  saveParent: function(req, res) {
+  saveParent: function (req, res) {
     // console.log("body", req.body);
     let baseUrl = req.body.baseUrl;
     let tempPass = shortid.generate();
@@ -151,7 +139,7 @@ module.exports = {
               <h3>Your temporary password is ${tempPass}</h3>
               <h3>Please change your password under your settings the next time you log in.</h3>`
           };
-          transporter.sendMail(mailOptions, function(error, info) {
+          transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
               console.log(error);
             } else {
@@ -176,7 +164,7 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
-  getStudentParentInfo: function(req, res) {
+  getStudentParentInfo: function (req, res) {
     db.Student.findOne({
       where: {
         id: req.params.studentId
@@ -197,7 +185,7 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
-  updateParent: function(req, res) {
+  updateParent: function (req, res) {
     db.Parent.update(
       {
         name: req.body.name,
@@ -215,7 +203,7 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
-  checkParentEmail: function(req, res) {
+  checkParentEmail: function (req, res) {
     db.Parent.findOne({
       where: {
         email: req.params.email
@@ -228,29 +216,18 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
-  createStudentParentAssociation: function(req, res) {
-    db.Parent.findOne({
-      where: {
-        id: req.body.parentId
-      }
+  createStudentParentAssociation: function (req, res) {
+    db.ParentStudent.create({
+      ParentId: req.body.parentId,
+      StudentId: req.body.studentId
     })
-      .then(parent => {
-        db.Student.findOne({
-          where: {
-            id: req.body.studentId
-          }
-        }).then(student => {
-          parent.setStudents([student]);
-          res.json(student);
-        });
-      })
       .catch(err => res.status(422).json(err));
   },
   /************parents**************/
 
   /************pickups**************/
 
-  savePickup: function(req, res) {
+  savePickup: function (req, res) {
     db.Pickup.create({
       name: req.body.name,
       address: req.body.address,
@@ -262,17 +239,28 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
-  getStudentPickupInfo: function(req, res) {
-    db.Pickup.findAll({
+  getStudentPickupInfo: function (req, res) {
+    db.Student.findOne({
       where: {
-        StudentId: req.params.studentId
-      }
+        id: req.params.studentId
+      },
+      include: [
+        {
+          model: db.Pickup
+        }
+      ]
     })
-      .then(dbPickup => res.json(dbPickup))
+      .then(dbPickup => {
+        if (dbPickup) {
+          return res.json(dbPickup);
+        } else {
+          return res.json("No pickup found");
+        }
+      })
       .catch(err => res.status(422).json(err));
   },
 
-  updatePickup: function(req, res) {
+  updatePickup: function (req, res) {
     db.Pickup.update(
       {
         name: req.body.name,
@@ -290,7 +278,7 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
-  deletePickup: function(req, res) {
+  deletePickup: function (req, res) {
     db.Pickup.destroy({
       where: {
         id: req.params.pickupId
@@ -300,7 +288,7 @@ module.exports = {
   /************pickups**************/
 
   /************report**************/
-  getReportConsolidated: function(req, res) {
+  getReportConsolidated: function (req, res) {
     console.log("Req ", req.params);
     db.Student.findAll({
       include: [
@@ -345,7 +333,7 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
-  getReport: function(req, res) {
+  getReport: function (req, res) {
     db.Report.findOne({
       where: {
         StudentId: req.params.studentId,
@@ -359,7 +347,7 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
-  saveReport: function(req, res) {
+  saveReport: function (req, res) {
     db.Report.create({
       StudentId: req.params.studentId,
       date: req.body.date,
@@ -370,7 +358,7 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
-  updateReport: function(req, res) {
+  updateReport: function (req, res) {
     db.Report.update(
       {
         noteForParents: req.body.noteForParents
@@ -384,10 +372,26 @@ module.exports = {
       .then(dbReport => res.json(dbReport))
       .catch(err => res.status(422).json(err));
   },
+
+  updateReportHighlight: function (req, res) {
+    db.Report.update(
+      {
+        highlight: req.body.highlight
+      },
+      {
+        where: {
+          id: req.params.reportId
+        }
+      }
+    )
+      .then(dbReport => res.json(dbReport))
+      .catch(err => res.status(422).json(err));
+  },
+
   /************report**************/
 
   /************diapering**************/
-  getDiapering: function(req, res) {
+  getDiapering: function (req, res) {
     db.Diapering.findAll({
       where: {
         StudentId: req.params.studentId,
@@ -402,7 +406,7 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
-  saveDiapering: function(req, res) {
+  saveDiapering: function (req, res) {
     db.Diapering.create({
       place: req.body.place,
       type: req.body.type,
@@ -416,7 +420,7 @@ module.exports = {
   /************diapering**************/
 
   /************Nap**************/
-  getNap: function(req, res) {
+  getNap: function (req, res) {
     db.Nap.findAll({
       where: {
         StudentId: req.params.studentId,
@@ -431,7 +435,7 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
-  saveNap: function(req, res) {
+  saveNap: function (req, res) {
     console.log("NAP BODY", req.body);
     console.log("NAP BODY", req.params);
     db.Nap.create({
@@ -446,7 +450,7 @@ module.exports = {
   /************Nap**************/
 
   /************Meal**************/
-  getMeal: function(req, res) {
+  getMeal: function (req, res) {
     db.Meal.findAll({
       where: {
         StudentId: req.params.studentId,
@@ -461,7 +465,7 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
-  saveMeal: function(req, res) {
+  saveMeal: function (req, res) {
     db.Meal.create({
       time: req.body.time,
       type: req.body.type,
@@ -475,7 +479,7 @@ module.exports = {
   /************Meal**************/
 
   /************Incident**************/
-  getIncident: function(req, res) {
+  getIncident: function (req, res) {
     db.Incident.findAll({
       where: {
         StudentId: req.params.studentId,
@@ -490,7 +494,7 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
-  saveIncident: function(req, res) {
+  saveIncident: function (req, res) {
     db.Incident.create({
       time: req.body.time,
       incident: req.body.incident,
@@ -503,7 +507,7 @@ module.exports = {
   /************Incident**************/
 
   /************Medicine**************/
-  getMedicine: function(req, res) {
+  getMedicine: function (req, res) {
     db.Medicine.findAll({
       where: {
         StudentId: req.params.studentId,
@@ -518,7 +522,7 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
-  saveMedicine: function(req, res) {
+  saveMedicine: function (req, res) {
     db.Medicine.create({
       time: req.body.time,
       medName: req.body.medName,
@@ -532,7 +536,7 @@ module.exports = {
 
   /************invoice**************/
 
-  createInvoice: function(req, res) {
+  createInvoice: function (req, res) {
     db.Invoice.create({
       StudentId: req.params.studentId,
       month: req.body.month,
@@ -542,7 +546,7 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
-  updateInvoice: function(req, res) {
+  updateInvoice: function (req, res) {
     db.Invoice.update(
       {
         month: req.body.month,
@@ -560,7 +564,7 @@ module.exports = {
   /************invoice**************/
 
   /************fixedsnack**************/
-  saveSnacks: function(req, res) {
+  saveSnacks: function (req, res) {
     db.Snack.create({
       day: req.body.day,
       time: req.body.time,
@@ -571,7 +575,7 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
 
-  updateSnacks: function(req, res) {
+  updateSnacks: function (req, res) {
     db.Snack.update(
       {
         day: req.body.day,
@@ -592,7 +596,7 @@ module.exports = {
   /************fixedsnack**************/
 
   /************email**************/
-  emailParents: function(req, res) {
+  emailParents: function (req, res) {
     try {
       var transporter = nodemailer.createTransport({
         service: "gmail",
@@ -605,14 +609,14 @@ module.exports = {
         }
       });
       let mailOptions = {
-        subject: `Snack Time | Message to all parents`,
+        subject: `Snack Time | ${req.body.subject}`,
         to: req.body.emails,
         from: `Snack Time <snacktimeemail@gmail.com>`,
         html: `
           <h1>This is a message to all parents.</h1>
           <p>${req.body.message}</p>`
       };
-      transporter.sendMail(mailOptions, function(error, info) {
+      transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
           console.log(error);
         } else {
@@ -626,20 +630,51 @@ module.exports = {
   },
   /************email**************/
 
-  /************email**************/
-  changeOrg: function(req, res) {
+  /************org**************/
+  changeOrg: function (req, res) {
     console.log("change org", req.body);
     db.Organization.update(req.body, {
       where: {
-        id: req.session.staff.OrganizationId
+        id: req.session.user.OrganizationId
       }
     }).then(org => {
-      if(org) {
+      if (org) {
         res.json("Updated Org Successfully");
       } else {
         res.json("Update Org Failed");
       }
     })
+  },
+  /************org**************/
+
+  /************remove staff to org**************/
+  removeStaff: function (req, res) {
+    console.log("REMOVE STAFF", req.body);
+    db.Staff.destroy({
+      where: {
+        id: req.body.staffId
+      }
+    }).then(result => {
+      if (result) {
+        res.json("Staff Destroyed!!");
+      } else {
+        res.json("failed");
+      }
+    })
+  },
+  /************add staff to org**************/
+
+  /************get all staff**************/
+  getAllStaff: function (req, res) {
+    console.log("get all staff backend", req.session.user.OrganizationId);
+    db.Staff.findAll({
+      where: {
+        OrganizationId: req.session.user.OrganizationId
+      },
+      order:[['createdAt','DESC']]
+    }).then(staffs => {
+      res.json(staffs);
+    })
   }
-  /************email**************/
+  /************get all staff**************/
 };
