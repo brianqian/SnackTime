@@ -24,7 +24,7 @@ import CloseIcon from "@material-ui/icons/Close";
 
 function TabContainer({ children, dir }) {
   return (
-    <Typography component="div" dir={dir} style={{ padding: 8 * 3 }}>
+    <Typography component="div" dir={dir} style={{ padding: 0 }}>
       {children}
     </Typography>
   );
@@ -34,7 +34,10 @@ const styles = theme => ({
   root: {
     margin: "auto",
     width: "75%",
-    textAlign: "center"
+    textAlign: "center",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%"
+    }
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -65,7 +68,8 @@ const styles = theme => ({
   },
   close: {
     padding: theme.spacing.unit / 2
-  }
+  },
+
 });
 
 class ParentSettings extends React.Component {
@@ -269,7 +273,7 @@ class ParentSettings extends React.Component {
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography className={classes.heading}>Account</Typography>
               </ExpansionPanelSummary>
-              <ExpansionPanelDetails className={classes.textCenter}>
+              <ExpansionPanelDetails className={`${classes.textCenter} `}>
                 <AppBar position="static" color="default">
                   <Tabs
                     value={value}
@@ -287,7 +291,7 @@ class ParentSettings extends React.Component {
                 {value === 0 && (
                   <TabContainer>
                     <form
-                      className={classes.container}
+                      className={`${classes.container}`}
                       noValidate
                       autoComplete="off"
                     >

@@ -12,11 +12,18 @@ import { Redirect } from "react-router-dom";
 import Auth from "../../../../utils/Auth";
 import MultiSelectContainer from "../MultiSelect/MultiSelectContainer";
 import Timepicker from "../../../../components/TimePicker/TimePicker";
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 
 const styles = theme => ({
   container: {
     display: "flex",
     flexWrap: "wrap"
+  },
+  submitbutton:{
+    marginTop:25,
+    height:10
   },
   textField: {
     marginLeft: theme.spacing.unit,
@@ -59,7 +66,7 @@ class AddIncident extends React.Component {
     console.log(idArray);
     await this.setState({ studentIdsToSubmit: idArray });
     if(this.state.studentIdsToSubmit.length===0)
-      alert("No student selected")
+      this.handleClick();
     else
       this.state.studentIdsToSubmit.map(id => this.postIncident(id));
   };
@@ -99,6 +106,16 @@ class AddIncident extends React.Component {
       .then(resp => console.log(resp));
   };
 
+  handleClick = () => {
+    this.setState({ open: true });
+  };
+  handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ open: false });
+  };
+
   render() {
     const { classes } = this.props;
     if (this.state.loggedIn) {
@@ -126,8 +143,32 @@ class AddIncident extends React.Component {
               variant="outlined"
             />
             <hr />
-            <Button onClick={this.handleSubmit}>Add Activity</Button>
+            <Button className={classes.submitbutton} onClick={this.handleSubmit}>Add Activity</Button>
           </form>
+          <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={this.state.open}
+          autoHideDuration={6000}
+          onClose={this.handleClose}
+          ContentProps={{
+            "aria-describedby": "message-id"
+          }}
+          message={<span id="message-id">No Student Selected</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={this.handleClose}
+            >
+              <CloseIcon />
+            </IconButton>
+          ]}
+        />
         </div>
       );
     } else if (this.state.loginRejected) {

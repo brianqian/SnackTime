@@ -18,6 +18,10 @@ const styles = theme => ({
     display: "flex",
     flexWrap: "wrap"
   },
+  submitbutton:{
+    marginTop:25,
+    height:10
+  },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
@@ -56,8 +60,10 @@ class AddMeds extends React.Component {
     });
     console.log(idArray);
     await this.setState({ studentIdsToSubmit: idArray });
-
-    this.state.studentIdsToSubmit.map(id => this.postMeds(id));
+    if(this.state.studentIdsToSubmit.length===0)
+      alert("No student selected")
+    else
+      this.state.studentIdsToSubmit.map(id => this.postMeds(id));
   };
 
   handleChange = name => event => {
@@ -113,7 +119,7 @@ class AddMeds extends React.Component {
             <hr />
             <TextField
               required
-              label="Medications Administered"
+              label="Medicines Administered"
               className={classes.textField}
               value={this.state.medName}
               onChange={this.handleChange("medName")}
@@ -122,7 +128,7 @@ class AddMeds extends React.Component {
               variant="outlined"
             />
             <hr />
-            <Button onClick={this.handleSubmit}>Add Activity</Button>
+            <Button className={classes.submitbutton} onClick={this.handleSubmit}>Add Activity</Button>
           </form>
         </div>
       );

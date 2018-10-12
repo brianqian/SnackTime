@@ -2,12 +2,21 @@ module.exports = function(sequelize, DataTypes) {
   var Diapering = sequelize.define('Diapering', {
     time: {
       type: DataTypes.TIME,
+      allowNull:false
     },
     place: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull:false,
+      validate: {
+        notEmpty: true,
+      },
     },
     type: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull:false,
+      validate: {
+        notEmpty: true,
+      },
     },
     date: {
         type: DataTypes.STRING,

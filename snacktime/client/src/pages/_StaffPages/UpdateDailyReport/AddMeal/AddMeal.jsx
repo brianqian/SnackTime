@@ -18,6 +18,10 @@ const styles = theme => ({
     display: "flex",
     flexWrap: "wrap"
   },
+  submitbutton:{
+    marginTop:25,
+    height:10
+  },
 
   textField: {
     marginLeft: theme.spacing.unit,
@@ -90,6 +94,9 @@ class AddMeal extends React.Component {
     });
     console.log(idArray);
     this.setState({ studentIdsToSubmit: idArray }, function() {
+      if(this.state.studentIdsToSubmit.length===0)
+        alert("No student selected")
+    else
       this.state.studentIdsToSubmit.map(id => {
         console.log("Student to submit", id);
         this.postMeal(id);
@@ -152,7 +159,7 @@ class AddMeal extends React.Component {
             allStudents={this.state.allStudents}
             updateStudents={this.updateStudents}
           />
-          <button onClick={this.logState} />
+          
           <form className={classes.container} noValidate autoComplete="off">
             {/* <DateTimeSelector
               name="mealTime"
@@ -204,7 +211,7 @@ class AddMeal extends React.Component {
               variant="outlined"
             />
             <hr />
-            <Button onClick={this.handleSubmit}>Add Activity</Button>
+            <Button className={classes.submitbutton} onClick={this.handleSubmit}>Add Activity</Button>
           </form>
         </div>
       );

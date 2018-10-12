@@ -2,9 +2,17 @@ module.exports = function(sequelize, DataTypes) {
     var Nap = sequelize.define('Nap', {
       startTime: {
         type: DataTypes.TIME,
+        allowNull:false,
+        validate: {
+          notEmpty: true,
+        },
       },
       endTime: {
         type: DataTypes.TIME,
+        allowNull:false,
+        validate: {
+          notEmpty: true,
+        },
       },
       date: {
         type: DataTypes.STRING,

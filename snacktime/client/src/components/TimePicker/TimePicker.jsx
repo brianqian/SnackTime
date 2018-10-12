@@ -13,6 +13,7 @@ class TimePicker extends Component {
     hide: false,
   };
   componentWillMount() {
+    console.log('HOUR', moment().hours())
     let now = moment().format('LT');
     now = now.split(':');
     now = [now[0], ...now[1].split(' ')];
@@ -31,6 +32,7 @@ class TimePicker extends Component {
     } else {
       let hour = parseInt(this.state.selectedHour);
       hour += 12;
+      if (hour===24) hour = '00';
       return `${hour}:${this.state.selectedMin}:00`;
     }
   };
