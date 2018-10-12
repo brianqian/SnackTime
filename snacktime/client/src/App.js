@@ -13,7 +13,6 @@ import AllStudents from './pages/_StaffPages/AllStudentsPage/AllStudentsPage';
 import SingleStudent from './pages/SingleStudent/SingleStudent';
 import ResetPassword from './pages/ForgotPassword/components/ResetPassword';
 import DailyReportMenu from './pages/_StaffPages/UpdateDailyReport/DailyReportMenu/DailyReportMenu';
-import MultiStudentSelect from './pages/_StaffPages/MultiStudentSelect/MultiStudentSelect';
 import AddNap from './pages/_StaffPages/UpdateDailyReport/AddNap/AddNap';
 import AddPotty from './pages/_StaffPages/UpdateDailyReport/AddPotty/AddPotty';
 import AddMeds from './pages/_StaffPages/UpdateDailyReport/AddMeds/AddMeds';
@@ -28,6 +27,8 @@ import UpdateCalendar from './pages/_StaffPages/UpdateCalendar/UpdateCalendar';
 import MessageParents from './pages/_StaffPages/MessageParents/MessageParents';
 import AddHighlight from './pages/_StaffPages/UpdateDailyReport/AddHighlight/AddHighlight';
 import Timepicker from './components/TimePicker/TimePicker'
+import DailyReportArchive from './pages/DailyReportArchive/DailyReportArchive';
+import ParentSettings from "./pages/_ParentPages/ParentHomePage/components/ParentSettings";
 
 
 class App extends Component {
@@ -43,7 +44,6 @@ class App extends Component {
             <Route exact path="/addstaff" component={AddStaff} />
             <Route exact path="/dailyreportmenu" component={DailyReportMenu} />
             <Route exact path="/messageparents" component={MessageParents} />
-            <Route exact path="/studentselect" component={MultiStudentSelect} />
             <Route exact path="/dailyreport/addnap" component={AddNap} />
             <Route exact path="/dailyreport/addpotty" component={AddPotty} />
             <Route exact path="/dailyreport/addmeds" component={AddMeds} />
@@ -59,10 +59,10 @@ class App extends Component {
             <Route path="/allstudentspage/:student" component={SingleStudent} />
             <Route exact path="/staffsettings" component={StaffSettingsPage} />
             <Route exact path="/changepassword" component={ChangePassword} />
-            <Route exact path="/multiselect" component={MultiSelectContainer} /> {/*TEST ROUTE*/}
             <Route exact path="/staffsettings" component={Settings} />
             <Route exact path="/updatecalendar" component={UpdateCalendar} />
-            <Route exact path="/picker" component={Timepicker} /> {/*TEST ROUTE*/}
+            <Route exact path="/archive" component={DailyReportArchive} /> 
+            <Route exact path="/parentsettings" component={ParentSettings} /> 
             <Route component={notFound} />
           </Switch>
         </Router>

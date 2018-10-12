@@ -3,6 +3,7 @@ import DashboardItem from '../../../components/DashboardItem/DashboardItem';
 import './ParentHomePage.css';
 import { Redirect } from 'react-router';
 import Auth from '../../../utils/Auth'
+import HeaderBar from "../../../components/HeaderBar/HeaderBar"
 
 class ParentHomePage extends Component {
   state = {
@@ -21,14 +22,12 @@ class ParentHomePage extends Component {
     console.log(this.state)
   };
 
-
-
-  
   render() {
-    // if (this.state.loggedIn) {
-      if (true){
+    if (this.state.loggedIn) {
+      // if (true){
       return (
         <div>
+          <HeaderBar type={this.state.userType}/>
           <header>
             <p>Welcome {this.state.userName}</p>
           </header>
@@ -48,7 +47,7 @@ class ParentHomePage extends Component {
             />
             <DashboardItem
               title="Settings"
-              destination=""
+              destination="/parentsettings"
               image="/img/settings.png"
               role="parent"
             />
@@ -67,6 +66,8 @@ class ParentHomePage extends Component {
         />
       );
     }
+
+
     return <div>Logging in</div>;
   }
 }

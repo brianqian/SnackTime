@@ -11,7 +11,7 @@ import DateTimeSelector from "../../../../components/DateTimeSelector/DateTimeSe
 import { Redirect } from "react-router-dom";
 import Auth from "../../../../utils/Auth";
 import MultiSelectContainer from "../MultiSelect/MultiSelectContainer";
-
+import Timepicker from "../../../../components/TimePicker/TimePicker";
 
 const styles = theme => ({
   container: {
@@ -37,18 +37,18 @@ class AddIncident extends React.Component {
     time: "",
     incident: "",
     multiline: "Controlled",
-    allStudents:[],
+    allStudents: [],
     studentIdsToSubmit: []
   };
 
   async componentWillMount() {
     Auth.StaffAuthorize(this);
-    console.log('hello');
+    console.log("hello");
   }
   updateStudents = newArray => {
     this.setState({ allStudents: newArray });
   };
-  handleSubmit = async (event) => {
+  handleSubmit = async event => {
     event.preventDefault();
     let idArray = [];
     this.state.allStudents.map(student => {
@@ -58,8 +58,10 @@ class AddIncident extends React.Component {
     });
     console.log(idArray);
     await this.setState({ studentIdsToSubmit: idArray });
-
-    this.state.studentIdsToSubmit.map(id => this.postIncident(id));
+    if(this.state.studentIdsToSubmit.length===0)
+      alert("No student selected")
+    else
+      this.state.studentIdsToSubmit.map(id => this.postIncident(id));
   };
 
   handleChange = name => event => {
@@ -97,58 +99,51 @@ class AddIncident extends React.Component {
       .then(resp => console.log(resp));
   };
 
-
   render() {
     const { classes } = this.props;
-    if(this.state.loggedIn){
-    return (
-      <div>
-        <HeaderBar type={this.state.userType} />
-        <MultiSelectContainer
-          orgId={this.state.orgId}
-          allStudents={this.state.allStudents}
-          updateStudents={this.updateStudents}
-        />
+    if (this.state.loggedIn) {
+      return (
+        <div>
+          <HeaderBar type={this.state.userType} />
+          <MultiSelectContainer
+            orgId={this.state.orgId}
+            allStudents={this.state.allStudents}
+            updateStudents={this.updateStudents}
+          />
 
-        <form className={classes.container} noValidate autoComplete="off">
-          <DateTimeSelector
-            label="Time: "
-            name="time"
-            className={classes.textField}
-            value={this.state.time}
-            setTime={this.setIncidentTime}
-            //   onChange={this.handleSelectorChange}
-            //   margin="normal"
-            //   variant="outlined"
-          />
-          <hr />
-          <TextField
-            required
-            label="Indcident"
-            className={classes.textField}
-            value={this.state.medName}
-            onChange={this.handleChange("incident")}
-            multiline
-            margin="normal"
-            variant="outlined"
-          />
-          <hr />
-          <Button onClick={this.handleSubmit}>Add Activity</Button>
-        </form>
-      </div>
-    );
-    }else if (this.state.loginRejected) {
+          <form className={classes.container} noValidate autoComplete="off">
+            <Timepicker setTime={this.setIncidentTime} />
+
+            <hr />
+            <TextField
+              required
+              label="Indcident"
+              className={classes.textField}
+              value={this.state.medName}
+              onChange={this.handleChange("incident")}
+              multiline
+              margin="normal"
+              variant="outlined"
+            />
+            <hr />
+            <Button onClick={this.handleSubmit}>Add Activity</Button>
+          </form>
+        </div>
+      );
+    } else if (this.state.loginRejected) {
       return (
         <Redirect
           to={{
-            pathname: '/notAuthorized',
-            state: { type: 'Staff',
-            location: '/addincident' },
+            pathname: "/notAuthorized",
+            state: {
+              type: "Staff",
+              location: "/addincident"
+            }
           }}
         />
       );
-    }else{
-      return <div/>
+    } else {
+      return <div />;
     }
   }
 }

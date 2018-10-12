@@ -1,92 +1,88 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { withStyles } from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import HeaderBar from '../../../../components/HeaderBar/HeaderBar';
+import React from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames";
+import { withStyles } from "@material-ui/core/styles";
+import MenuItem from "@material-ui/core/MenuItem";
+import TextField from "@material-ui/core/TextField";
+import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
+import HeaderBar from "../../../../components/HeaderBar/HeaderBar";
 // import Label from '@material-ui/core/Label';
-import DateTimeSelector from '../../../../components/DateTimeSelector/DateTimeSelector';
-import { Redirect } from 'react-router-dom';
+import DateTimeSelector from "../../../../components/DateTimeSelector/DateTimeSelector";
+import { Redirect } from "react-router-dom";
 //import MultiStudentSelect from "../../MultiStudentSelect/MultiStudentSelect";
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
 //import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import ListItemText from '@material-ui/core/ListItemText';
-import Select from '@material-ui/core/Select';
-import Checkbox from '@material-ui/core/Checkbox';
-import Chip from '@material-ui/core/Chip';
+import FormControl from "@material-ui/core/FormControl";
+import ListItemText from "@material-ui/core/ListItemText";
+import Select from "@material-ui/core/Select";
+import Checkbox from "@material-ui/core/Checkbox";
+import Chip from "@material-ui/core/Chip";
 //import Button from '@material-ui/core/Button';
 //import HeaderBar from '../../../components/HeaderBar/HeaderBar';
-import Auth from '../../../../utils/Auth';
+import Auth from "../../../../utils/Auth";
 import MultiSelectContainer from "../MultiSelect/MultiSelectContainer";
-
-
+import Timepicker from "../../../../components/TimePicker/TimePicker";
 
 const styles = theme => ({
   container: {
-    display: 'flex',
-    flexWrap: 'wrap',
+    display: "flex",
+    flexWrap: "wrap"
   },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: 200,
+    width: 200
   },
   dense: {
-    marginTop: 19,
+    marginTop: 19
   },
   menu: {
-    width: 200,
-  },
+    width: 200
+  }
 });
 
 class AddNap extends React.Component {
   state = {
     //selectedStudents: this.props.location.state.selectedStudents,
-    napStart: '',
-    napEnd: '',
-    multiline: 'Controlled',
+    napStart: "",
+    napEnd: "",
+    multiline: "Controlled",
     allStudents: [],
-    studentIdsToSubmit:[],
+    studentIdsToSubmit: [],
     loginRejected: false,
-    loggedIn: false,
+    loggedIn: false
   };
 
   async componentWillMount() {
     await Auth.StaffAuthorize(this);
-    console.log(this.state.orgId)
+    console.log(this.state.orgId);
   }
 
-  updateStudents = (newArray) => {
+  updateStudents = newArray => {
     this.setState({ allStudents: newArray });
   };
-  handleSubmit = async (event) => {
+  handleSubmit = async event => {
     event.preventDefault();
-    let idArray = []
-    this.state.allStudents.map(student=> {
-      if (student.selected === true){
-         idArray.push(student.id)
+    let idArray = [];
+    this.state.allStudents.map(student => {
+      if (student.selected === true) {
+        idArray.push(student.id);
       }
-    })
+    });
     console.log(idArray);
-    await this.setState({studentIdsToSubmit: idArray})
+    await this.setState({ studentIdsToSubmit: idArray });
 
     this.state.studentIdsToSubmit.map(id => this.postNap(id));
   };
-  logState=()=>{
-  console.log(this.state)
-  }
 
   handleChange = event => {
     console.log(event.target);
     // this.setState({
     //   [name]: event.target.value,
     // });
-    console.log('NAP START, END', this.state.napStart, this.state.napEnd);
+    console.log("NAP START, END", this.state.napStart, this.state.napEnd);
   };
 
   setNapStart = time => {
@@ -101,19 +97,19 @@ class AddNap extends React.Component {
     let today = new Date();
     let date =
       today.getFullYear() +
-      '-' +
+      "-" +
       (today.getMonth() + 1) +
-      '-' +
+      "-" +
       today.getDate();
     console.log(date);
     fetch(`/api/student/${id}/nap`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         napStart: this.state.napStart,
         napEnd: this.state.napEnd,
-        date: date,
-      }),
+        date: date
+      })
     })
       .then(resp => {
         console.log(resp);
@@ -122,57 +118,38 @@ class AddNap extends React.Component {
       .then(resp => console.log(resp));
   };
 
-
   render() {
     const { classes, theme } = this.props;
 
     if (this.state.loggedIn) {
-        return (
-          <div>
-            <HeaderBar type={this.state.userType} />
-            <MultiSelectContainer
+      return (
+        <div>
+          <HeaderBar type={this.state.userType} />
+          <MultiSelectContainer
             orgId={this.state.orgId}
             allStudents={this.state.allStudents}
             updateStudents={this.updateStudents}
           />
-          <button onClick={this.logState}/>
-            <div>
-              <Paper className={classes.root} elevation={1} />
-              <form className={classes.container} noValidate autoComplete="off">
-                <DateTimeSelector
-                  label="Start Time: "
-                  name="napStart"
-                  className={classes.textField}
-                  value={this.state.napStart}
-                  setTime={this.setNapStart}
-                  onChange={this.handleChange}
-                  //   margin="normal"
-                  //   variant="outlined"
-                />
-                <hr />
-                <DateTimeSelector
-                  label="End Time: "
-                  name="napEnd"
-                  className={classes.textField}
-                  value={this.state.napEnd}
-                  setTime={this.setNapEnd}
-                  // onChange={this.handleChange}
-                  //   margin="normal"
-                  //   variant="outlined"
-                />
-                <hr />
-                <Button onClick={this.handleSubmit}>Add Activity</Button>
-              </form>
-            </div>
+          <div>
+            <Paper className={classes.root} elevation={1} />
+            <form className={classes.container} noValidate autoComplete="off">
+              <Timepicker setTime={this.setNapStart} />
+
+              <hr />
+              <Timepicker setTime={this.setNapEnd} />
+
+              <hr />
+              <Button onClick={this.handleSubmit}>Add Activity</Button>
+            </form>
           </div>
-        );
-      
+        </div>
+      );
     } else if (this.state.loginRejected) {
       return (
         <Redirect
           to={{
-            pathname: '/notAuthorized',
-            state: { type: 'Staff' },
+            pathname: "/notAuthorized",
+            state: { type: "Staff" }
           }}
         />
       );
@@ -220,7 +197,7 @@ class AddNap extends React.Component {
 }
 
 AddNap.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(AddNap);

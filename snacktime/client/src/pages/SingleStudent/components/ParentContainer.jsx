@@ -1,78 +1,99 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import TextField from '@material-ui/core/TextField';
-import './ParentContainer.css';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import indigo from '@material-ui/core/colors/indigo';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import Typography from "@material-ui/core/Typography";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import TextField from "@material-ui/core/TextField";
+import "./ParentContainer.css";
+import Table from "@material-ui/core/Table";
+import Button from "@material-ui/core/Button";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+import indigo from "@material-ui/core/colors/indigo";
 
 const CustomTableCell = withStyles(theme => ({
   head: {
     backgroundColor: indigo[500],
-    color: theme.palette.common.white,
+    color: theme.palette.common.white
   },
   body: {
-    fontSize: 14,
-  },
+    fontSize: 14
+  }
 }))(TableCell);
 
 const styles = theme => ({
   root: {
-    width: '100%',
-    marginTop: theme.spacing.unit * 3,
-    overflowX: 'auto',
+    width: "75vw",
+    marginTop: theme.spacing.unit * 3
+    // overflowX: 'auto',
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
+    fontWeight: theme.typography.fontWeightRegular
   },
   childInfo: {
-    margin: "15px",
+    margin: "15px"
   },
   table: {
-    minWidth: 700,
+    minWidth: 700
+  },
+  searchSubmit: {
+    marginTop: "25px"
+  },
+  submitGuardian: {
+    marginTop: "25px"
+  },
+  registerParent: {
+    marginTop: "25px"
   },
   row: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
-  },
+    "&:nth-of-type(odd)": {
+      backgroundColor: theme.palette.background.default
+    }
+  }
 });
 
 class ParentContainer extends Component {
   state = {
+    searchEmail: "",
     parents: [],
-    email: '',
-    status: '',
+    email: "",
+    status: "",
     showAddNewParent: true,
-    parentName: '',
-    parentEmail: '',
-    parentPassword: 'testpass',
-    parentAddress: '',
-    parentPhone: '',
+    parentName: "",
+    parentEmail: "",
+    parentPassword: "testpass",
+    parentAddress: "",
+    parentPhone: "",
     guardians: [],
     showAddNewGuardian: true,
-    guardianName: '',
-    guardianEmail: '',
-    guardianAddress: '',
-    guardianPhone: '',
+    guardianName: "",
+    guardianEmail: "",
+    guardianAddress: "",
+    guardianPhone: "",
     role: this.props.role,
-    staffs:[],
-    orgName:'',
-    orgAddress:'',
-    orgPhone:'',
-    orgOpenTime:'',
-    orgCloseTime:''
+    staffs: [],
+    orgName: "",
+    orgAddress: "",
+    orgPhone: "",
+    orgOpenTime: "",
+    orgCloseTime: "",
+    hideSearchParent: false,
+    diaperings: [],
+    meals: [],
+    naps: [],
+    medicines: [],
+    incidents: [],
+    date: "",
+    noteForStaff: null,
+    noteForParents: null,
+    highlight: null
   };
 
   componentDidMount() {
@@ -80,15 +101,213 @@ class ParentContainer extends Component {
     this.getExistingPickup();
     this.getSchoolInfo();
     this.getStaffInfo();
+    this.getDiapering();
+    this.getMeals();
+    this.getNaps();
+    this.getMedicines();
+    this.getIncidents();
+    if (this.props.role == "staff") this.getNotesForStaff();
+    else if (this.props.role === "parent") this.getNotesForParents();
     console.log(this.props.studentId, "STUDENT ID");
   }
 
-  getSchoolInfo = () =>{
+  getDiapering = () => {
+    console.log("start of get diapering function");
+    let today = new Date();
+    let date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+    console.log("Date:", date);
+    console.log("Id", this.props.studentId);
+    this.setState({ date: date });
+    fetch(`/api/student/${this.props.studentId}/diapering/${date}`)
+      .then(resp => resp.json())
+      .then(resp => {
+        if (resp) {
+          if (resp === "No diaperings") {
+            this.setState({ status: "No diapering found :(" });
+          } else {
+            console.log(resp);
+            this.setState({ diaperings: resp });
+          }
+        }
+      });
+  };
+
+  getMeals = () => {
+    console.log("start of get meals function");
+    let today = new Date();
+    let date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+    console.log("Date:", date);
+    console.log("Id", this.props.studentId);
+    fetch(`/api/student/${this.props.studentId}/meal/${date}`)
+      .then(resp => resp.json())
+      .then(resp => {
+        if (resp) {
+          if (resp === "No meals") {
+            this.setState({ status: "No Meal found :(" });
+          } else {
+            console.log(resp);
+            this.setState({ meals: resp });
+          }
+        }
+      });
+  };
+
+  getNaps = () => {
+    console.log("start of get naps function");
+    let today = new Date();
+    let date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+    console.log("Date:", date);
+    console.log("Id", this.props.studentId);
+    fetch(`/api/student/${this.props.studentId}/nap/${date}`)
+      .then(resp => resp.json())
+      .then(resp => {
+        if (resp) {
+          if (resp === "No naps") {
+            this.setState({ status: "No Naps found :(" });
+          } else {
+            console.log(resp);
+            this.setState({ naps: resp });
+          }
+        }
+      });
+  };
+
+  getMedicines = () => {
+    console.log("start of get medicines function");
+    let today = new Date();
+    let date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+    console.log("Date:", date);
+    console.log("Id", this.props.studentId);
+    this.setState({ date: date });
+    fetch(`/api/student/${this.props.studentId}/medicine/${date}`)
+      .then(resp => resp.json())
+      .then(resp => {
+        if (resp) {
+          if (resp === "No medicines") {
+            this.setState({ status: "No medicines found :(" });
+          } else {
+            console.log(resp);
+            this.setState({ medicines: resp });
+          }
+        }
+      });
+  };
+
+  getIncidents = () => {
+    console.log("start of get incidents function");
+    let today = new Date();
+    let date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+    console.log("Date:", date);
+    console.log("Id", this.props.studentId);
+    this.setState({ date: date });
+    fetch(`/api/student/${this.props.studentId}/incident/${date}`)
+      .then(resp => resp.json())
+      .then(resp => {
+        if (resp) {
+          if (resp === "No incidents") {
+            this.setState({ status: "No incident found :(" });
+          } else {
+            console.log(resp);
+            this.setState({ incidents: resp });
+          }
+        }
+      });
+  };
+
+  getNotesForStaff = () => {
+    console.log("start of get note for staff function");
+    let today = new Date();
+    let date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+
+    this.setState({ date: date });
+
+    fetch(`/api/student/${this.props.studentId}/report/${date}`)
+      .then(resp => resp.json())
+      .then(resp => {
+        console.log("Resp from notes: ", resp);
+        if (resp) {
+          if (resp !== "No Notes") {
+            console.log(resp);
+            this.setState({ noteForStaff: resp.noteForStaff });
+          }
+        }
+      });
+  };
+
+  getNotesForParents = () => {
+    console.log("start of get note for parents function");
+    let today = new Date();
+    let date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+
+    this.setState({ date: date });
+
+    fetch(`/api/student/${this.props.studentId}/report/${date}`)
+      .then(resp => resp.json())
+      .then(resp => {
+        console.log("Resp from notes: ", resp);
+        if (resp) {
+          if (resp === "No Notes") {
+            this.setState({ status: "No report found :(" });
+          } else {
+            console.log(resp);
+            this.setState({
+              noteForParents: resp.noteForParents,
+              highlight: resp.highlight
+            });
+          }
+        }
+      });
+  };
+
+  getSchoolInfo = () => {
     //use this.props.orgId as parameter to fetch and assign it to appropriate states
     fetch(`/api/parent/org/${this.props.orgId}`)
       .then(resp => resp.json())
-      .then(resp => this.setState({ orgName:resp.name, orgAddress: resp.address, orgPhone: resp.phone, orgOpenTime: resp.openTime, orgCloseTime: resp.closeTime  }))
-  }
+      .then(resp =>
+        this.setState({
+          orgName: resp.name,
+          orgAddress: resp.address,
+          orgPhone: resp.phone,
+          orgOpenTime: resp.openTime,
+          orgCloseTime: resp.closeTime
+        })
+      );
+  };
 
   getStaffInfo = () => {
     //use this.props.orgId as parameter to fetch and assign to state staffs
@@ -96,8 +315,8 @@ class ParentContainer extends Component {
       .then(resp => resp.json())
       .then(resp => {
         if (resp) {
-          if (resp === 'No staffs found') {
-            this.setState({ status: 'No staffs found :(' });
+          if (resp === "No staffs found") {
+            this.setState({ status: "No staffs found :(" });
           } else {
             const staffs = [];
             resp.map(staff => staffs.push(staff));
@@ -105,15 +324,15 @@ class ParentContainer extends Component {
           }
         }
       });
-  }
+  };
 
   getExistingPickup = () => {
     fetch(`/api/student/${this.props.studentId}/pickup`)
       .then(resp => resp.json())
       .then(resp => {
         if (resp) {
-          if (resp === 'No pickup found') {
-            this.setState({ status: 'No pickup found :(' });
+          if (resp === "No pickup found") {
+            this.setState({ status: "No pickup found :(" });
           } else {
             const guardians = [];
             resp.Pickups.map(guardian => guardians.push(guardian));
@@ -128,8 +347,8 @@ class ParentContainer extends Component {
       .then(resp => resp.json())
       .then(resp => {
         if (resp) {
-          if (resp === 'No parent found') {
-            this.setState({ status: 'No parents found :(' });
+          if (resp === "No parent found") {
+            this.setState({ status: "No parents found :(" });
           } else {
             const parents = [];
             resp.Parents.map(parent => parents.push(parent));
@@ -143,7 +362,7 @@ class ParentContainer extends Component {
     const { name, value } = e.target;
 
     this.setState({
-      [name]: value,
+      [name]: value
     });
   };
 
@@ -158,7 +377,7 @@ class ParentContainer extends Component {
           const { name, email, phone, address, id } = this.state.existingParent;
           this.setState({
             parentId: id,
-            status: `${name}, ${email}, ${phone}, ${address}`,
+            status: `${name}, ${email}, ${phone}, ${address}`
           });
         } else {
           this.setState({ status: "That email doesn't exist" });
@@ -169,10 +388,10 @@ class ParentContainer extends Component {
   capitalize = name => {
     const names = name.split(" ");
     for (var i = 0; i < names.length; i++) {
-      names[i] = names[i].charAt(0).toUpperCase() + names[i].slice(1)
+      names[i] = names[i].charAt(0).toUpperCase() + names[i].slice(1);
     }
-    return names.join(" ")
-  }
+    return names.join(" ");
+  };
 
   handleSubmitNewParent = e => {
     e.preventDefault();
@@ -186,31 +405,33 @@ class ParentContainer extends Component {
       phone: this.state.parentPhone,
       name: this.capitalize(this.state.parentName),
       baseUrl: url
-
     };
     console.log(newObj);
     this.setState({ addParentForm: newObj });
-    console.log('ADD PARENT FORM', this.state.addParentForm);
+    console.log("ADD PARENT FORM", this.state.addParentForm);
     console.log("STudnet IDDddddddd", this.props.studentId);
     fetch(`/api/student/${this.props.studentId}/parent`, {
-      method: 'POST',
-      headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify(newObj),
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify(newObj)
     })
       .then(resp => resp.json())
       .then(resp => {
         console.log(resp);
         if (resp) {
-          this.setState({
-            status: 'Parent Added!',
-            parentName: '',
-            parentEmail: '',
-            parentPassword: 'testpass',
-            parentAddress: '',
-            parentPhone: '',
-          }, () => this.getExistingParent());
+          this.setState(
+            {
+              status: "Parent Added!",
+              parentName: "",
+              parentEmail: "",
+              parentPassword: "testpass",
+              parentAddress: "",
+              parentPhone: ""
+            },
+            () => this.getExistingParent()
+          );
         } else {
-          this.setState({ status: 'Parent not added' });
+          this.setState({ status: "Parent not added" });
         }
         this.getExistingParent();
       });
@@ -226,102 +447,125 @@ class ParentContainer extends Component {
       //password: this.state.guardianPassword,
       address: this.state.guardianAddress,
       phone: this.state.guardianPhone,
-      name: this.capitalize(this.state.guardianName),
+      name: this.capitalize(this.state.guardianName)
       //baseUrl: url
-
     };
 
     this.setState({ addGuardianForm: newObj });
     fetch(`/api/student/${this.props.studentId}/pickup`, {
-      method: 'POST',
-      headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify(newObj),
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify(newObj)
     })
       .then(resp => resp.json())
       .then(resp => {
         console.log(resp);
         if (resp) {
-          this.setState({
-            status: 'Pickup Added!',
-            guardianName: '',
-            guardianEmail: '',
-            guardianPassword: 'testpass',
-            guardianAddress: '',
-            guardianPhone: '',
-          }, () => this.getExistingPickup());
+          this.setState(
+            {
+              status: "Pickup Added!",
+              guardianName: "",
+              guardianEmail: "",
+              guardianPassword: "testpass",
+              guardianAddress: "",
+              guardianPhone: ""
+            },
+            () => this.getExistingPickup()
+          );
         } else {
-          this.setState({ status: 'Pickup not added' });
+          this.setState({ status: "Pickup not added" });
         }
         this.getExistingPickup();
       });
-
   };
 
   handleAddNewParent = e => {
     e.preventDefault();
-    this.setState({ addParentForm: {}, showAddNewParent: false, status: '' });
+    this.setState({
+      addParentForm: {},
+      showAddNewParent: false,
+      hideSearchParent: true,
+      status: ""
+    });
   };
 
   handleAddNewGuardian = e => {
     e.preventDefault();
-    this.setState({ addGuardianForm: {}, showAddNewGuardian: false, status: '' });
+    this.setState({
+      addGuardianForm: {},
+      showAddNewGuardian: false,
+      status: ""
+    });
   };
 
   makeAssociation = e => {
     e.preventDefault();
-    fetch('/api/parentstudent', {
-      method: 'POST',
-      headers: { 'Content-type': 'application/json' },
+    fetch("/api/parentstudent", {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
       body: JSON.stringify({
         parentId: this.state.parentId,
-        studentId: this.props.studentId,
-      }),
+        studentId: this.props.studentId
+      })
     }).then(() => this.getExistingParent());
   };
 
   deleteAssociation = e => {
     const data = {
       studentId: this.props.studentId,
-      parentId: e.target.name,
+      parentId: e.target.name
     };
     console.log(data);
-    fetch('/api/', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+    fetch("/api/", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
     }).then(() => this.getExistingParent());
   };
 
   editParentInfo = e => {
     const data = { parentId: e.target.name };
-    fetch('/api/', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+    fetch("/api/", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
     }).then(() => this.getExistingParent());
   };
 
+  renderSearchParentByEmailForm = () => {
+    const { classes } = this.props;
+    if (!this.state.hideSearchParent)
+      return (
+        <form>
+          <TextField
+            name="searchEmail"
+            value={this.state.searchEmail}
+            onChange={this.handleChange}
+            id="addParents"
+            label="Add Parents by Email"
+            margin="normal"
+            variant="outlined"
+          />
+          <Button
+            className={classes.searchSubmit}
+            onClick={this.handleSearch}
+            type="submit"
+          >
+            Search
+          </Button>
+        </form>
+      );
+  };
+
   renderAddParentForm() {
+    const { classes } = this.props;
     if (this.state.role === "staff")
       return (
-        <div>
-          <form>
-            <TextField
-              name="parentEmail"
-              value={this.state.parentEmail}
-              onChange={this.handleChange}
-              id="addParents"
-              label="Add Parents by Email"
-              margin="normal"
-              variant="outlined"
-            />
-            <button onClick={this.handleSearch} type="submit">
-              Search
-      </button>
-          </form>
+        <div className="add-new-parent">
+          {this.renderSearchParentByEmailForm()}
+
           {this.state.addParentForm && (
             <form>
-
               <TextField
                 name="parentName"
                 onChange={this.handleChange}
@@ -366,37 +610,38 @@ class ParentContainer extends Component {
                 type="text"
               />
 
-              <input
+              <Button
+                className={classes.registerParent}
                 onClick={this.handleSubmitNewParent}
-                value="Register and Email New Parent"
                 type="submit"
-              />
+              >
+                Register and Email New Parent
+              </Button>
             </form>
           )}
           <p>{this.state.status}</p>
           {this.state.existingParent && (
-            <button onClick={this.makeAssociation}>
+            <Button onClick={this.makeAssociation}>
               Add Existing Parent to Child
-      </button>
+            </Button>
           )}
           {this.state.showAddNewParent && (
-            <button name="new" onClick={this.handleAddNewParent}>
+            <Button name="new" onClick={this.handleAddNewParent}>
               Create New Parent Account
-      </button>
+            </Button>
           )}
-        </div>)
-
-    else if (this.state.role === "parent")
-      return (<div></div>)
+        </div>
+      );
+    else if (this.state.role === "parent") return <div />;
   }
 
   renderGuardianForm() {
+    const { classes } = this.props;
     if (this.state.role === "parent")
       return (
         <div>
           {this.state.addGuardianForm && (
             <form>
-
               <TextField
                 name="guardianName"
                 onChange={this.handleChange}
@@ -441,96 +686,466 @@ class ParentContainer extends Component {
                 type="text"
               />
 
-              <input
+              <Button
+                className={classes.submitGuardian}
                 onClick={this.handleSubmitNewGuardian}
-                value="Add Guardian"
                 type="submit"
-              />
+              >
+                Submit
+              </Button>
             </form>
           )}
           {this.state.showAddNewGuardian && (
-            <button name="new" onClick={this.handleAddNewGuardian}>
+            <Button name="new" onClick={this.handleAddNewGuardian}>
               Add a Guardian
-      </button>
+            </Button>
           )}
-        </div>)
-
-    else if (this.state.role === "staff")
-      return (<div></div>)
+        </div>
+      );
+    else if (this.state.role === "staff") return <div />;
   }
 
-  renderSchoolInfo(){
+  renderSchoolInfo() {
     const { classes } = this.props;
-    if(this.state.role === "parent")
-      return(
-        <div>
-          <ExpansionPanel>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>School</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
+    if (this.state.role === "parent")
+      return (
+        <ExpansionPanel>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography className={classes.heading}>School</Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
             <Paper className={classes.root}>
-                <Table className={classes.table}>
-                  <TableHead>
-                    <TableRow>
-                      <CustomTableCell>Name</CustomTableCell>
-                      <CustomTableCell>Phone</CustomTableCell>
-                      <CustomTableCell>Address</CustomTableCell>
-                      <CustomTableCell>Open Time</CustomTableCell>
-                      <CustomTableCell>Close Time</CustomTableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      <CustomTableCell>{this.state.orgName}</CustomTableCell>
-                      <CustomTableCell>{this.state.orgPhone}</CustomTableCell>
-                      <CustomTableCell>{this.state.orgAddress}</CustomTableCell>
-                      <CustomTableCell>{this.state.orgOpenTime}</CustomTableCell>
-                      <CustomTableCell>{this.state.orgCloseTime}</CustomTableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
+              <Table className={classes.table}>
+                <TableHead>
+                  <TableRow>
+                    <CustomTableCell>Name</CustomTableCell>
+                    <CustomTableCell>Phone</CustomTableCell>
+                    <CustomTableCell>Address</CustomTableCell>
+                    <CustomTableCell>Open Time</CustomTableCell>
+                    <CustomTableCell>Close Time</CustomTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <CustomTableCell>{this.state.orgName}</CustomTableCell>
+                    <CustomTableCell>{this.state.orgPhone}</CustomTableCell>
+                    <CustomTableCell>{this.state.orgAddress}</CustomTableCell>
+                    <CustomTableCell>{this.state.orgOpenTime}</CustomTableCell>
+                    <CustomTableCell>{this.state.orgCloseTime}</CustomTableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </Paper>
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-          </div>)
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+      );
   }
 
-  renderStaffInfo(){
+  renderStaffInfo() {
     const { classes } = this.props;
-    if(this.state.role==="parent")
+    if (this.state.role === "parent")
+      return (
+        <ExpansionPanel>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography className={classes.heading}>Staff</Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <Paper className={classes.root}>
+              <Table className={classes.table}>
+                <TableHead>
+                  <TableRow>
+                    <CustomTableCell>Name</CustomTableCell>
+                    <CustomTableCell>Email</CustomTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {this.state.staffs.map(staff => {
+                    return (
+                      <TableRow>
+                        <CustomTableCell>{staff.name}</CustomTableCell>
+                        <CustomTableCell>{staff.email}</CustomTableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </Paper>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+      );
+  }
+
+  renderIncidents() {
+    const { classes } = this.props;
+    if (this.state.incidents.length === 0) {
+      return <div />;
+    } else {
       return (
         <div>
-    <ExpansionPanel>
-    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-      <Typography className={classes.heading}>Staff</Typography>
-    </ExpansionPanelSummary>
-    <ExpansionPanelDetails>
-      <Paper className={classes.root}>
+          <br />
+          <strong>Incidents</strong>
+          <Paper className={classes.root}>
+            <Table className={classes.table}>
+              <TableHead>
+                <TableRow>
+                  <CustomTableCell>Time</CustomTableCell>
+                  <CustomTableCell>Incident</CustomTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {this.state.incidents.map(incident => {
+                  return (
+                    <TableRow>
+                      <CustomTableCell>{incident.time}</CustomTableCell>
+                      <CustomTableCell>{incident.incident}</CustomTableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </Paper>
+          <br />
+        </div>
+      );
+    }
+  }
+
+  renderMeds() {
+    const { classes } = this.props;
+    if (this.state.medicines.length === 0) {
+      return <div />;
+    } else {
+      return (
+        <div>
+          <br />
+          <strong>Medicines Administered</strong>
+          <Paper className={classes.root}>
+            <Table className={classes.table}>
+              <TableHead>
+                <TableRow>
+                  <CustomTableCell>Time</CustomTableCell>
+                  <CustomTableCell>Medicine</CustomTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {this.state.medicines.map(medicine => {
+                  return (
+                    <TableRow>
+                      <CustomTableCell>{medicine.time}</CustomTableCell>
+                      <CustomTableCell>{medicine.medName}</CustomTableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </Paper>
+          <br />
+        </div>
+      );
+    }
+  }
+
+  renderNaps() {
+    const { classes } = this.props;
+    if (this.state.naps.length === 0) {
+      return <div />;
+    } else {
+      return (
+        <div>
+          <br />
+          <strong>Naps</strong>
+          <Paper className={classes.root}>
+            <Table className={classes.table}>
+              <TableHead>
+                <TableRow>
+                  <CustomTableCell>Start Time</CustomTableCell>
+                  <CustomTableCell>End Time</CustomTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {this.state.naps.map(nap => {
+                  return (
+                    <TableRow>
+                      <CustomTableCell>{nap.startTime}</CustomTableCell>
+                      <CustomTableCell>{nap.endTime}</CustomTableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </Paper>
+          <br />
+        </div>
+      );
+    }
+  }
+
+  renderMeals() {
+    const { classes } = this.props;
+    if (this.state.meals.length === 0) {
+      return <div />;
+    } else {
+      return (
+        <div>
+          <br />
+          <strong>Meals</strong>
+          <Paper className={classes.root}>
+            <Table className={classes.table}>
+              <TableHead>
+                <TableRow>
+                  <CustomTableCell>Time</CustomTableCell>
+                  <CustomTableCell>Meal</CustomTableCell>
+                  <CustomTableCell>Food</CustomTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {this.state.meals.map(meal => {
+                  return (
+                    <TableRow>
+                      <CustomTableCell>{meal.time}</CustomTableCell>
+                      <CustomTableCell>{meal.type}</CustomTableCell>
+                      <CustomTableCell>{meal.food}</CustomTableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </Paper>
+        </div>
+      );
+    }
+  }
+
+  renderDiaperings() {
+    const { classes } = this.props;
+    if (this.state.diaperings.length === 0) {
+      return <div />;
+    } else {
+      return (
+        <div>
+          <br />
+          <strong>Diaper/Toilet</strong>
+          <Paper className={classes.root}>
+            <Table className={classes.table}>
+              <TableHead>
+                <TableRow>
+                  <CustomTableCell>Time</CustomTableCell>
+                  <CustomTableCell>Place</CustomTableCell>
+                  <CustomTableCell>Type</CustomTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {this.state.diaperings.map(diapering => {
+                  return (
+                    <TableRow>
+                      <CustomTableCell>{diapering.time}</CustomTableCell>
+                      <CustomTableCell>{diapering.place}</CustomTableCell>
+                      <CustomTableCell>{diapering.type}</CustomTableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </Paper>
+        </div>
+      );
+    }
+  }
+
+  renderNoteForParents() {
+    if (this.props.role == "parent") {
+      const { classes } = this.props;
+      if (!this.state.noteForParents && !this.state.highlight) {
+        return <div />;
+      }
+      if (this.state.noteForParents && this.state.highlight) {
+        return (
+          <div>
+            <br />
+            <strong>Note for Parents</strong>
+            <Paper className={classes.root}>
+              <Table className={classes.table}>
+                <TableHead>
+                  <TableRow>
+                    <CustomTableCell>Note</CustomTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <CustomTableCell>
+                      {this.state.noteForParents}
+                    </CustomTableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </Paper>
+            <br />
+            <strong>Highlight</strong>
+            <Paper className={classes.root}>
+              <Table className={classes.table}>
+                <TableHead>
+                  <TableRow>
+                    <CustomTableCell>Highlight</CustomTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <CustomTableCell>{this.state.highlight}</CustomTableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </Paper>
+            <br />
+          </div>
+        );
+      }
+      if (this.state.highlight) {
+        return (
+          <div>
+            <strong>Highlight</strong>
+            <Paper className={classes.root}>
+              <Table className={classes.table}>
+                <TableHead>
+                  <TableRow>
+                    <CustomTableCell>Highlight</CustomTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <CustomTableCell>{this.state.highlight}</CustomTableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </Paper>
+            <br />
+          </div>
+        );
+      }
+      if (this.state.noteForParents) {
+        return (
+          <div>
+            <strong>Note for Parents</strong>
+            <Paper className={classes.root}>
+              <Table className={classes.table}>
+                <TableHead>
+                  <TableRow>
+                    <CustomTableCell>Note</CustomTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <CustomTableCell>
+                      {this.state.noteForParents}
+                    </CustomTableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </Paper>
+            <br />
+          </div>
+        );
+      }
+    }
+  }
+
+  renderNoteForStaff() {
+    if (this.props.role == "staff") {
+      const { classes } = this.props;
+      if (!this.state.noteForStaff) {
+        return <div />;
+      } else {
+        return (
+          <div>
+            <br />
+            <strong>Note from Parents</strong>
+            <Paper className={classes.root}>
+              <Table className={classes.table}>
+                <TableHead>
+                  <TableRow>
+                    <CustomTableCell>Note</CustomTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <CustomTableCell>{this.state.noteForStaff}</CustomTableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </Paper>
+            <br />
+          </div>
+        );
+      }
+    }
+  }
+
+  renderGuardianTable() {
+    const { classes } = this.props;
+    if (this.state.guardians.length > 0) {
+      return (
+        <Paper className={classes.root}>
           <Table className={classes.table}>
             <TableHead>
               <TableRow>
                 <CustomTableCell>Name</CustomTableCell>
+                <CustomTableCell>Phone</CustomTableCell>
                 <CustomTableCell>Email</CustomTableCell>
+                <CustomTableCell>Address</CustomTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-            {this.state.staffs.map(staff => {
-            return (
-              <TableRow>
-                <CustomTableCell>{staff.name}</CustomTableCell>
-                <CustomTableCell>{staff.email}</CustomTableCell>
-              </TableRow>
-            );
-            })}
+              {this.state.guardians.map(guardian => {
+                return (
+                  <TableRow>
+                    <CustomTableCell>{guardian.name}</CustomTableCell>
+                    <CustomTableCell>{guardian.phone}</CustomTableCell>
+                    <CustomTableCell>{guardian.email}</CustomTableCell>
+                    <CustomTableCell>{guardian.address}</CustomTableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
-      </Paper>
-    </ExpansionPanelDetails>
-  </ExpansionPanel>
-  </div>)
+        </Paper>
+      );
+    } else {
+      return <div>No Guardian added</div>;
+    }
   }
 
+  renderParentTable() {
+    const { classes } = this.props;
+    if (this.state.parents.length > 0) {
+      return (
+        <Paper className={classes.root}>
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>
+                <CustomTableCell>Name</CustomTableCell>
+                <CustomTableCell>Phone</CustomTableCell>
+                <CustomTableCell>Email</CustomTableCell>
+                <CustomTableCell>Address</CustomTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {this.state.parents.map(parent => {
+                return (
+                  <TableRow>
+                    <CustomTableCell>{parent.name}</CustomTableCell>
+                    <CustomTableCell>{parent.phone}</CustomTableCell>
+                    <CustomTableCell>{parent.email}</CustomTableCell>
+                    <CustomTableCell>{parent.address}</CustomTableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </Paper>
+      );
+    } else {
+      return <div>No Parents added</div>;
+    }
+  }
 
   render() {
     const { classes } = this.props;
@@ -540,10 +1155,30 @@ class ParentContainer extends Component {
         <div className={classes.root}>
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>Student Information</Typography>
+              <Typography className={classes.heading}>
+                Today's Report
+              </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-            <Paper className={classes.root}>
+              <div>
+                {this.renderNoteForStaff()}
+                {this.renderNoteForParents()}
+                {this.renderDiaperings()}
+                {this.renderMeals()}
+                {this.renderNaps()}
+                {this.renderMeds()}
+                {this.renderIncidents()}
+              </div>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography className={classes.heading}>
+                Student Information
+              </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Paper className={classes.root}>
                 <Table className={classes.table}>
                   <TableHead>
                     <TableRow>
@@ -556,7 +1191,6 @@ class ParentContainer extends Component {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                  
                     <TableRow>
                       <CustomTableCell>{this.props.address}</CustomTableCell>
                       <CustomTableCell>{this.props.dob}</CustomTableCell>
@@ -565,12 +1199,9 @@ class ParentContainer extends Component {
                       <CustomTableCell>{this.props.notes}</CustomTableCell>
                       <CustomTableCell>{this.props.doctor}</CustomTableCell>
                     </TableRow>
-                  
-                 
                   </TableBody>
                 </Table>
-            </Paper>
-
+              </Paper>
             </ExpansionPanelDetails>
           </ExpansionPanel>
           <ExpansionPanel>
@@ -578,76 +1209,22 @@ class ParentContainer extends Component {
               <Typography className={classes.heading}>Parents</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-            <Paper className={classes.root}>
-                <Table className={classes.table}>
-                  <TableHead>
-                    <TableRow>
-                      <CustomTableCell>Name</CustomTableCell>
-                      <CustomTableCell>Phone</CustomTableCell>
-                      <CustomTableCell>Email</CustomTableCell>
-                      <CustomTableCell>Address</CustomTableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                  {this.state.parents.map(parent => {
-                  return (
-                    <TableRow>
-                      <CustomTableCell>{parent.name}</CustomTableCell>
-                      <CustomTableCell>{parent.phone}</CustomTableCell>
-                      <CustomTableCell>{parent.email}</CustomTableCell>
-                      <CustomTableCell>{parent.address}</CustomTableCell>
-                    </TableRow>
-                  );
-                  })}
-                  </TableBody>
-                </Table>
-            </Paper>
-                  
-                {this.renderAddParentForm()}
-
-              {/* </Typography> */}
+              {this.renderParentTable()}
             </ExpansionPanelDetails>
+            {this.renderAddParentForm()}
           </ExpansionPanel>
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <Typography className={classes.heading}>Guardians</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-            <Paper className={classes.root}>
-                <Table className={classes.table}>
-                  <TableHead>
-                    <TableRow>
-                      <CustomTableCell>Name</CustomTableCell>
-                      <CustomTableCell>Phone</CustomTableCell>
-                      <CustomTableCell>Email</CustomTableCell>
-                      <CustomTableCell>Address</CustomTableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                  {this.state.guardians.map(guardian => {
-                  return (
-                    <TableRow>
-                      <CustomTableCell>{guardian.name}</CustomTableCell>
-                      <CustomTableCell>{guardian.phone}</CustomTableCell>
-                      <CustomTableCell>{guardian.email}</CustomTableCell>
-                      <CustomTableCell>{guardian.address}</CustomTableCell>
-                    </TableRow>
-                  );
-                  })}
-                  </TableBody>
-                </Table>
-            </Paper>
-
-                {this.renderGuardianForm()}
-
+              {this.renderGuardianTable()}
             </ExpansionPanelDetails>
+            {this.renderGuardianForm()}
           </ExpansionPanel>
-                
+
           {this.renderSchoolInfo()}
           {this.renderStaffInfo()}
-
-         
-          
         </div>
       </div>
     );
@@ -655,7 +1232,7 @@ class ParentContainer extends Component {
 }
 
 ParentContainer.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(ParentContainer);

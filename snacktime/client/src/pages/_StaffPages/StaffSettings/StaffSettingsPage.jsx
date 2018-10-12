@@ -315,7 +315,7 @@ class Settings extends React.Component {
                     noValidate
                     autoComplete="off"
                   >
-                    <ChangeEmail />
+                    <ChangeEmail role="staff"/>
                   </form>
                 </TabContainer>
               )}
@@ -326,7 +326,7 @@ class Settings extends React.Component {
                     noValidate
                     autoComplete="off"
                   >
-                    <ChangePassword />
+                    <ChangePassword role="staff"/>
                   </form>
                 </TabContainer>
               )}

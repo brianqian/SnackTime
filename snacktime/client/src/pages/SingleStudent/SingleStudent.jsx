@@ -90,7 +90,6 @@ export default class SingleStudent extends Component {
         <Redirect
           to={{
             pathname: '/notAuthorized',
-            state: { type: 'Parent' },
           }}
         />
       );

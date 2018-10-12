@@ -58,7 +58,6 @@ updateParentInfo: function(req,res){
     db.Parent.update({
         name: req.body.name,
         address: req.body.address,
-        email: req.body.email,
         phone: req.body.phone
     },{
         where:{

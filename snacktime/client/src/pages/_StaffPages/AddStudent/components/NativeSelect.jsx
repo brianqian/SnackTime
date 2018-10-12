@@ -11,8 +11,7 @@ import NativeSelect from '@material-ui/core/NativeSelect';
 
 const styles = theme => ({
   root: {
-    display: 'flex',
-    flexWrap: 'wrap',
+    gridColumn: "3/-1"
   },
   formControl: {
     margin: theme.spacing.unit,

@@ -610,11 +610,12 @@ module.exports = {
       });
       let mailOptions = {
         subject: `Snack Time | ${req.body.subject}`,
-        to: req.body.emails,
+        bcc: req.body.emails,
         from: `Snack Time <snacktimeemail@gmail.com>`,
         html: `
-          <h1>This is a message to all parents.</h1>
-          <p>${req.body.message}</p>`
+          <h4>Greetings Parent!</h4>
+          <p>${req.body.body}</p>
+          <h4>Thanks! Snack Time Team</h4>`
       };
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
