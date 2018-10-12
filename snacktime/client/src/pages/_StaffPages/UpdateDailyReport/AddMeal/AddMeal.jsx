@@ -10,6 +10,8 @@ import HeaderBar from "../../../../components/HeaderBar/HeaderBar";
 import DateTimeSelector from "../../../../components/DateTimeSelector/DateTimeSelector";
 import Auth from "../../../../utils/Auth";
 import MultiSelectContainer from "../MultiSelect/MultiSelectContainer";
+import Timepicker from '../../../../components/TimePicker/TimePicker'
+
 
 const styles = theme => ({
   container: {
@@ -152,7 +154,7 @@ class AddMeal extends React.Component {
           />
           <button onClick={this.logState} />
           <form className={classes.container} noValidate autoComplete="off">
-            <DateTimeSelector
+            {/* <DateTimeSelector
               name="mealTime"
               setTime={this.setMealTime}
               label="Time: "
@@ -161,7 +163,9 @@ class AddMeal extends React.Component {
               //   onChange={this.handleChange}
               //   margin="normal"
               //   variant="outlined"
-            />
+            /> */}
+            <Timepicker setTime={this.setMealTime}/>
+
            
             <hr />
             
