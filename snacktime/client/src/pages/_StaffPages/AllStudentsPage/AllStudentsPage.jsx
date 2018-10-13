@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect, Router } from 'react-router';
+import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import Chip from '@material-ui/core/Chip';
 import FaceIcon from '@material-ui/icons/Face';

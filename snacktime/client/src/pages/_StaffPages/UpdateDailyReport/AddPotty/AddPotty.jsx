@@ -202,7 +202,19 @@ class AddPotty extends React.Component {
           </div>
         </div>
       );
-    } else {
+    }else if (this.state.loginRejected) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/notAuthorized",
+            state: {
+              type: "Staff",
+              location: '/dailyreport/addpotty'
+            }
+          }}
+        />
+      );
+    }  else {
       return <div />;
     }
   }

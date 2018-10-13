@@ -62,7 +62,7 @@ class AddNap extends React.Component {
     event.preventDefault();
     const napStart = this.timepickerState1.current.returnTime();
     const napEnd = this.timepickerState2.current.returnTime();
-    await this.setState({napStart, napEnd})
+    await this.setState({ napStart, napEnd });
     let idArray = [];
     this.state.allStudents.map(student => {
       if (student.selected === true) {
@@ -130,25 +130,32 @@ class AddNap extends React.Component {
             updateStudents={this.updateStudents}
           />
 
-            <div className="addnap-container">
-              <div className="addnap-tp-1">
-              Nap Start: 
-                <Timepicker ref={this.timepickerState1} setTime={this.setNapStart} />
-              </div>
-
-              <div className="addnap-tp-2">
-              Nap End: 
-                <Timepicker ref={this.timepickerState2} className="addnap-tp-2" setTime={this.setNapEnd} />
-              </div>
-
-              <Button
-                className={classes.submitbutton}
-                onClick={this.handleSubmit}
-                // color='default'
-              >
-                Add Activity
-              </Button>
+          <div className="addnap-container">
+            <div className="addnap-tp-1">
+              Nap Start:
+              <Timepicker
+                ref={this.timepickerState1}
+                setTime={this.setNapStart}
+              />
             </div>
+
+            <div className="addnap-tp-2">
+              Nap End:
+              <Timepicker
+                ref={this.timepickerState2}
+                className="addnap-tp-2"
+                setTime={this.setNapEnd}
+              />
+            </div>
+
+            <Button
+              className={classes.submitbutton}
+              onClick={this.handleSubmit}
+              // color='default'
+            >
+              Add Activity
+            </Button>
+          </div>
         </div>
       );
     } else if (this.state.loginRejected) {
@@ -156,7 +163,10 @@ class AddNap extends React.Component {
         <Redirect
           to={{
             pathname: '/notAuthorized',
-            state: { type: 'Staff' },
+            state: {
+              type: 'Staff',
+              location: '/dailyreport/nap',
+            },
           }}
         />
       );

@@ -12,6 +12,7 @@ import Auth from '../../../../utils/Auth';
 import MultiSelectContainer from '../MultiSelect/MultiSelectContainer';
 import Timepicker from '../../../../components/TimePicker/TimePicker';
 import './AddMeal.css';
+import {Redirect} from 'react-router-dom'
 
 const styles = theme => ({
   container: {
@@ -203,6 +204,18 @@ class AddMeal extends React.Component {
             </Button>
           </div>
         </div>
+      );
+    }else if (this.state.loginRejected) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/notAuthorized",
+            state: {
+              type: "Staff",
+              location: '/dailyreport/addmeal'
+            }
+          }}
+        />
       );
     } else {
       return <div />;

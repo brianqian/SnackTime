@@ -3,15 +3,11 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
-import MenuItem from "@material-ui/core/MenuItem";
-import Icon from "@material-ui/core/Icon";
 import SaveIcon from "@material-ui/icons/Save";
 import TextField from "@material-ui/core/TextField";
 import StudentDOB from "./components/NativeSelect";
 import HeaderBar from "../../../components/HeaderBar/HeaderBar";
 import Auth from "../../../utils/Auth";
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
@@ -35,7 +31,6 @@ const styles = theme => ({
   },
   two: {
     gridColumnEnd: "4",
-    // gridColumn: "3/-1",
     gridRow: 1
   },
   rowTwo: {

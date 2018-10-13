@@ -141,7 +141,19 @@ class AddMeds extends React.Component {
           </div>
         </div>
       );
-    } else {
+    } else if (this.state.loginRejected) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/notAuthorized",
+            state: {
+              type: "Staff",
+              location: '/dailyreport/addmeds'
+            }
+          }}
+        />
+      );
+    }else {
       return <div />;
     }
   }
