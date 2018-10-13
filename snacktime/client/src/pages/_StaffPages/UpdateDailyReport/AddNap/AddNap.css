@@ -2,7 +2,6 @@
   display: flex;
   width: 100vw;
   margin: 3% auto;
-
 }
 
 .addnap-tp-1,
@@ -18,7 +17,7 @@
   grid-column: 5;
   grid-row: 2;
   flex: 1;
-  border: 1px rgba(0, 0, 0, 0.4) solid;
+  border: 1px rgba(62, 80, 180, 0.4) solid;
   align-self: center;
 }
 

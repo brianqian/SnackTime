@@ -138,6 +138,7 @@ class AddNap extends React.Component {
               <Button
                 className={classes.submitbutton}
                 onClick={this.handleSubmit}
+                color='primary'
               >
                 Add Activity
               </Button>
