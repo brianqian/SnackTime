@@ -71,7 +71,7 @@ class TimePicker extends Component {
       <div className="timepicker-container">
         <div onClick={this.openCloseSelector} className="timepicker-display">
           <div className="tp-display-hour">{this.state.selectedHour}</div>
-          <div>:</div>
+          {/* <div>:</div> */}
           <div className="tp-display-min">{this.state.selectedMin}</div>
           <div className="tp-display-ampm">{this.state.selectedAmpm}</div>
         </div>
