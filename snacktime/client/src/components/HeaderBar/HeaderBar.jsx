@@ -11,6 +11,7 @@ import { Redirect } from 'react-router-dom';
 import './HeaderBar.css';
 
 
+
 const styles = {
   root: {
     flexGrow: 1,
@@ -49,6 +50,7 @@ class HeaderBar extends React.Component {
     if (!this.state.status) {
       return (
         <div className={classes.root}>
+
             <AppBar color='primary' position="static">
               <Toolbar>
                 <IconButton

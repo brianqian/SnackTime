@@ -3,7 +3,7 @@ import NavBar from './components/NavBar/NavBar';
 import About from './components/About/About';
 
 class WelcomePage extends Component {
-  componentDidMount(){
+  componentWillMount(){
     console.log('welcome page',this.props)
   }
   render() {
