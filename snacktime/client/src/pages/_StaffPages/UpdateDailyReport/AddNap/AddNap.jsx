@@ -47,6 +47,9 @@ class AddNap extends React.Component {
     loggedIn: false,
   };
 
+  timepickerState1 = React.createRef();
+  timepickerState2 = React.createRef();
+
   async componentWillMount() {
     await Auth.StaffAuthorize(this);
     console.log(this.state.orgId);
@@ -57,6 +60,9 @@ class AddNap extends React.Component {
   };
   handleSubmit = async event => {
     event.preventDefault();
+    const napStart = this.timepickerState1.current.returnTime();
+    const napEnd = this.timepickerState2.current.returnTime();
+    await this.setState({napStart, napEnd})
     let idArray = [];
     this.state.allStudents.map(student => {
       if (student.selected === true) {
@@ -127,18 +133,18 @@ class AddNap extends React.Component {
             <div className="addnap-container">
               <div className="addnap-tp-1">
               Nap Start: 
-                <Timepicker setTime={this.setNapStart} />
+                <Timepicker ref={this.timepickerState1} setTime={this.setNapStart} />
               </div>
 
               <div className="addnap-tp-2">
               Nap End: 
-                <Timepicker className="addnap-tp-2" setTime={this.setNapEnd} />
+                <Timepicker ref={this.timepickerState2} className="addnap-tp-2" setTime={this.setNapEnd} />
               </div>
 
               <Button
                 className={classes.submitbutton}
                 onClick={this.handleSubmit}
-                color='primary'
+                // color='default'
               >
                 Add Activity
               </Button>

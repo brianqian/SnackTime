@@ -15,6 +15,7 @@ import Timepicker from "../../../../components/TimePicker/TimePicker";
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import './AddIncident.css'
 
 const styles = theme => ({
   container: {

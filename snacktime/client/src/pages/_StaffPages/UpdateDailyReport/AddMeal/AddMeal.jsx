@@ -73,6 +73,7 @@ class AddMeal extends React.Component {
     type: 'Breakfast',
     multiline: 'Controlled',
   };
+  timepickerState = React.createRef();
 
   async componentWillMount() {
     await Auth.StaffAuthorize(this);
@@ -84,8 +85,9 @@ class AddMeal extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
+    const mealTime = this.timepickerState.current.returnTime();
+    this.setState({ time: mealTime });
     let idArray = [];
-
     this.state.allStudents.map(student => {
       if (student.selected === true) {
         console.log('pushing', student.id);
@@ -102,13 +104,6 @@ class AddMeal extends React.Component {
           this.postMeal(id);
         });
     });
-  };
-  logState = () => {
-    console.log(this.state);
-  };
-
-  setMealTime = time => {
-    this.setState({ time: time });
   };
 
   handleChange = name => event => {
@@ -194,16 +189,15 @@ class AddMeal extends React.Component {
                 value={this.state.food}
                 onChange={this.handleChange('food')}
                 multiline
-                rows='5'
+                rows="5"
                 margin="normal"
                 variant="outlined"
               />
-
             </div>
             <Button
               className={classes.submitbutton}
               onClick={this.handleSubmit}
-              color='primary'
+              color="primary"
             >
               Add Activity
             </Button>
