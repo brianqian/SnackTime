@@ -1,62 +1,50 @@
-import React from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
-import { withStyles } from "@material-ui/core/styles";
-import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
-import Paper from "@material-ui/core/Paper";
-import Button from "@material-ui/core/Button";
-import HeaderBar from "../../../../components/HeaderBar/HeaderBar";
-// import Label from '@material-ui/core/Label';
-import DateTimeSelector from "../../../../components/DateTimeSelector/DateTimeSelector";
-import { Redirect } from "react-router-dom";
-//import MultiStudentSelect from "../../MultiStudentSelect/MultiStudentSelect";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-//import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from "@material-ui/core/FormControl";
-import ListItemText from "@material-ui/core/ListItemText";
-import Select from "@material-ui/core/Select";
-import Checkbox from "@material-ui/core/Checkbox";
-import Chip from "@material-ui/core/Chip";
-//import Button from '@material-ui/core/Button';
-//import HeaderBar from '../../../components/HeaderBar/HeaderBar';
-import Auth from "../../../../utils/Auth";
-import MultiSelectContainer from "../MultiSelect/MultiSelectContainer";
-import Timepicker from "../../../../components/TimePicker/TimePicker";
+import React from 'react';
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import { withStyles } from '@material-ui/core/styles';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import HeaderBar from '../../../../components/HeaderBar/HeaderBar';
+import { Redirect } from 'react-router-dom';
+import Auth from '../../../../utils/Auth';
+import MultiSelectContainer from '../MultiSelect/MultiSelectContainer';
+import Timepicker from '../../../../components/TimePicker/TimePicker';
+import './AddNap.css';
 
 const styles = theme => ({
   container: {
-    display: "flex",
-    flexWrap: "wrap"
+    display: 'flex',
+    flexWrap: 'wrap',
   },
-  submitbutton:{
-    marginTop:25,
-    height:10
+  submitbutton: {
+    marginTop: 25,
+    height: 10,
   },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: 200
+    width: 200,
   },
   dense: {
-    marginTop: 19
+    marginTop: 19,
   },
   menu: {
-    width: 200
-  }
+    width: 200,
+  },
 });
 
 class AddNap extends React.Component {
   state = {
     //selectedStudents: this.props.location.state.selectedStudents,
-    napStart: "",
-    napEnd: "",
-    multiline: "Controlled",
+    napStart: '',
+    napEnd: '',
+    multiline: 'Controlled',
     allStudents: [],
     studentIdsToSubmit: [],
     loginRejected: false,
-    loggedIn: false
+    loggedIn: false,
   };
 
   async componentWillMount() {
@@ -77,10 +65,9 @@ class AddNap extends React.Component {
     });
     console.log(idArray);
     await this.setState({ studentIdsToSubmit: idArray });
-    if(this.state.studentIdsToSubmit.length===0)
-      alert("No student selected")
-    else
-      this.state.studentIdsToSubmit.map(id => this.postNap(id));
+    if (this.state.studentIdsToSubmit.length === 0)
+      alert('No student selected');
+    else this.state.studentIdsToSubmit.map(id => this.postNap(id));
   };
 
   handleChange = event => {
@@ -88,7 +75,7 @@ class AddNap extends React.Component {
     // this.setState({
     //   [name]: event.target.value,
     // });
-    console.log("NAP START, END", this.state.napStart, this.state.napEnd);
+    console.log('NAP START, END', this.state.napStart, this.state.napEnd);
   };
 
   setNapStart = time => {
@@ -103,19 +90,19 @@ class AddNap extends React.Component {
     let today = new Date();
     let date =
       today.getFullYear() +
-      "-" +
+      '-' +
       (today.getMonth() + 1) +
-      "-" +
+      '-' +
       today.getDate();
     console.log(date);
     fetch(`/api/student/${id}/nap`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         napStart: this.state.napStart,
         napEnd: this.state.napEnd,
-        date: date
-      })
+        date: date,
+      }),
     })
       .then(resp => {
         console.log(resp);
@@ -136,26 +123,34 @@ class AddNap extends React.Component {
             allStudents={this.state.allStudents}
             updateStudents={this.updateStudents}
           />
-          <div>
-            <Paper className={classes.root} elevation={1} />
-            <form className={classes.container} noValidate autoComplete="off">
-              <Timepicker setTime={this.setNapStart} />
 
-              <hr />
-              <Timepicker setTime={this.setNapEnd} />
+            <div className="addnap-container">
+              <div className="addnap-tp-1">
+              Nap Start: 
+                <Timepicker setTime={this.setNapStart} />
+              </div>
 
-              <hr />
-              <Button className={classes.submitbutton} onClick={this.handleSubmit}>Add Activity</Button>
-            </form>
-          </div>
+              <div className="addnap-tp-2">
+              Nap End: 
+                <Timepicker className="addnap-tp-2" setTime={this.setNapEnd} />
+              </div>
+
+              <Button
+                className={classes.submitbutton}
+                onClick={this.handleSubmit}
+                color='primary'
+              >
+                Add Activity
+              </Button>
+            </div>
         </div>
       );
     } else if (this.state.loginRejected) {
       return (
         <Redirect
           to={{
-            pathname: "/notAuthorized",
-            state: { type: "Staff" }
+            pathname: '/notAuthorized',
+            state: { type: 'Staff' },
           }}
         />
       );
@@ -166,8 +161,7 @@ class AddNap extends React.Component {
 }
 
 AddNap.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(AddNap);
-

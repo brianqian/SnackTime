@@ -100,7 +100,7 @@ class LogIn extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <React.Fragment>
+      <React.Fragment >
         <CssBaseline />
         <main className={classes.layout}>
           <Paper className={classes.paper}>
@@ -133,16 +133,12 @@ class LogIn extends React.Component {
                   autoComplete="current-password"
                 />
               </FormControl>
-              {/* <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-                checked
-              /> */}
+
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                color="primary"
+                color={this.props.type === 'Staff' ? 'secondary': 'primary'} 
                 onClick={this.handleSubmit}
                 className={classes.submit}
               >

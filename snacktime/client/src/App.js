@@ -21,15 +21,30 @@ import AddNote from './pages/_StaffPages/UpdateDailyReport/AddNote/AddNote';
 import AddIncident from './pages/_StaffPages/UpdateDailyReport/AddIncident/AddIncident';
 import StaffSettingsPage from './pages/_StaffPages/StaffSettings/StaffSettingsPage';
 import ChangePassword from './pages/ForgotPassword/components/ChangePassword';
-import MultiSelectContainer from './pages/_StaffPages/UpdateDailyReport/MultiSelect/MultiSelectContainer';
-import Settings from "./pages/_StaffPages/StaffSettings/StaffSettingsPage";
+import Settings from './pages/_StaffPages/StaffSettings/StaffSettingsPage';
 import UpdateCalendar from './pages/_StaffPages/UpdateCalendar/UpdateCalendar';
 import MessageParents from './pages/_StaffPages/MessageParents/MessageParents';
 import AddHighlight from './pages/_StaffPages/UpdateDailyReport/AddHighlight/AddHighlight';
-import Timepicker from './components/TimePicker/TimePicker'
 import DailyReportArchive from './pages/DailyReportArchive/DailyReportArchive';
-import ParentSettings from "./pages/_ParentPages/ParentHomePage/components/ParentSettings";
+import ParentSettings from './pages/_ParentPages/ParentHomePage/components/ParentSettings';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      light: '#757ce8',
+      main: '#3f50b5',
+      dark: '#002884',
+      contrastText: '#fff',
+    },
+    secondary: {
+      light: '#ff7961',
+      main: '#f44336',
+      dark: '#ba000d',
+      contrastText: '#000',
+    },
+  },
+});
 
 class App extends Component {
   render() {
@@ -37,7 +52,15 @@ class App extends Component {
       <div className="App">
         <Router>
           <Switch>
-            <Route exact path="/" component={WelcomePage} />
+            <Route
+              exact path="/"
+              render={(props) => {
+                return(
+                <MuiThemeProvider theme={theme}>
+                  <WelcomePage {...props}/>
+                </MuiThemeProvider>)
+              }}
+            />
             <Route exact path="/staffhomepage" component={StaffHomePage} />
             <Route exact path="/parenthomepage" component={ParentHomePage} />
             <Route exact path="/staffhome" component={StaffHomePage} />
@@ -50,7 +73,8 @@ class App extends Component {
             <Route exact path="/dailyreport/addmeal" component={AddMeal} />
             <Route exact path="/addnote" component={AddNote} />
             <Route exact path="/addhighlight" component={AddHighlight} />
-            <Route exact path="/dailyreport/addincident" component={AddIncident} />
+            <Route exact path="/dailyreport/addincident" component={AddIncident}
+            />
             <Route exact path="/notauthorized" component={notAuthorized} />
             <Route exact path="/addstudent" component={AddStudent} />
             <Route exact path="/allstudentspage" component={AllStudents} />
@@ -61,8 +85,8 @@ class App extends Component {
             <Route exact path="/changepassword" component={ChangePassword} />
             <Route exact path="/staffsettings" component={Settings} />
             <Route exact path="/updatecalendar" component={UpdateCalendar} />
-            <Route exact path="/archive" component={DailyReportArchive} /> 
-            <Route exact path="/parentsettings" component={ParentSettings} /> 
+            <Route exact path="/archive" component={DailyReportArchive} />
+            <Route exact path="/parentsettings" component={ParentSettings} />
             <Route component={notFound} />
           </Switch>
         </Router>

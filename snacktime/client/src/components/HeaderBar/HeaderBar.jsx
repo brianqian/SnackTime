@@ -6,8 +6,10 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import SvgIcon from '@material-ui/core/SvgIcon'
-import { Redirect } from 'react-router-dom'
+import SvgIcon from '@material-ui/core/SvgIcon';
+import { Redirect } from 'react-router-dom';
+import './HeaderBar.css';
+
 
 
 const styles = {
@@ -48,28 +50,31 @@ class HeaderBar extends React.Component {
     if (!this.state.status) {
       return (
         <div className={classes.root}>
-          <AppBar position="static">
-            <Toolbar>
-              <IconButton
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="Menu"
-                href={`/${this.props.type}homepage`}
-              >
-                <HomeIcon className="{classes.icon}" style={{ fontSize: 40 }}/>
-              </IconButton>
-              <Typography
-                variant="title"
-                color="inherit"
-                className={classes.grow}
-              >
-                Snack Time
-              </Typography>
-              <Button onClick={this.logOut} value="Log Out" color="inherit">
-                Log Out
-              </Button>
-            </Toolbar>
-          </AppBar>
+
+            <AppBar color='primary' position="static">
+              <Toolbar>
+                <IconButton
+                  className={classes.menuButton}
+                  aria-label="Menu"
+                  href={`/${this.props.type}homepage`}
+                >
+                  <HomeIcon
+                    className="{classes.icon}"
+                    style={{ fontSize: 40 }}
+                  />
+                </IconButton>
+                <Typography
+                  variant="title"
+                  color="inherit"
+                  className={classes.grow}
+                >
+                  Snack Time
+                </Typography>
+                <Button onClick={this.logOut} value="Log Out" color="inherit">
+                  Log Out
+                </Button>
+              </Toolbar>
+            </AppBar>
         </div>
       );
     } else {

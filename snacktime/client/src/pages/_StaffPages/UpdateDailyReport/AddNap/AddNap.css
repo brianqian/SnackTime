@@ -1,0 +1,46 @@
+.addnap-container {
+  display: flex;
+  width: 100vw;
+  margin: 3% auto;
+}
+
+.addnap-tp-1,
+.addnap-tp-2 {
+  background-color: #b1dcf73d;
+  box-shadow: -10px 10px 40px rgba(49, 64, 71, 0.2);
+  padding: 2rem 0;
+  flex: 2;
+  margin: 0 3rem;
+}
+
+.addnap-container > button {
+  grid-column: 5;
+  grid-row: 2;
+  flex: 1;
+  border: 1px rgba(62, 80, 180, 0.4) solid;
+  align-self: center;
+}
+
+@media screen and (max-width: 768px) {
+  .addnap-tp-1,
+  .addnap-tp-2 {
+    margin: 0;
+    box-shadow: none;
+    border: 1px rgba(0, 0, 0, 0.1) solid;
+
+  }
+
+}
+@media screen and (max-width: 580px) {
+.addnap-container{
+  display:grid;
+  grid-template-columns:1fr 1fr
+}
+.addnap-container > button {
+  grid-column: 1/3;
+  grid-row: 2;
+}
+
+}
+
+

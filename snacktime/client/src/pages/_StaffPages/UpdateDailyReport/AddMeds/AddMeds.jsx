@@ -1,47 +1,48 @@
-import React from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
-import { withStyles } from "@material-ui/core/styles";
-import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import HeaderBar from "../../../../components/HeaderBar/HeaderBar";
+import React from 'react';
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import { withStyles } from '@material-ui/core/styles';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import HeaderBar from '../../../../components/HeaderBar/HeaderBar';
 // import Label from '@material-ui/core/Label';
-import DateTimeSelector from "../../../../components/DateTimeSelector/DateTimeSelector";
-import { Redirect } from "react-router-dom";
-import Auth from "../../../../utils/Auth";
-import MultiSelectContainer from "../MultiSelect/MultiSelectContainer";
-import Timepicker from "../../../../components/TimePicker/TimePicker";
+import DateTimeSelector from '../../../../components/DateTimeSelector/DateTimeSelector';
+import { Redirect } from 'react-router-dom';
+import Auth from '../../../../utils/Auth';
+import MultiSelectContainer from '../MultiSelect/MultiSelectContainer';
+import Timepicker from '../../../../components/TimePicker/TimePicker';
+import './AddMeds.css'
 
 const styles = theme => ({
   container: {
-    display: "flex",
-    flexWrap: "wrap"
+    display: 'flex',
+    flexWrap: 'wrap',
   },
-  submitbutton:{
-    marginTop:25,
-    height:10
+  submitbutton: {
+    marginTop: 25,
+    height: 10,
   },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: 200
+    width: 200,
   },
   dense: {
-    marginTop: 19
+    marginTop: 19,
   },
   menu: {
-    width: 200
-  }
+    width: 200,
+  },
 });
 
 class AddMeds extends React.Component {
   state = {
     allStudents: [],
     studentIdsToSubmit: [],
-    time: "",
-    medName: "",
-    multiline: "Controlled"
+    time: '',
+    medName: '',
+    multiline: 'Controlled',
   };
   componentWillMount() {
     Auth.StaffAuthorize(this);
@@ -60,15 +61,14 @@ class AddMeds extends React.Component {
     });
     console.log(idArray);
     await this.setState({ studentIdsToSubmit: idArray });
-    if(this.state.studentIdsToSubmit.length===0)
-      alert("No student selected")
-    else
-      this.state.studentIdsToSubmit.map(id => this.postMeds(id));
+    if (this.state.studentIdsToSubmit.length === 0)
+      alert('No student selected');
+    else this.state.studentIdsToSubmit.map(id => this.postMeds(id));
   };
 
   handleChange = name => event => {
     this.setState({
-      [name]: event.target.value
+      [name]: event.target.value,
     });
   };
 
@@ -80,19 +80,19 @@ class AddMeds extends React.Component {
     let today = new Date();
     let date =
       today.getFullYear() +
-      "-" +
+      '-' +
       (today.getMonth() + 1) +
-      "-" +
+      '-' +
       today.getDate();
     console.log(date);
     fetch(`/api/student/${id}/medicine`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         time: this.state.time,
         medName: this.state.medName,
-        date: date
-      })
+        date: date,
+      }),
     })
       .then(resp => {
         console.log(resp);
@@ -113,23 +113,32 @@ class AddMeds extends React.Component {
             updateStudents={this.updateStudents}
           />
 
-          <form className={classes.container} noValidate autoComplete="off">
-            <Timepicker setTime={this.setMedTime} />
+          <div className="addmeds-container">
+            <div className="addmeds-item1">
+              <Timepicker setTime={this.setMedTime} />
+            </div>
+            <div className="addmeds-item2">
+              <TextField
+                required
+                label="Medicines Administered"
+                className={classes.textField}
+                value={this.state.medName}
+                rows='5'
+                onChange={this.handleChange('medName')}
+                multiline
+                margin="normal"
+                variant="outlined"
+              />
+            </div>
 
-            <hr />
-            <TextField
-              required
-              label="Medicines Administered"
-              className={classes.textField}
-              value={this.state.medName}
-              onChange={this.handleChange("medName")}
-              multiline
-              margin="normal"
-              variant="outlined"
-            />
-            <hr />
-            <Button className={classes.submitbutton} onClick={this.handleSubmit}>Add Activity</Button>
-          </form>
+            <Button
+              className={classes.submitbutton}
+              color='primary'
+              onClick={this.handleSubmit}
+            >
+              Add Activity
+            </Button>
+          </div>
         </div>
       );
     } else {
@@ -139,7 +148,7 @@ class AddMeds extends React.Component {
 }
 
 AddMeds.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(AddMeds);
