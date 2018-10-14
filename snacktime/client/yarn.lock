@@ -5975,15 +5975,30 @@ lodash.camelcase@^4.3.0:
   resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
   integrity sha1-soqmKIorn8ZRA1x3EfZathkDMaY=
 
+lodash.clonedeep@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
+  integrity sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=
+
 lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
   integrity sha1-gteb/zCmfEAF/9XiUVMArZyk168=
 
+lodash.get@^4.4.2:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
+  integrity sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=
+
 lodash.memoize@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
   integrity sha1-vMbEmkKihA7Zl/Mj6tpezRguC/4=
+
+lodash.merge@^4.6.0:
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.1.tgz#adc25d9cb99b9391c59624f379fbba60d7111d54"
+  integrity sha512-AOYza4+Hf5z1/0Hztxpm2/xiPZgi/cjMqdnKTUWTBSKchJlxXXuUSxCCl8rJlf4g6yww/j6mA8nC8Hw/EZWxKQ==
 
 lodash.once@^4.1.1:
   version "4.1.1"
@@ -6382,6 +6397,19 @@ ms@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
   integrity sha512-tgp+dl5cGk28utYktBsrFqA7HKgrhgPsg6Z/EfhWI4gl1Hwq8B/GmY/0oXZ6nF8hDVesS/FpnYaD/kOWhYQvyg==
+
+mui-datatables@^2.0.0-beta-32:
+  version "2.0.0-beta-32"
+  resolved "https://registry.yarnpkg.com/mui-datatables/-/mui-datatables-2.0.0-beta-32.tgz#4b6a1ee71abf85a33185d9c1f941a030c0543277"
+  integrity sha512-kOlCpCVa/Dbp4t8iBI7JxuW8SQMn5X+NzwjCse9ExFHdMp98GWFb57jkx3zFilNJeHSGB4Wgf3zAWOvZKM0dDw==
+  dependencies:
+    classnames "^2.2.5"
+    lodash.clonedeep "^4.5.0"
+    lodash.get "^4.4.2"
+    lodash.memoize "^4.1.2"
+    lodash.merge "^4.6.0"
+    prop-types "^15.6.0"
+    react-to-print "^1.0.10"
 
 multicast-dns-service-types@^1.1.0:
   version "1.1.0"
@@ -8160,6 +8188,14 @@ react-scripts@2.0.3:
   optionalDependencies:
     fsevents "1.2.4"
 
+react-to-print@^1.0.10:
+  version "1.0.21"
+  resolved "https://registry.yarnpkg.com/react-to-print/-/react-to-print-1.0.21.tgz#f6713c5c0ac06dc8c079937e4b7cecd6dbc8d630"
+  integrity sha512-fKUSFe7ra2GbtKCNw50J9ksq+iblOxvUvYYFkxvG/EaAxpM3tcCdyBnBAP6fwYf6+MlBrYw6AAqu71+dHOVrJQ==
+  dependencies:
+    prop-types "^15.6.0"
+    react "^16.2.0"
+
 react-transition-group@^2.2.1:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-2.5.0.tgz#70bca0e3546102c4dc5cf3f5f57f73447cce6874"
@@ -8170,7 +8206,7 @@ react-transition-group@^2.2.1:
     prop-types "^15.6.2"
     react-lifecycles-compat "^3.0.4"
 
-react@^16.5.2:
+react@^16.2.0, react@^16.5.2:
   version "16.5.2"
   resolved "https://registry.yarnpkg.com/react/-/react-16.5.2.tgz#19f6b444ed139baa45609eee6dc3d318b3895d42"
   integrity sha512-FDCSVd3DjVTmbEAjUNX6FgfAmQ+ypJfHUsqUJOYNCBUp1h8lqmtC+0mXJ+JjsWx4KAVTkk1vKd1hLQPvEviSuw==

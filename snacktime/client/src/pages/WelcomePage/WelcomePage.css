@@ -1,4 +1,4 @@
-.welcomepage-header-imagebefore {
+.welcomepage-header-image {
   position: relative;
   background-image: url(./welcomepage-stock1.jpg);
   height: 50vh;
@@ -13,7 +13,7 @@
 
 .welcomepage-header-image:after{
   display:block;
-  /* position: relative; */
+
   content: '';
   height: 100%;
   width: 100%;
