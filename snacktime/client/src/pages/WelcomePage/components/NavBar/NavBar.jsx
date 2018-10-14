@@ -5,13 +5,14 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import About from '../About/About';
+import WelcomePage from '../../WelcomePage'
 import Login from '../Login/Login';
 import SignUp from '../SignUp/SignUp';
+import '../../WelcomePage.css'
 
 function TabContainer(props) {
   return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
+    <Typography component="div">
       {props.children}
     </Typography>
   );
@@ -54,7 +55,7 @@ class SimpleTabs extends React.Component {
         </AppBar>
         {value === 0 && (
           <TabContainer>
-            <About />
+          <WelcomePage/>
           </TabContainer>
         )}
         {value === 1 && (
