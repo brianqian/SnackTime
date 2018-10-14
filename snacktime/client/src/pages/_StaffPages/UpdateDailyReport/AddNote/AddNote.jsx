@@ -1,15 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+//import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
+//import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import HeaderBar from '../../../../components/HeaderBar/HeaderBar';
 // import Label from '@material-ui/core/Label';
-import DateTimeSelector from '../../../../components/DateTimeSelector/DateTimeSelector'
-import { Redirect } from "react-router-dom";
-import Auth from '../../../../utils/Auth'
+// import DateTimeSelector from '../../../../components/DateTimeSelector/DateTimeSelector'
+// import { Redirect } from "react-router-dom";
+import Auth from '../../../../utils/Auth';
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 
 
 const styles = theme => ({
@@ -46,7 +49,8 @@ class AddNote extends React.Component {
     role:this.props.location.state.role,
     reportId: '',
     multiline: 'Controlled',
-    noteExists:false
+    noteExists:false,
+    snackbarMessage:""
   };
   componentWillMount() {
     console.log(this.state.id);
@@ -63,6 +67,16 @@ class AddNote extends React.Component {
     this.setState({
       [name]: event.target.value,
     });
+  };
+
+  handleClickSnackbar = () => {
+    this.setState({ open: true });
+  };
+  handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ open: false });
   };
 
   getNoteForParent= () =>{
@@ -192,10 +206,16 @@ class AddNote extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    if(this.state.noteExists)
-      this.updateNote()
-    else
-      this.postNote();
+    if(this.state.role === "parent" && this.state.noteForStaff.length ===0)
+      this.setState({snackbarMessage:"Note cannot be empty"}, this.handleClickSnackbar())
+    else if(this.state.role === "staff" && this.state.noteForParents.length ===0)
+      this.setState({snackbarMessage:"Note cannot be empty"}, this.handleClickSnackbar())
+    else{
+      if(this.state.noteExists)
+        this.updateNote()
+      else
+        this.postNote();
+    }
   };  
 
   renderTexField(){
@@ -243,6 +263,30 @@ class AddNote extends React.Component {
         Add Activity
         </Button>
       </form>
+      <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={this.state.open}
+          autoHideDuration={6000}
+          onClose={this.handleCloseSnackbar}
+          ContentProps={{
+            "aria-describedby": "message-id"
+          }}
+          message={<span id="message-id">{this.state.snackbarMessage}</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={this.handleCloseSnackbar}
+            >
+              <CloseIcon />
+            </IconButton>
+          ]}
+        />
       </div>
     );
   }

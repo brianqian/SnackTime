@@ -45,7 +45,7 @@ class TimePicker extends Component {
       if (num.length === 1) num = '0' + num;
       hourArray.push(num);
     }
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 60; i+=10) {
       let num = i + '';
       if (num.length === 1) num = '0' + num;
       minArray.push(num);

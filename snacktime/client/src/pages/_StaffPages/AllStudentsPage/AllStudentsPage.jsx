@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect, Router } from 'react-router';
+import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import Chip from '@material-ui/core/Chip';
 import FaceIcon from '@material-ui/icons/Face';
@@ -63,7 +63,7 @@ export default class AllStudentsPage extends Component {
 
           {this.state.allStudents.length > 0
             ? this.state.allStudents.map(student => (
-              <Link to={{ pathname: `/allstudentspage/${student.id}`, state: { role: this.state.userType } }}>
+              <Link key={student.id} to={{ pathname: `/allstudentspage/${student.id}`, state: { role: this.state.userType } }}>
                 <Chip
                   studentId={student.id}
                   avatar={<FaceIcon />}

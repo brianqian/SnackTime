@@ -290,42 +290,45 @@ module.exports = {
   /************report**************/
   getReportConsolidated: function (req, res) {
     console.log("Req ", req.params);
-    db.Student.findAll({
-      include: [
-        {
-          model: db.Nap,
-          required: false,
-          where: { date: req.params.date },
-          order: [["createdAt", "ASC"]]
-        },
-        {
-          model: db.Diapering,
-          required: false,
-          where: { date: req.params.date },
-          order: [["createdAt", "ASC"]]
-        },
-        {
-          model: db.Meal,
-          required: false,
-          where: { date: req.params.date },
-          order: [["createdAt", "ASC"]]
-        },
-        {
-          model: db.Incident,
-          required: false,
-          where: { date: req.params.date },
-          order: [["createdAt", "ASC"]]
-        },
-        {
-          model: db.Medicine,
-          required: false,
-          where: { date: req.params.date },
-          order: [["createdAt", "ASC"]]
-        }
-      ],
-      where: {
+    db.Student.findOne({
+      where:{
         id: req.params.studentId
-      }
+      },
+      include:[{
+       model:db.Meal,
+       required:false,
+       as:'Meals',
+      where:{date:req.params.date}
+      },
+      {
+        model:db.Diapering,
+        required:false,
+        as:'Diaperings',
+       where:{date:req.params.date}
+       },
+       {
+        model:db.Nap,
+        required:false,
+        as:'Naps',
+        where:{date:req.params.date}
+       },
+       {
+        model:db.Incident,
+        required:false,
+        as:'Incidents',
+       where:{date:req.params.date}
+       },
+       {
+        model:db.Medicine,
+        required:false,
+        as:'Medicines',
+       where:{date:req.params.date}
+       },
+       {
+        model:db.Report,
+        required:false,
+        where:{date:req.params.date}
+       }]
     })
       .then(dbStudent => {
         res.json(dbStudent);

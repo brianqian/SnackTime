@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
-import classNames from "classnames";
+//import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
-import MenuItem from "@material-ui/core/MenuItem";
+//import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import HeaderBar from "../../../../components/HeaderBar/HeaderBar";
 // import Label from '@material-ui/core/Label';
-import DateTimeSelector from "../../../../components/DateTimeSelector/DateTimeSelector";
+// import DateTimeSelector from "../../../../components/DateTimeSelector/DateTimeSelector";
 import { Redirect } from "react-router-dom";
 import Auth from "../../../../utils/Auth";
 import MultiSelectContainer from "../MultiSelect/MultiSelectContainer";
@@ -45,7 +45,8 @@ class AddIncident extends React.Component {
     incident: "",
     multiline: "Controlled",
     allStudents: [],
-    studentIdsToSubmit: []
+    studentIdsToSubmit: [],
+    snackbarMessage:'No student selected'
   };
 
   async componentWillMount() {
@@ -66,7 +67,7 @@ class AddIncident extends React.Component {
     console.log(idArray);
     await this.setState({ studentIdsToSubmit: idArray });
     if(this.state.studentIdsToSubmit.length===0)
-      this.handleClick();
+      this.handleClickSnackbar();
     else
       this.state.studentIdsToSubmit.map(id => this.postIncident(id));
   };
@@ -100,16 +101,23 @@ class AddIncident extends React.Component {
       })
     })
       .then(resp => {
-        console.log(resp);
+        console.log("Resp1:",resp);
         return resp.json();
       })
-      .then(resp => console.log(resp));
+      .then(resp => {console.log("Resp2:",resp)
+      if(resp.errors){
+        if(resp.errors.length>0){
+          if(resp.errors[0].message === "Validation notEmpty on incident failed")
+            this.setState({snackbarMessage:"Incident cannot be empty"}, this.handleClickSnackbar())
+        }
+      }
+      });
   };
 
-  handleClick = () => {
+  handleClickSnackbar = () => {
     this.setState({ open: true });
   };
-  handleClose = (event, reason) => {
+  handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
@@ -152,18 +160,18 @@ class AddIncident extends React.Component {
           }}
           open={this.state.open}
           autoHideDuration={6000}
-          onClose={this.handleClose}
+          onClose={this.handleCloseSnackbar}
           ContentProps={{
             "aria-describedby": "message-id"
           }}
-          message={<span id="message-id">No Student Selected</span>}
+          message={<span id="message-id">{this.state.snackbarMessage}</span>}
           action={[
             <IconButton
               key="close"
               aria-label="Close"
               color="inherit"
               className={classes.close}
-              onClick={this.handleClose}
+              onClick={this.handleCloseSnackbar}
             >
               <CloseIcon />
             </IconButton>

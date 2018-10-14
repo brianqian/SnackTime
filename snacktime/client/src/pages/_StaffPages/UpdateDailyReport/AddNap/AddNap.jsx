@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+//import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
-import Paper from '@material-ui/core/Paper';
+// import MenuItem from '@material-ui/core/MenuItem';
+// import TextField from '@material-ui/core/TextField';
+// import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import HeaderBar from '../../../../components/HeaderBar/HeaderBar';
 import { Redirect } from 'react-router-dom';
@@ -12,6 +12,9 @@ import Auth from '../../../../utils/Auth';
 import MultiSelectContainer from '../MultiSelect/MultiSelectContainer';
 import Timepicker from '../../../../components/TimePicker/TimePicker';
 import './AddNap.css';
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 
 const styles = theme => ({
   container: {
@@ -66,7 +69,7 @@ class AddNap extends React.Component {
     console.log(idArray);
     await this.setState({ studentIdsToSubmit: idArray });
     if (this.state.studentIdsToSubmit.length === 0)
-      alert('No student selected');
+      this.handleClickSnackbar();
     else this.state.studentIdsToSubmit.map(id => this.postNap(id));
   };
 
@@ -84,6 +87,16 @@ class AddNap extends React.Component {
 
   setNapEnd = time => {
     this.setState({ napEnd: time });
+  };
+
+  handleClickSnackbar = () => {
+    this.setState({ open: true });
+  };
+  handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ open: false });
   };
 
   postNap = id => {
@@ -143,6 +156,30 @@ class AddNap extends React.Component {
                 Add Activity
               </Button>
             </div>
+            <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={this.state.open}
+          autoHideDuration={6000}
+          onClose={this.handleCloseSnackbar}
+          ContentProps={{
+            "aria-describedby": "message-id"
+          }}
+          message={<span id="message-id">No Student Selected</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={this.handleCloseSnackbar}
+            >
+              <CloseIcon />
+            </IconButton>
+          ]}
+        />
         </div>
       );
     } else if (this.state.loginRejected) {

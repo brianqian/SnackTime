@@ -16,6 +16,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import indigo from "@material-ui/core/colors/indigo";
+import moment from "moment";
+import { Link } from "react-router-dom";
 
 const CustomTableCell = withStyles(theme => ({
   head: {
@@ -106,7 +108,7 @@ class ParentContainer extends Component {
     this.getNaps();
     this.getMedicines();
     this.getIncidents();
-    if (this.props.role == "staff") this.getNotesForStaff();
+    if (this.props.role === "staff") this.getNotesForStaff();
     else if (this.props.role === "parent") this.getNotesForParents();
     console.log(this.props.studentId, "STUDENT ID");
   }
@@ -717,7 +719,7 @@ class ParentContainer extends Component {
             <Paper className={classes.root}>
               <Table className={classes.table}>
                 <TableHead>
-                  <TableRow>
+                  <TableRow key="header">
                     <CustomTableCell>Name</CustomTableCell>
                     <CustomTableCell>Phone</CustomTableCell>
                     <CustomTableCell>Address</CustomTableCell>
@@ -726,12 +728,12 @@ class ParentContainer extends Component {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow>
+                  <TableRow key={this.state.orgName}>
                     <CustomTableCell>{this.state.orgName}</CustomTableCell>
                     <CustomTableCell>{this.state.orgPhone}</CustomTableCell>
                     <CustomTableCell>{this.state.orgAddress}</CustomTableCell>
-                    <CustomTableCell>{this.state.orgOpenTime}</CustomTableCell>
-                    <CustomTableCell>{this.state.orgCloseTime}</CustomTableCell>
+                    <CustomTableCell>{moment(this.state.orgOpenTime,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
+                    <CustomTableCell>{moment(this.state.orgCloseTime,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
                   </TableRow>
                 </TableBody>
               </Table>
@@ -753,7 +755,7 @@ class ParentContainer extends Component {
             <Paper className={classes.root}>
               <Table className={classes.table}>
                 <TableHead>
-                  <TableRow>
+                  <TableRow key="header">
                     <CustomTableCell>Name</CustomTableCell>
                     <CustomTableCell>Email</CustomTableCell>
                   </TableRow>
@@ -761,7 +763,7 @@ class ParentContainer extends Component {
                 <TableBody>
                   {this.state.staffs.map(staff => {
                     return (
-                      <TableRow>
+                      <TableRow key={staff.id}>
                         <CustomTableCell>{staff.name}</CustomTableCell>
                         <CustomTableCell>{staff.email}</CustomTableCell>
                       </TableRow>
@@ -787,7 +789,7 @@ class ParentContainer extends Component {
           <Paper className={classes.root}>
             <Table className={classes.table}>
               <TableHead>
-                <TableRow>
+                <TableRow key="header">
                   <CustomTableCell>Time</CustomTableCell>
                   <CustomTableCell>Incident</CustomTableCell>
                 </TableRow>
@@ -795,8 +797,8 @@ class ParentContainer extends Component {
               <TableBody>
                 {this.state.incidents.map(incident => {
                   return (
-                    <TableRow>
-                      <CustomTableCell>{incident.time}</CustomTableCell>
+                    <TableRow key={incident.id}>
+                      <CustomTableCell>{moment(incident.time,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
                       <CustomTableCell>{incident.incident}</CustomTableCell>
                     </TableRow>
                   );
@@ -822,7 +824,7 @@ class ParentContainer extends Component {
           <Paper className={classes.root}>
             <Table className={classes.table}>
               <TableHead>
-                <TableRow>
+                <TableRow key="header">
                   <CustomTableCell>Time</CustomTableCell>
                   <CustomTableCell>Medicine</CustomTableCell>
                 </TableRow>
@@ -830,8 +832,8 @@ class ParentContainer extends Component {
               <TableBody>
                 {this.state.medicines.map(medicine => {
                   return (
-                    <TableRow>
-                      <CustomTableCell>{medicine.time}</CustomTableCell>
+                    <TableRow key={medicine.id}>
+                      <CustomTableCell>{moment(medicine.time,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
                       <CustomTableCell>{medicine.medName}</CustomTableCell>
                     </TableRow>
                   );
@@ -857,7 +859,7 @@ class ParentContainer extends Component {
           <Paper className={classes.root}>
             <Table className={classes.table}>
               <TableHead>
-                <TableRow>
+                <TableRow key="header">
                   <CustomTableCell>Start Time</CustomTableCell>
                   <CustomTableCell>End Time</CustomTableCell>
                 </TableRow>
@@ -865,9 +867,9 @@ class ParentContainer extends Component {
               <TableBody>
                 {this.state.naps.map(nap => {
                   return (
-                    <TableRow>
-                      <CustomTableCell>{nap.startTime}</CustomTableCell>
-                      <CustomTableCell>{nap.endTime}</CustomTableCell>
+                    <TableRow key={nap.id}>
+                      <CustomTableCell>{moment(nap.startTime,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
+                      <CustomTableCell>{moment(nap.endTime,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
                     </TableRow>
                   );
                 })}
@@ -892,7 +894,7 @@ class ParentContainer extends Component {
           <Paper className={classes.root}>
             <Table className={classes.table}>
               <TableHead>
-                <TableRow>
+                <TableRow key="header">
                   <CustomTableCell>Time</CustomTableCell>
                   <CustomTableCell>Meal</CustomTableCell>
                   <CustomTableCell>Food</CustomTableCell>
@@ -901,8 +903,8 @@ class ParentContainer extends Component {
               <TableBody>
                 {this.state.meals.map(meal => {
                   return (
-                    <TableRow>
-                      <CustomTableCell>{meal.time}</CustomTableCell>
+                    <TableRow key={meal.id}>
+                      <CustomTableCell>{moment(meal.time,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
                       <CustomTableCell>{meal.type}</CustomTableCell>
                       <CustomTableCell>{meal.food}</CustomTableCell>
                     </TableRow>
@@ -928,7 +930,7 @@ class ParentContainer extends Component {
           <Paper className={classes.root}>
             <Table className={classes.table}>
               <TableHead>
-                <TableRow>
+                <TableRow key="header">
                   <CustomTableCell>Time</CustomTableCell>
                   <CustomTableCell>Place</CustomTableCell>
                   <CustomTableCell>Type</CustomTableCell>
@@ -937,8 +939,8 @@ class ParentContainer extends Component {
               <TableBody>
                 {this.state.diaperings.map(diapering => {
                   return (
-                    <TableRow>
-                      <CustomTableCell>{diapering.time}</CustomTableCell>
+                    <TableRow key={diapering.id}>
+                      <CustomTableCell>{moment(diapering.time,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
                       <CustomTableCell>{diapering.place}</CustomTableCell>
                       <CustomTableCell>{diapering.type}</CustomTableCell>
                     </TableRow>
@@ -953,7 +955,7 @@ class ParentContainer extends Component {
   }
 
   renderNoteForParents() {
-    if (this.props.role == "parent") {
+    if (this.props.role === "parent") {
       const { classes } = this.props;
       if (!this.state.noteForParents && !this.state.highlight) {
         return <div />;
@@ -966,12 +968,12 @@ class ParentContainer extends Component {
             <Paper className={classes.root}>
               <Table className={classes.table}>
                 <TableHead>
-                  <TableRow>
+                  <TableRow key="header">
                     <CustomTableCell>Note</CustomTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow>
+                  <TableRow key="noteForParents">
                     <CustomTableCell>
                       {this.state.noteForParents}
                     </CustomTableCell>
@@ -984,12 +986,12 @@ class ParentContainer extends Component {
             <Paper className={classes.root}>
               <Table className={classes.table}>
                 <TableHead>
-                  <TableRow>
+                  <TableRow key="header">
                     <CustomTableCell>Highlight</CustomTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow>
+                  <TableRow key="highlight">
                     <CustomTableCell>{this.state.highlight}</CustomTableCell>
                   </TableRow>
                 </TableBody>
@@ -1006,12 +1008,12 @@ class ParentContainer extends Component {
             <Paper className={classes.root}>
               <Table className={classes.table}>
                 <TableHead>
-                  <TableRow>
+                  <TableRow key="header">
                     <CustomTableCell>Highlight</CustomTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow>
+                  <TableRow key="highlight">
                     <CustomTableCell>{this.state.highlight}</CustomTableCell>
                   </TableRow>
                 </TableBody>
@@ -1028,12 +1030,12 @@ class ParentContainer extends Component {
             <Paper className={classes.root}>
               <Table className={classes.table}>
                 <TableHead>
-                  <TableRow>
+                  <TableRow key="header">
                     <CustomTableCell>Note</CustomTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow>
+                  <TableRow key="noteForParents">
                     <CustomTableCell>
                       {this.state.noteForParents}
                     </CustomTableCell>
@@ -1049,7 +1051,7 @@ class ParentContainer extends Component {
   }
 
   renderNoteForStaff() {
-    if (this.props.role == "staff") {
+    if (this.props.role === "staff") {
       const { classes } = this.props;
       if (!this.state.noteForStaff) {
         return <div />;
@@ -1061,12 +1063,12 @@ class ParentContainer extends Component {
             <Paper className={classes.root}>
               <Table className={classes.table}>
                 <TableHead>
-                  <TableRow>
+                  <TableRow key="header">
                     <CustomTableCell>Note</CustomTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow>
+                  <TableRow key="noteForStaff">
                     <CustomTableCell>{this.state.noteForStaff}</CustomTableCell>
                   </TableRow>
                 </TableBody>
@@ -1086,7 +1088,7 @@ class ParentContainer extends Component {
         <Paper className={classes.root}>
           <Table className={classes.table}>
             <TableHead>
-              <TableRow>
+              <TableRow key="header">
                 <CustomTableCell>Name</CustomTableCell>
                 <CustomTableCell>Phone</CustomTableCell>
                 <CustomTableCell>Email</CustomTableCell>
@@ -1096,7 +1098,7 @@ class ParentContainer extends Component {
             <TableBody>
               {this.state.guardians.map(guardian => {
                 return (
-                  <TableRow>
+                  <TableRow key={guardian.id}>
                     <CustomTableCell>{guardian.name}</CustomTableCell>
                     <CustomTableCell>{guardian.phone}</CustomTableCell>
                     <CustomTableCell>{guardian.email}</CustomTableCell>
@@ -1120,7 +1122,7 @@ class ParentContainer extends Component {
         <Paper className={classes.root}>
           <Table className={classes.table}>
             <TableHead>
-              <TableRow>
+              <TableRow key="header">
                 <CustomTableCell>Name</CustomTableCell>
                 <CustomTableCell>Phone</CustomTableCell>
                 <CustomTableCell>Email</CustomTableCell>
@@ -1130,7 +1132,7 @@ class ParentContainer extends Component {
             <TableBody>
               {this.state.parents.map(parent => {
                 return (
-                  <TableRow>
+                  <TableRow key={parent.id}>
                     <CustomTableCell>{parent.name}</CustomTableCell>
                     <CustomTableCell>{parent.phone}</CustomTableCell>
                     <CustomTableCell>{parent.email}</CustomTableCell>
@@ -1181,7 +1183,7 @@ class ParentContainer extends Component {
               <Paper className={classes.root}>
                 <Table className={classes.table}>
                   <TableHead>
-                    <TableRow>
+                    <TableRow key="header">
                       <CustomTableCell>Address</CustomTableCell>
                       <CustomTableCell>DOB</CustomTableCell>
                       <CustomTableCell>Allergies</CustomTableCell>
@@ -1191,7 +1193,7 @@ class ParentContainer extends Component {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow>
+                    <TableRow key={this.props.studentId}>
                       <CustomTableCell>{this.props.address}</CustomTableCell>
                       <CustomTableCell>{this.props.dob}</CustomTableCell>
                       <CustomTableCell>{this.props.allergies}</CustomTableCell>
@@ -1225,6 +1227,18 @@ class ParentContainer extends Component {
 
           {this.renderSchoolInfo()}
           {this.renderStaffInfo()}
+          <ExpansionPanel>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography className={classes.heading}>
+                Report Archive
+              </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <div>
+                <Link to={{pathname: '/archive', state:{studentId:this.props.studentId, role:this.props.role, name: this.props.name}}}>Click here to see {this.props.name}'s report archive </Link>
+              </div>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
         </div>
       </div>
     );
