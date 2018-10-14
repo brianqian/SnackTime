@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -10,7 +10,6 @@ import TextField from '@material-ui/core/TextField';
 export default class SignUp extends React.Component {
   state = {
     orgName: '',
-    // orgEmail: '',
     orgPhoneNum: '',
     streetAddress: '',
     city: '',

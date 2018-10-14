@@ -1,18 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+// import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
+// import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import HeaderBar from '../../../../components/HeaderBar/HeaderBar';
 // import Label from '@material-ui/core/Label';
-import DateTimeSelector from '../../../../components/DateTimeSelector/DateTimeSelector';
+// import DateTimeSelector from '../../../../components/DateTimeSelector/DateTimeSelector';
 import Auth from '../../../../utils/Auth';
 import MultiSelectContainer from '../MultiSelect/MultiSelectContainer';
 import Timepicker from '../../../../components/TimePicker/TimePicker';
 import './AddMeal.css';
+
 import {Redirect} from 'react-router-dom'
+
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+
 
 const styles = theme => ({
   container: {
@@ -73,6 +79,7 @@ class AddMeal extends React.Component {
     food: '',
     type: 'Breakfast',
     multiline: 'Controlled',
+    snackbarMessage:'No student selected'
   };
   timepickerState = React.createRef();
 
@@ -98,7 +105,7 @@ class AddMeal extends React.Component {
     console.log(idArray);
     this.setState({ studentIdsToSubmit: idArray }, function() {
       if (this.state.studentIdsToSubmit.length === 0)
-        alert('No student selected');
+        this.handleClickSnackbar();
       else
         this.state.studentIdsToSubmit.map(id => {
           console.log('Student to submit', id);
@@ -117,6 +124,16 @@ class AddMeal extends React.Component {
     this.setState({
       [name]: event.target.value,
     });
+  };
+
+  handleClickSnackbar = () => {
+    this.setState({ open: true });
+  };
+  handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ open: false });
   };
 
   postMeal = id => {
@@ -139,7 +156,14 @@ class AddMeal extends React.Component {
         console.log(resp);
         return resp.json();
       })
-      .then(resp => console.log(resp));
+      .then(resp => {console.log("Resp2:",resp)
+      if(resp.errors){
+        if(resp.errors.length>0){
+          if(resp.errors[0].message === "Validation notEmpty on food failed")
+            this.setState({snackbarMessage:"Please write meal items"}, this.handleClickSnackbar())
+        }
+      }
+      });
   };
 
   render() {
@@ -203,6 +227,30 @@ class AddMeal extends React.Component {
               Add Activity
             </Button>
           </div>
+          <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={this.state.open}
+          autoHideDuration={6000}
+          onClose={this.handleCloseSnackbar}
+          ContentProps={{
+            "aria-describedby": "message-id"
+          }}
+          message={<span id="message-id">{this.state.snackbarMessage}</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={this.handleCloseSnackbar}
+            >
+              <CloseIcon />
+            </IconButton>
+          ]}
+        />
         </div>
       );
     }else if (this.state.loginRejected) {

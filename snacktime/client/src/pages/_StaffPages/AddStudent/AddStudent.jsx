@@ -128,7 +128,7 @@ class OutlinedTextFields extends React.Component {
         notes: this.state.notes,
         allergies: this.state.allergies,
         medication: this.state.meds,
-        doctor: this.state.doctor,
+        doctor: this.capitalize(this.state.doctor),
         orgId: this.state.orgId
       })
     })

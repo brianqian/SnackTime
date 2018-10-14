@@ -16,6 +16,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import indigo from "@material-ui/core/colors/indigo";
+import moment from "moment";
+import { Link } from "react-router-dom";
 
 const CustomTableCell = withStyles(theme => ({
   head: {
@@ -68,7 +70,6 @@ class ParentContainer extends Component {
     showAddNewParent: true,
     parentName: "",
     parentEmail: "",
-    parentPassword: "testpass",
     parentAddress: "",
     parentPhone: "",
     guardians: [],
@@ -93,7 +94,9 @@ class ParentContainer extends Component {
     date: "",
     noteForStaff: null,
     noteForParents: null,
-    highlight: null
+    highlight: null,
+    validationErrorMssg:"",
+    guardianValidationErrorMssg:""
   };
 
   componentDidMount() {
@@ -106,7 +109,7 @@ class ParentContainer extends Component {
     this.getNaps();
     this.getMedicines();
     this.getIncidents();
-    if (this.props.role == "staff") this.getNotesForStaff();
+    if (this.props.role === "staff") this.getNotesForStaff();
     else if (this.props.role === "parent") this.getNotesForParents();
     console.log(this.props.studentId, "STUDENT ID");
   }
@@ -347,12 +350,13 @@ class ParentContainer extends Component {
       .then(resp => resp.json())
       .then(resp => {
         if (resp) {
+          console.log("resp:", resp)
           if (resp === "No parent found") {
             this.setState({ status: "No parents found :(" });
           } else {
             const parents = [];
             resp.Parents.map(parent => parents.push(parent));
-            this.setState({ parents });
+            this.setState({parents:parents});
           }
         }
       });
@@ -368,8 +372,11 @@ class ParentContainer extends Component {
 
   handleSearch = e => {
     e.preventDefault();
-    console.log(this.state.email, "PARENT EMAIL");
-    fetch(`/api/parent/email/${this.state.parentEmail}`)
+    if(this.state.searchEmail.trim() === "")
+      this.setState({status:"Email can't be empty"})
+    else{
+    console.log(this.state.searchEmail, "PARENT EMAIL");
+    fetch(`/api/parent/email/${this.state.searchEmail}`)
       .then(resp => resp.json())
       .then(resp => {
         if (resp.name) {
@@ -380,9 +387,10 @@ class ParentContainer extends Component {
             status: `${name}, ${email}, ${phone}, ${address}`
           });
         } else {
-          this.setState({ status: "That email doesn't exist" });
+          this.setState({ status: "That email doesn't exist in our database" });
         }
       });
+    }
   };
 
   capitalize = name => {
@@ -400,7 +408,6 @@ class ParentContainer extends Component {
 
     let newObj = {
       email: this.state.parentEmail,
-      password: this.state.parentPassword,
       address: this.state.parentAddress,
       phone: this.state.parentPhone,
       name: this.capitalize(this.state.parentName),
@@ -418,20 +425,33 @@ class ParentContainer extends Component {
       .then(resp => resp.json())
       .then(resp => {
         console.log(resp);
-        if (resp) {
+        if (resp.id) {
           this.setState(
             {
               status: "Parent Added!",
               parentName: "",
               parentEmail: "",
-              parentPassword: "testpass",
               parentAddress: "",
-              parentPhone: ""
+              parentPhone: "",
+              validationErrorMssg:""
             },
-            () => this.getExistingParent()
+            //() => this.getExistingParent()
           );
         } else {
-          this.setState({ status: "Parent not added" });
+          if(resp.errors){
+            if(resp.errors[0].message ==="email must be unique")
+              this.setState({ validationErrorMssg: "Email already exists in database", status: "" });
+            else if(resp.errors[0].message ==="Validation isEmail on email failed")
+              this.setState({ validationErrorMssg: "Invalid email address", status: "" });
+            else if(resp.errors[0].message ==="Validation notEmpty on name failed")
+              this.setState({ validationErrorMssg: "Name is required", status: "" });
+            else if(resp.errors[0].message ==="Validation len on phone failed")
+              this.setState({ validationErrorMssg: "Invalid phone number", status: "" });
+            else if(resp.errors[0].message ==="Validation notEmpty on address failed")
+              this.setState({ validationErrorMssg: "Address is required", status: "" });
+          }
+          else
+            this.setState({ validationErrorMssg: "Parent could not be added, please check the entered values", status: "" });
         }
         this.getExistingParent();
       });
@@ -444,7 +464,6 @@ class ParentContainer extends Component {
 
     let newObj = {
       email: this.state.guardianEmail,
-      //password: this.state.guardianPassword,
       address: this.state.guardianAddress,
       phone: this.state.guardianPhone,
       name: this.capitalize(this.state.guardianName)
@@ -460,20 +479,31 @@ class ParentContainer extends Component {
       .then(resp => resp.json())
       .then(resp => {
         console.log(resp);
-        if (resp) {
+        if (resp.id) {
           this.setState(
             {
-              status: "Pickup Added!",
+              status: "Guardian Added!",
               guardianName: "",
               guardianEmail: "",
-              guardianPassword: "testpass",
               guardianAddress: "",
-              guardianPhone: ""
+              guardianPhone: "",
+              guardianValidationErrorMssg:""
             },
-            () => this.getExistingPickup()
+            //() => this.getExistingPickup()
           );
         } else {
-          this.setState({ status: "Pickup not added" });
+          if(resp.errors){
+            if(resp.errors[0].message ==="Validation isEmail on email failed")
+              this.setState({ guardianValidationErrorMssg: "Invalid email address", status:""});
+            else if(resp.errors[0].message ==="Validation notEmpty on name failed")
+              this.setState({ guardianValidationErrorMssg: "Name is required", status:""});
+            else if(resp.errors[0].message ==="Validation len on phone failed")
+              this.setState({ guardianValidationErrorMssg: "Invalid phone number", status:""});
+            else if(resp.errors[0].message ==="Validation notEmpty on address failed")
+              this.setState({ guardianValidationErrorMssg: "Address is required", status:""});
+          }
+          else
+          this.setState({ guardianValidationErrorMssg: "Guardian could not be added, please check the entered values", status: "" });
         }
         this.getExistingPickup();
       });
@@ -498,16 +528,17 @@ class ParentContainer extends Component {
     });
   };
 
-  makeAssociation = e => {
+  makeAssociation = async e => {
+    console.log("association func")
     e.preventDefault();
-    fetch("/api/parentstudent", {
+    await fetch("/api/parentstudent", {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
         parentId: this.state.parentId,
         studentId: this.props.studentId
       })
-    }).then(() => this.getExistingParent());
+    }).then(this.getExistingParent());
   };
 
   deleteAssociation = e => {
@@ -619,7 +650,8 @@ class ParentContainer extends Component {
               </Button>
             </form>
           )}
-          <p>{this.state.status}</p>
+          <div>{this.state.status}</div>
+          <div className="validationerror">{this.state.validationErrorMssg}</div>
           {this.state.existingParent && (
             <Button onClick={this.makeAssociation}>
               Add Existing Parent to Child
@@ -685,7 +717,8 @@ class ParentContainer extends Component {
                 variant="outlined"
                 type="text"
               />
-
+              <div>{this.state.status}</div>
+              <div>{this.state.guardianValidationErrorMssg}</div>
               <Button
                 className={classes.submitGuardian}
                 onClick={this.handleSubmitNewGuardian}
@@ -717,7 +750,7 @@ class ParentContainer extends Component {
             <Paper className={classes.root}>
               <Table className={classes.table}>
                 <TableHead>
-                  <TableRow>
+                  <TableRow key="header">
                     <CustomTableCell>Name</CustomTableCell>
                     <CustomTableCell>Phone</CustomTableCell>
                     <CustomTableCell>Address</CustomTableCell>
@@ -726,12 +759,12 @@ class ParentContainer extends Component {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow>
+                  <TableRow key={this.state.orgName}>
                     <CustomTableCell>{this.state.orgName}</CustomTableCell>
                     <CustomTableCell>{this.state.orgPhone}</CustomTableCell>
                     <CustomTableCell>{this.state.orgAddress}</CustomTableCell>
-                    <CustomTableCell>{this.state.orgOpenTime}</CustomTableCell>
-                    <CustomTableCell>{this.state.orgCloseTime}</CustomTableCell>
+                    <CustomTableCell>{moment(this.state.orgOpenTime,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
+                    <CustomTableCell>{moment(this.state.orgCloseTime,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
                   </TableRow>
                 </TableBody>
               </Table>
@@ -753,7 +786,7 @@ class ParentContainer extends Component {
             <Paper className={classes.root}>
               <Table className={classes.table}>
                 <TableHead>
-                  <TableRow>
+                  <TableRow key="header">
                     <CustomTableCell>Name</CustomTableCell>
                     <CustomTableCell>Email</CustomTableCell>
                   </TableRow>
@@ -761,7 +794,7 @@ class ParentContainer extends Component {
                 <TableBody>
                   {this.state.staffs.map(staff => {
                     return (
-                      <TableRow>
+                      <TableRow key={staff.id}>
                         <CustomTableCell>{staff.name}</CustomTableCell>
                         <CustomTableCell>{staff.email}</CustomTableCell>
                       </TableRow>
@@ -787,7 +820,7 @@ class ParentContainer extends Component {
           <Paper className={classes.root}>
             <Table className={classes.table}>
               <TableHead>
-                <TableRow>
+                <TableRow key="header">
                   <CustomTableCell>Time</CustomTableCell>
                   <CustomTableCell>Incident</CustomTableCell>
                 </TableRow>
@@ -795,8 +828,8 @@ class ParentContainer extends Component {
               <TableBody>
                 {this.state.incidents.map(incident => {
                   return (
-                    <TableRow>
-                      <CustomTableCell>{incident.time}</CustomTableCell>
+                    <TableRow key={incident.id}>
+                      <CustomTableCell>{moment(incident.time,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
                       <CustomTableCell>{incident.incident}</CustomTableCell>
                     </TableRow>
                   );
@@ -822,7 +855,7 @@ class ParentContainer extends Component {
           <Paper className={classes.root}>
             <Table className={classes.table}>
               <TableHead>
-                <TableRow>
+                <TableRow key="header">
                   <CustomTableCell>Time</CustomTableCell>
                   <CustomTableCell>Medicine</CustomTableCell>
                 </TableRow>
@@ -830,8 +863,8 @@ class ParentContainer extends Component {
               <TableBody>
                 {this.state.medicines.map(medicine => {
                   return (
-                    <TableRow>
-                      <CustomTableCell>{medicine.time}</CustomTableCell>
+                    <TableRow key={medicine.id}>
+                      <CustomTableCell>{moment(medicine.time,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
                       <CustomTableCell>{medicine.medName}</CustomTableCell>
                     </TableRow>
                   );
@@ -857,7 +890,7 @@ class ParentContainer extends Component {
           <Paper className={classes.root}>
             <Table className={classes.table}>
               <TableHead>
-                <TableRow>
+                <TableRow key="header">
                   <CustomTableCell>Start Time</CustomTableCell>
                   <CustomTableCell>End Time</CustomTableCell>
                 </TableRow>
@@ -865,9 +898,9 @@ class ParentContainer extends Component {
               <TableBody>
                 {this.state.naps.map(nap => {
                   return (
-                    <TableRow>
-                      <CustomTableCell>{nap.startTime}</CustomTableCell>
-                      <CustomTableCell>{nap.endTime}</CustomTableCell>
+                    <TableRow key={nap.id}>
+                      <CustomTableCell>{moment(nap.startTime,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
+                      <CustomTableCell>{moment(nap.endTime,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
                     </TableRow>
                   );
                 })}
@@ -892,7 +925,7 @@ class ParentContainer extends Component {
           <Paper className={classes.root}>
             <Table className={classes.table}>
               <TableHead>
-                <TableRow>
+                <TableRow key="header">
                   <CustomTableCell>Time</CustomTableCell>
                   <CustomTableCell>Meal</CustomTableCell>
                   <CustomTableCell>Food</CustomTableCell>
@@ -901,8 +934,8 @@ class ParentContainer extends Component {
               <TableBody>
                 {this.state.meals.map(meal => {
                   return (
-                    <TableRow>
-                      <CustomTableCell>{meal.time}</CustomTableCell>
+                    <TableRow key={meal.id}>
+                      <CustomTableCell>{moment(meal.time,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
                       <CustomTableCell>{meal.type}</CustomTableCell>
                       <CustomTableCell>{meal.food}</CustomTableCell>
                     </TableRow>
@@ -928,7 +961,7 @@ class ParentContainer extends Component {
           <Paper className={classes.root}>
             <Table className={classes.table}>
               <TableHead>
-                <TableRow>
+                <TableRow key="header">
                   <CustomTableCell>Time</CustomTableCell>
                   <CustomTableCell>Place</CustomTableCell>
                   <CustomTableCell>Type</CustomTableCell>
@@ -937,8 +970,8 @@ class ParentContainer extends Component {
               <TableBody>
                 {this.state.diaperings.map(diapering => {
                   return (
-                    <TableRow>
-                      <CustomTableCell>{diapering.time}</CustomTableCell>
+                    <TableRow key={diapering.id}>
+                      <CustomTableCell>{moment(diapering.time,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
                       <CustomTableCell>{diapering.place}</CustomTableCell>
                       <CustomTableCell>{diapering.type}</CustomTableCell>
                     </TableRow>
@@ -953,7 +986,7 @@ class ParentContainer extends Component {
   }
 
   renderNoteForParents() {
-    if (this.props.role == "parent") {
+    if (this.props.role === "parent") {
       const { classes } = this.props;
       if (!this.state.noteForParents && !this.state.highlight) {
         return <div />;
@@ -966,12 +999,12 @@ class ParentContainer extends Component {
             <Paper className={classes.root}>
               <Table className={classes.table}>
                 <TableHead>
-                  <TableRow>
+                  <TableRow key="header">
                     <CustomTableCell>Note</CustomTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow>
+                  <TableRow key="noteForParents">
                     <CustomTableCell>
                       {this.state.noteForParents}
                     </CustomTableCell>
@@ -984,12 +1017,12 @@ class ParentContainer extends Component {
             <Paper className={classes.root}>
               <Table className={classes.table}>
                 <TableHead>
-                  <TableRow>
+                  <TableRow key="header">
                     <CustomTableCell>Highlight</CustomTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow>
+                  <TableRow key="highlight">
                     <CustomTableCell>{this.state.highlight}</CustomTableCell>
                   </TableRow>
                 </TableBody>
@@ -1006,12 +1039,12 @@ class ParentContainer extends Component {
             <Paper className={classes.root}>
               <Table className={classes.table}>
                 <TableHead>
-                  <TableRow>
+                  <TableRow key="header">
                     <CustomTableCell>Highlight</CustomTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow>
+                  <TableRow key="highlight">
                     <CustomTableCell>{this.state.highlight}</CustomTableCell>
                   </TableRow>
                 </TableBody>
@@ -1028,12 +1061,12 @@ class ParentContainer extends Component {
             <Paper className={classes.root}>
               <Table className={classes.table}>
                 <TableHead>
-                  <TableRow>
+                  <TableRow key="header">
                     <CustomTableCell>Note</CustomTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow>
+                  <TableRow key="noteForParents">
                     <CustomTableCell>
                       {this.state.noteForParents}
                     </CustomTableCell>
@@ -1049,7 +1082,7 @@ class ParentContainer extends Component {
   }
 
   renderNoteForStaff() {
-    if (this.props.role == "staff") {
+    if (this.props.role === "staff") {
       const { classes } = this.props;
       if (!this.state.noteForStaff) {
         return <div />;
@@ -1061,12 +1094,12 @@ class ParentContainer extends Component {
             <Paper className={classes.root}>
               <Table className={classes.table}>
                 <TableHead>
-                  <TableRow>
+                  <TableRow key="header">
                     <CustomTableCell>Note</CustomTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow>
+                  <TableRow key="noteForStaff">
                     <CustomTableCell>{this.state.noteForStaff}</CustomTableCell>
                   </TableRow>
                 </TableBody>
@@ -1086,7 +1119,7 @@ class ParentContainer extends Component {
         <Paper className={classes.root}>
           <Table className={classes.table}>
             <TableHead>
-              <TableRow>
+              <TableRow key="header">
                 <CustomTableCell>Name</CustomTableCell>
                 <CustomTableCell>Phone</CustomTableCell>
                 <CustomTableCell>Email</CustomTableCell>
@@ -1096,7 +1129,7 @@ class ParentContainer extends Component {
             <TableBody>
               {this.state.guardians.map(guardian => {
                 return (
-                  <TableRow>
+                  <TableRow key={guardian.id}>
                     <CustomTableCell>{guardian.name}</CustomTableCell>
                     <CustomTableCell>{guardian.phone}</CustomTableCell>
                     <CustomTableCell>{guardian.email}</CustomTableCell>
@@ -1120,7 +1153,7 @@ class ParentContainer extends Component {
         <Paper className={classes.root}>
           <Table className={classes.table}>
             <TableHead>
-              <TableRow>
+              <TableRow key="header">
                 <CustomTableCell>Name</CustomTableCell>
                 <CustomTableCell>Phone</CustomTableCell>
                 <CustomTableCell>Email</CustomTableCell>
@@ -1130,7 +1163,7 @@ class ParentContainer extends Component {
             <TableBody>
               {this.state.parents.map(parent => {
                 return (
-                  <TableRow>
+                  <TableRow key={parent.id}>
                     <CustomTableCell>{parent.name}</CustomTableCell>
                     <CustomTableCell>{parent.phone}</CustomTableCell>
                     <CustomTableCell>{parent.email}</CustomTableCell>
@@ -1181,7 +1214,7 @@ class ParentContainer extends Component {
               <Paper className={classes.root}>
                 <Table className={classes.table}>
                   <TableHead>
-                    <TableRow>
+                    <TableRow key="header">
                       <CustomTableCell>Address</CustomTableCell>
                       <CustomTableCell>DOB</CustomTableCell>
                       <CustomTableCell>Allergies</CustomTableCell>
@@ -1191,7 +1224,7 @@ class ParentContainer extends Component {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow>
+                    <TableRow key={this.props.studentId}>
                       <CustomTableCell>{this.props.address}</CustomTableCell>
                       <CustomTableCell>{this.props.dob}</CustomTableCell>
                       <CustomTableCell>{this.props.allergies}</CustomTableCell>
@@ -1225,6 +1258,18 @@ class ParentContainer extends Component {
 
           {this.renderSchoolInfo()}
           {this.renderStaffInfo()}
+          <ExpansionPanel>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography className={classes.heading}>
+                Report Archive
+              </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <div>
+                <Link to={{pathname: '/archive', state:{studentId:this.props.studentId, role:this.props.role, name: this.props.name}}}>Click here to see {this.props.name}'s report archive </Link>
+              </div>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
         </div>
       </div>
     );
