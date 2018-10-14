@@ -18,6 +18,7 @@ import Paper from "@material-ui/core/Paper";
 import indigo from "@material-ui/core/colors/indigo";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import ResponsiveTable from "./ResponsiveTable"
 
 const CustomTableCell = withStyles(theme => ({
   head: {
@@ -58,6 +59,9 @@ const styles = theme => ({
     "&:nth-of-type(odd)": {
       backgroundColor: theme.palette.background.default
     }
+  },
+  block: {
+    display: "block"
   }
 });
 
@@ -95,8 +99,8 @@ class ParentContainer extends Component {
     noteForStaff: null,
     noteForParents: null,
     highlight: null,
-    validationErrorMssg:"",
-    guardianValidationErrorMssg:""
+    validationErrorMssg: "",
+    guardianValidationErrorMssg: ""
   };
 
   componentDidMount() {
@@ -133,8 +137,13 @@ class ParentContainer extends Component {
           if (resp === "No diaperings") {
             this.setState({ status: "No diapering found :(" });
           } else {
-            console.log(resp);
-            this.setState({ diaperings: resp });
+            let allDiaperings = [];
+            resp.map(diapering => {
+              let diaperingRow = [];
+              diaperingRow.push(moment(diapering.time, "HH:mm:ss").format("hh:mm A"), diapering.place, diapering.type);
+              allDiaperings.push(diaperingRow);
+            });
+            this.setState({ diaperingData: allDiaperings, diaperings: resp });
           }
         }
       });
@@ -158,8 +167,13 @@ class ParentContainer extends Component {
           if (resp === "No meals") {
             this.setState({ status: "No Meal found :(" });
           } else {
-            console.log(resp);
-            this.setState({ meals: resp });
+            let allMeals = [];
+            resp.map(meal => {
+              let mealRow = [];
+              mealRow.push(moment(meal.time, "HH:mm:ss").format("hh:mm A"), meal.type, meal.food);
+              allMeals.push(mealRow);
+            });
+            this.setState({ mealData: allMeals, meals: resp });
           }
         }
       });
@@ -183,8 +197,13 @@ class ParentContainer extends Component {
           if (resp === "No naps") {
             this.setState({ status: "No Naps found :(" });
           } else {
-            console.log(resp);
-            this.setState({ naps: resp });
+            let allnaps = [];
+            resp.map(nap => {
+              let napRow = [];
+              napRow.push(moment(nap.startTime, "HH:mm:ss").format("hh:mm A"), moment(nap.endTime, "HH:mm:ss").format("hh:mm: A"));
+              allnaps.push(napRow);
+            });
+            this.setState({ napData: allnaps, naps: resp });
           }
         }
       });
@@ -209,8 +228,13 @@ class ParentContainer extends Component {
           if (resp === "No medicines") {
             this.setState({ status: "No medicines found :(" });
           } else {
-            console.log(resp);
-            this.setState({ medicines: resp });
+            let allmedicines = [];
+            resp.map(medicine => {
+              let medicineRow = [];
+              medicineRow.push(moment(medicine.time, "HH:mm:ss").format("hh:mm A"), medicine.medName);
+              allmedicines.push(medicineRow);
+            });
+            this.setState({ medicineData: allmedicines, medicines: resp });
           }
         }
       });
@@ -235,8 +259,13 @@ class ParentContainer extends Component {
           if (resp === "No incidents") {
             this.setState({ status: "No incident found :(" });
           } else {
-            console.log(resp);
-            this.setState({ incidents: resp });
+            let allincidents = [];
+            resp.map(incident => {
+              let incidentRow = [];
+              incidentRow.push(moment(incident.time, "HH:mm:ss").format("hh:mm A"), incident.incident);
+              allincidents.push(incidentRow);
+            });
+            this.setState({ incidentData: allincidents, incidents: resp });
           }
         }
       });
@@ -356,7 +385,7 @@ class ParentContainer extends Component {
           } else {
             const parents = [];
             resp.Parents.map(parent => parents.push(parent));
-            this.setState({parents:parents});
+            this.setState({ parents: parents });
           }
         }
       });
@@ -372,24 +401,24 @@ class ParentContainer extends Component {
 
   handleSearch = e => {
     e.preventDefault();
-    if(this.state.searchEmail.trim() === "")
-      this.setState({status:"Email can't be empty"})
-    else{
-    console.log(this.state.searchEmail, "PARENT EMAIL");
-    fetch(`/api/parent/email/${this.state.searchEmail}`)
-      .then(resp => resp.json())
-      .then(resp => {
-        if (resp.name) {
-          this.setState({ existingParent: resp });
-          const { name, email, phone, address, id } = this.state.existingParent;
-          this.setState({
-            parentId: id,
-            status: `${name}, ${email}, ${phone}, ${address}`
-          });
-        } else {
-          this.setState({ status: "That email doesn't exist in our database" });
-        }
-      });
+    if (this.state.searchEmail.trim() === "")
+      this.setState({ status: "Email can't be empty" })
+    else {
+      console.log(this.state.searchEmail, "PARENT EMAIL");
+      fetch(`/api/parent/email/${this.state.searchEmail}`)
+        .then(resp => resp.json())
+        .then(resp => {
+          if (resp.name) {
+            this.setState({ existingParent: resp });
+            const { name, email, phone, address, id } = this.state.existingParent;
+            this.setState({
+              parentId: id,
+              status: `${name}, ${email}, ${phone}, ${address}`
+            });
+          } else {
+            this.setState({ status: "That email doesn't exist in our database" });
+          }
+        });
     }
   };
 
@@ -433,21 +462,21 @@ class ParentContainer extends Component {
               parentEmail: "",
               parentAddress: "",
               parentPhone: "",
-              validationErrorMssg:""
+              validationErrorMssg: ""
             },
             //() => this.getExistingParent()
           );
         } else {
-          if(resp.errors){
-            if(resp.errors[0].message ==="email must be unique")
+          if (resp.errors) {
+            if (resp.errors[0].message === "email must be unique")
               this.setState({ validationErrorMssg: "Email already exists in database", status: "" });
-            else if(resp.errors[0].message ==="Validation isEmail on email failed")
+            else if (resp.errors[0].message === "Validation isEmail on email failed")
               this.setState({ validationErrorMssg: "Invalid email address", status: "" });
-            else if(resp.errors[0].message ==="Validation notEmpty on name failed")
+            else if (resp.errors[0].message === "Validation notEmpty on name failed")
               this.setState({ validationErrorMssg: "Name is required", status: "" });
-            else if(resp.errors[0].message ==="Validation len on phone failed")
+            else if (resp.errors[0].message === "Validation len on phone failed")
               this.setState({ validationErrorMssg: "Invalid phone number", status: "" });
-            else if(resp.errors[0].message ==="Validation notEmpty on address failed")
+            else if (resp.errors[0].message === "Validation notEmpty on address failed")
               this.setState({ validationErrorMssg: "Address is required", status: "" });
           }
           else
@@ -487,23 +516,23 @@ class ParentContainer extends Component {
               guardianEmail: "",
               guardianAddress: "",
               guardianPhone: "",
-              guardianValidationErrorMssg:""
+              guardianValidationErrorMssg: ""
             },
             //() => this.getExistingPickup()
           );
         } else {
-          if(resp.errors){
-            if(resp.errors[0].message ==="Validation isEmail on email failed")
-              this.setState({ guardianValidationErrorMssg: "Invalid email address", status:""});
-            else if(resp.errors[0].message ==="Validation notEmpty on name failed")
-              this.setState({ guardianValidationErrorMssg: "Name is required", status:""});
-            else if(resp.errors[0].message ==="Validation len on phone failed")
-              this.setState({ guardianValidationErrorMssg: "Invalid phone number", status:""});
-            else if(resp.errors[0].message ==="Validation notEmpty on address failed")
-              this.setState({ guardianValidationErrorMssg: "Address is required", status:""});
+          if (resp.errors) {
+            if (resp.errors[0].message === "Validation isEmail on email failed")
+              this.setState({ guardianValidationErrorMssg: "Invalid email address", status: "" });
+            else if (resp.errors[0].message === "Validation notEmpty on name failed")
+              this.setState({ guardianValidationErrorMssg: "Name is required", status: "" });
+            else if (resp.errors[0].message === "Validation len on phone failed")
+              this.setState({ guardianValidationErrorMssg: "Invalid phone number", status: "" });
+            else if (resp.errors[0].message === "Validation notEmpty on address failed")
+              this.setState({ guardianValidationErrorMssg: "Address is required", status: "" });
           }
           else
-          this.setState({ guardianValidationErrorMssg: "Guardian could not be added, please check the entered values", status: "" });
+            this.setState({ guardianValidationErrorMssg: "Guardian could not be added, please check the entered values", status: "" });
         }
         this.getExistingPickup();
       });
@@ -763,8 +792,8 @@ class ParentContainer extends Component {
                     <CustomTableCell>{this.state.orgName}</CustomTableCell>
                     <CustomTableCell>{this.state.orgPhone}</CustomTableCell>
                     <CustomTableCell>{this.state.orgAddress}</CustomTableCell>
-                    <CustomTableCell>{moment(this.state.orgOpenTime,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
-                    <CustomTableCell>{moment(this.state.orgCloseTime,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
+                    <CustomTableCell>{moment(this.state.orgOpenTime, "HH:mm:ss").format("hh:mm A")}</CustomTableCell>
+                    <CustomTableCell>{moment(this.state.orgCloseTime, "HH:mm:ss").format("hh:mm A")}</CustomTableCell>
                   </TableRow>
                 </TableBody>
               </Table>
@@ -815,29 +844,7 @@ class ParentContainer extends Component {
     } else {
       return (
         <div>
-          <br />
-          <strong>Incidents</strong>
-          <Paper className={classes.root}>
-            <Table className={classes.table}>
-              <TableHead>
-                <TableRow key="header">
-                  <CustomTableCell>Time</CustomTableCell>
-                  <CustomTableCell>Incident</CustomTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {this.state.incidents.map(incident => {
-                  return (
-                    <TableRow key={incident.id}>
-                      <CustomTableCell>{moment(incident.time,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
-                      <CustomTableCell>{incident.incident}</CustomTableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </Paper>
-          <br />
+          <ResponsiveTable title="Incidents" columns={["Time", "Incident"]} data={this.state.incidentData} />
         </div>
       );
     }
@@ -850,29 +857,7 @@ class ParentContainer extends Component {
     } else {
       return (
         <div>
-          <br />
-          <strong>Medicines Administered</strong>
-          <Paper className={classes.root}>
-            <Table className={classes.table}>
-              <TableHead>
-                <TableRow key="header">
-                  <CustomTableCell>Time</CustomTableCell>
-                  <CustomTableCell>Medicine</CustomTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {this.state.medicines.map(medicine => {
-                  return (
-                    <TableRow key={medicine.id}>
-                      <CustomTableCell>{moment(medicine.time,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
-                      <CustomTableCell>{medicine.medName}</CustomTableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </Paper>
-          <br />
+          <ResponsiveTable title="Medicines Administered" data={this.state.medicineData} columns={["Time", "Medicine"]} />
         </div>
       );
     }
@@ -885,29 +870,7 @@ class ParentContainer extends Component {
     } else {
       return (
         <div>
-          <br />
-          <strong>Naps</strong>
-          <Paper className={classes.root}>
-            <Table className={classes.table}>
-              <TableHead>
-                <TableRow key="header">
-                  <CustomTableCell>Start Time</CustomTableCell>
-                  <CustomTableCell>End Time</CustomTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {this.state.naps.map(nap => {
-                  return (
-                    <TableRow key={nap.id}>
-                      <CustomTableCell>{moment(nap.startTime,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
-                      <CustomTableCell>{moment(nap.endTime,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </Paper>
-          <br />
+          <ResponsiveTable title="Naps" data={this.state.napData} columns={["Start Time", "End Time"]} />
         </div>
       );
     }
@@ -920,30 +883,11 @@ class ParentContainer extends Component {
     } else {
       return (
         <div>
-          <br />
-          <strong>Meals</strong>
-          <Paper className={classes.root}>
-            <Table className={classes.table}>
-              <TableHead>
-                <TableRow key="header">
-                  <CustomTableCell>Time</CustomTableCell>
-                  <CustomTableCell>Meal</CustomTableCell>
-                  <CustomTableCell>Food</CustomTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {this.state.meals.map(meal => {
-                  return (
-                    <TableRow key={meal.id}>
-                      <CustomTableCell>{moment(meal.time,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
-                      <CustomTableCell>{meal.type}</CustomTableCell>
-                      <CustomTableCell>{meal.food}</CustomTableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </Paper>
+          <ResponsiveTable
+            title="Meals"
+            columns={["Time", "Meal", "Food"]}
+            data={this.state.mealData}
+          />
         </div>
       );
     }
@@ -956,30 +900,7 @@ class ParentContainer extends Component {
     } else {
       return (
         <div>
-          <br />
-          <strong>Diaper/Toilet</strong>
-          <Paper className={classes.root}>
-            <Table className={classes.table}>
-              <TableHead>
-                <TableRow key="header">
-                  <CustomTableCell>Time</CustomTableCell>
-                  <CustomTableCell>Place</CustomTableCell>
-                  <CustomTableCell>Type</CustomTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {this.state.diaperings.map(diapering => {
-                  return (
-                    <TableRow key={diapering.id}>
-                      <CustomTableCell>{moment(diapering.time,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
-                      <CustomTableCell>{diapering.place}</CustomTableCell>
-                      <CustomTableCell>{diapering.type}</CustomTableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </Paper>
+          <ResponsiveTable title="Diaper/Toilet" columns={["Time", "Place", "Type"]} data={this.state.diaperingData} />
         </div>
       );
     }
@@ -1192,7 +1113,7 @@ class ParentContainer extends Component {
                 Today's Report
               </Typography>
             </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
+            <ExpansionPanelDetails className={classes.block}>
               <div>
                 {this.renderNoteForStaff()}
                 {this.renderNoteForParents()}
@@ -1266,7 +1187,7 @@ class ParentContainer extends Component {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <div>
-                <Link to={{pathname: '/archive', state:{studentId:this.props.studentId, role:this.props.role, name: this.props.name}}}>Click here to see {this.props.name}'s report archive </Link>
+                <Link to={{ pathname: '/archive', state: { studentId: this.props.studentId, role: this.props.role, name: this.props.name } }}>Click here to see {this.props.name}'s report archive </Link>
               </div>
             </ExpansionPanelDetails>
           </ExpansionPanel>

@@ -46,8 +46,13 @@
   align-items: center;
 }
 
-
-
 .timepicker__hidden{
   display:none;
+}
+
+@media screen and (max-width: 600px){
+  .timepicker-container{
+    grid-template-columns: repeat(3, 40px);
+  }
+
 }

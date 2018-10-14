@@ -8,6 +8,7 @@ import ParentHomePage from './pages/_ParentPages/ParentHomePage/ParentHomePage';
 import notAuthorized from './pages/notAuthorized';
 import AddStudent from './pages/_StaffPages/AddStudent/AddStudent';
 import AddStaff from './pages/_StaffPages/AddStaff/AddStaff';
+import Schedule from './pages/Schedule/Schedule';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import AllStudents from './pages/_StaffPages/AllStudentsPage/AllStudentsPage';
 import SingleStudent from './pages/SingleStudent/SingleStudent';
@@ -65,6 +66,7 @@ class App extends Component {
             <Route exact path="/staffhomepage" component={StaffHomePage} />
             <Route exact path="/parenthomepage" component={ParentHomePage} />
             <Route exact path="/staffhome" component={StaffHomePage} />
+            <Route exact path="/schedule" component={Schedule} />
             <Route exact path="/addstaff" component={AddStaff} />
             <Route exact path="/dailyreportmenu" component={DailyReportMenu} />
             <Route exact path="/messageparents" component={MessageParents} />

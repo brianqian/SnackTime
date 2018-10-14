@@ -123,7 +123,7 @@ class Settings extends React.Component {
   };
 
   render() {
-    const { classes, theme } = this.props;
+    const { classes } = this.props;
     const { expanded } = this.state;
     const { value } = this.state;
     return (

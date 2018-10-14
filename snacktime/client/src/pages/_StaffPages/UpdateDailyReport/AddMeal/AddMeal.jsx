@@ -13,7 +13,7 @@ import MultiSelectContainer from '../MultiSelect/MultiSelectContainer';
 import Timepicker from '../../../../components/TimePicker/TimePicker';
 import './AddMeal.css';
 
-import {Redirect} from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -79,7 +79,7 @@ class AddMeal extends React.Component {
     food: '',
     type: 'Breakfast',
     multiline: 'Controlled',
-    snackbarMessage:'No student selected'
+    snackbarMessage: 'No student selected'
   };
   timepickerState = React.createRef();
 
@@ -103,7 +103,7 @@ class AddMeal extends React.Component {
       }
     });
     console.log(idArray);
-    this.setState({ studentIdsToSubmit: idArray }, function() {
+    this.setState({ studentIdsToSubmit: idArray }, function () {
       if (this.state.studentIdsToSubmit.length === 0)
         this.handleClickSnackbar();
       else
@@ -134,13 +134,17 @@ class AddMeal extends React.Component {
       return;
     }
     this.setState({ open: false });
+    this.setState({
+      studentIdsToSubmit: [],
+      food: "",
+    })
   };
 
   postMeal = id => {
     console.log('INSIDE POST MEAL, LOOKING FOR ID VALUE', id);
     let today = new Date();
     //prettier-ignore
-    let date = today.getFullYear() +'-' + (today.getMonth() + 1) + '-' + today.getDate();
+    let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
     console.log(date);
     fetch(`/api/student/${id}/meal`, {
       method: 'POST',
@@ -156,15 +160,20 @@ class AddMeal extends React.Component {
         console.log(resp);
         return resp.json();
       })
-      .then(resp => {console.log("Resp2:",resp)
-      if(resp.errors){
-        if(resp.errors.length>0){
-          if(resp.errors[0].message === "Validation notEmpty on food failed")
-            this.setState({snackbarMessage:"Please write meal items"}, this.handleClickSnackbar())
+      .then(resp => {
+        console.log("Resp2:", resp)
+        if (resp.errors) {
+          if (resp.errors.length > 0) {
+            if (resp.errors[0].message === "Validation notEmpty on food failed")
+              this.setState({ snackbarMessage: "Please write meal items" }, this.handleClickSnackbar())
+          }
+        } else if (resp) {
+          this.setState({ snackbarMessage: "Meal added." },
+            this.handleClickSnackbar()
+          )
         }
-      }
-      });
-  };
+      })
+  }
 
   render() {
     const { classes } = this.props;
@@ -180,7 +189,7 @@ class AddMeal extends React.Component {
           />
           <div className="addmeal-container">
             <div className="addmeal-item1">
-              <Timepicker setTime={this.setMealTime} />
+              <Timepicker ref={this.timepickerState} setTime={this.setMealTime} />
             </div>
             <div className="addmeal-item2">
               <TextField
@@ -228,32 +237,32 @@ class AddMeal extends React.Component {
             </Button>
           </div>
           <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
-          }}
-          open={this.state.open}
-          autoHideDuration={6000}
-          onClose={this.handleCloseSnackbar}
-          ContentProps={{
-            "aria-describedby": "message-id"
-          }}
-          message={<span id="message-id">{this.state.snackbarMessage}</span>}
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              className={classes.close}
-              onClick={this.handleCloseSnackbar}
-            >
-              <CloseIcon />
-            </IconButton>
-          ]}
-        />
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left"
+            }}
+            open={this.state.open}
+            autoHideDuration={6000}
+            onClose={this.handleCloseSnackbar}
+            ContentProps={{
+              "aria-describedby": "message-id"
+            }}
+            message={<span id="message-id">{this.state.snackbarMessage}</span>}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                className={classes.close}
+                onClick={this.handleCloseSnackbar}
+              >
+                <CloseIcon />
+              </IconButton>
+            ]}
+          />
         </div>
       );
-    }else if (this.state.loginRejected) {
+    } else if (this.state.loginRejected) {
       return (
         <Redirect
           to={{

@@ -1112,7 +1112,7 @@ class ParentContainer extends Component {
     }
   }
 
-  renderGuardianTable() {
+  renderDaySchedule() {
     const { classes } = this.props;
     if (this.state.guardians.length > 0) {
       return (

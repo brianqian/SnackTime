@@ -16,6 +16,7 @@ import './AddMeds.css'
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import { Redirect } from 'react-router-dom'
 
 const styles = theme => ({
   container: {
@@ -46,7 +47,7 @@ class AddMeds extends React.Component {
     time: '',
     medName: '',
     multiline: 'Controlled',
-    snackbarMessage:'No student selected'
+    snackbarMessage: 'No student selected'
   };
 
   timepickerState = React.createRef();
@@ -60,7 +61,7 @@ class AddMeds extends React.Component {
   handleSubmit = async event => {
     event.preventDefault();
     const time = this.timepickerState.current.returnTime();
-    await this.setState({time})
+    await this.setState({ time })
     let idArray = [];
     this.state.allStudents.map(student => {
       if (student.selected === true) {
@@ -102,13 +103,17 @@ class AddMeds extends React.Component {
         console.log(resp);
         return resp.json();
       })
-      .then(resp => {console.log("Resp2:",resp)
-      if(resp.errors){
-        if(resp.errors.length>0){
-          if(resp.errors[0].message === "Validation notEmpty on medName failed")
-            this.setState({snackbarMessage:"Please write medicine name"}, this.handleClickSnackbar())
+      .then(resp => {
+        console.log("Resp2:", resp)
+        if (resp.errors) {
+          if (resp.errors.length > 0) {
+            if (resp.errors[0].message === "Validation notEmpty on medName failed")
+              this.setState({ snackbarMessage: "Please write medicine name" }, this.handleClickSnackbar())
+          }
+        } else if (resp) {
+          this.setState({ snackbarMessage: "Medication added." },
+            this.handleClickSnackbar())
         }
-      }
       });
   };
 
@@ -119,7 +124,7 @@ class AddMeds extends React.Component {
     if (reason === "clickaway") {
       return;
     }
-    this.setState({ open: false });
+    this.setState({ open: false, studentIdsToSubmit: [], snackbarMessage: 'No student selected' });
   };
 
   render() {
@@ -161,29 +166,29 @@ class AddMeds extends React.Component {
             </Button>
           </div>
           <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
-          }}
-          open={this.state.open}
-          autoHideDuration={6000}
-          onClose={this.handleCloseSnackbar}
-          ContentProps={{
-            "aria-describedby": "message-id"
-          }}
-          message={<span id="message-id">{this.state.snackbarMessage}</span>}
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              className={classes.close}
-              onClick={this.handleCloseSnackbar}
-            >
-              <CloseIcon />
-            </IconButton>
-          ]}
-        />
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left"
+            }}
+            open={this.state.open}
+            autoHideDuration={6000}
+            onClose={this.handleCloseSnackbar}
+            ContentProps={{
+              "aria-describedby": "message-id"
+            }}
+            message={<span id="message-id">{this.state.snackbarMessage}</span>}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                className={classes.close}
+                onClick={this.handleCloseSnackbar}
+              >
+                <CloseIcon />
+              </IconButton>
+            ]}
+          />
         </div>
       );
     } else if (this.state.loginRejected) {
@@ -198,7 +203,7 @@ class AddMeds extends React.Component {
           }}
         />
       );
-    }else {
+    } else {
       return <div />;
     }
   }

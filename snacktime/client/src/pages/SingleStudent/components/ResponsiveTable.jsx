@@ -68,6 +68,7 @@ class ResponsiveTable extends React.Component {
             options={options}
           />
         </MuiThemeProvider>
+        <br />
       </div>
     );
   }

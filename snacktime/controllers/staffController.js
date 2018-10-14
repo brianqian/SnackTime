@@ -291,46 +291,48 @@ module.exports = {
   getReportConsolidated: function (req, res) {
     console.log("Req ", req.params);
     db.Student.findOne({
-      where:{
+      where: {
         id: req.params.studentId
       },
-      include:[{
-       model:db.Meal,
-       required:false,
-       as:'Meals',
-      where:{date:req.params.date}
+      include: [{
+        model: db.Meal,
+        required: false,
+        as: 'Meals',
+        where: { date: req.params.date }
       },
       {
-        model:db.Diapering,
-        required:false,
-        as:'Diaperings',
-       where:{date:req.params.date}
-       },
-       {
-        model:db.Nap,
-        required:false,
-        as:'Naps',
-        where:{date:req.params.date}
-       },
-       {
-        model:db.Incident,
-        required:false,
-        as:'Incidents',
-       where:{date:req.params.date}
-       },
-       {
-        model:db.Medicine,
-        required:false,
-        as:'Medicines',
-       where:{date:req.params.date}
-       },
-       {
-        model:db.Report,
-        required:false,
-        where:{date:req.params.date}
-       }]
+        model: db.Diapering,
+        required: false,
+        as: 'Diaperings',
+        where: { date: req.params.date }
+      },
+      {
+        model: db.Nap,
+        required: false,
+        as: 'Naps',
+        where: { date: req.params.date }
+      },
+      {
+        model: db.Incident,
+        required: false,
+        as: 'Incidents',
+        where: { date: req.params.date }
+      },
+      {
+        model: db.Medicine,
+        required: false,
+        as: 'Medicines',
+        where: { date: req.params.date }
+      },
+      {
+        model: db.Report,
+        required: false,
+        as: "Reports",
+        where: { date: req.params.date }
+      }]
     })
       .then(dbStudent => {
+        console.log("DB STUDENT", dbStudent);
         res.json(dbStudent);
       })
       .catch(err => res.status(422).json(err));
@@ -675,10 +677,34 @@ module.exports = {
       where: {
         OrganizationId: req.session.user.OrganizationId
       },
-      order:[['createdAt','DESC']]
+      order: [['createdAt', 'DESC']]
     }).then(staffs => {
       res.json(staffs);
     })
-  }
+  },
   /************get all staff**************/
+
+  /***************org schedule by day************/
+  getOrgScheduleOfDay: function(req,res){
+    db.OrgSchedule.findAll({
+      where:{
+        day:req.params.day
+      }
+    })
+    .then(schedule => res.json(schedule))
+    .catch(err => res.status(422).json(err))
+  },
+
+  saveschedule: function(req,res){
+    db.OrgSchedule.create({
+      day: req.body.day,
+      activityStartTime: req.body.startTime,
+      activityEndTime: req.body.endTime,
+      activityName:req.body.description,
+      activityCategory:req.body.category
+    }).then(dbSchedule => res.json(dbSchedule))
+    .catch(err => res.status(422).json(err));
+
+  }
+  /***************org schedule by day************/
 };

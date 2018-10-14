@@ -13,10 +13,7 @@ import Auth from '../../../../utils/Auth';
 import MultiSelectContainer from '../MultiSelect/MultiSelectContainer';
 import Timepicker from '../../../../components/TimePicker/TimePicker';
 import './AddPotty.css';
-
-
-
-
+import { Redirect } from 'react-router-dom';
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
@@ -65,7 +62,7 @@ class AddPotty extends React.Component {
     clickedDiaper: 'classes.notclickked',
     clickedPotty: 'classes.notclicked',
     clickedAccident: 'classes.notclicked',
-    snackbarMessage:'No student selected'
+    snackbarMessage: 'No student selected.'
   };
 
   async componentWillMount() {
@@ -95,13 +92,34 @@ class AddPotty extends React.Component {
   };
 
   handleClick = async (e, name, value) => {
+    switch (value) {
+      case 'Diaper':
+        this.setState({ diaperColor: true, pottyColor: false, accidentColor: false });
+        break;
+      case 'Potty':
+        this.setState({ diaperColor: false, pottyColor: true, accidentColor: false });
+        break;
+      case 'Accident':
+        this.setState({ diaperColor: false, pottyColor: false, accidentColor: true });
+        break;
+      case 'Wet':
+        this.setState({ wetColor: true, bmColor: false, dryColor: false });
+        break;
+      case 'BM':
+        this.setState({ wetColor: false, bmColor: true, dryColor: false });
+        break;
+      case 'Dry':
+        this.setState({ wetColor: false, bmColor: false, dryColor: true });
+        break;
+    }
     this.setState({ [name]: value });
     console.log(e.currentTarget)
     const prevSelect = document.querySelectorAll(`.${name}`)
-    prevSelect.forEach(selected=> selected.setAttribute('color', 'default'))
+    prevSelect.forEach(selected => selected.setAttribute('color', 'default'))
     e.currentTarget.setAttribute('color', 'primary')
-    
+
   };
+
 
   handleClickSnackbar = () => {
     this.setState({ open: true });
@@ -111,7 +129,12 @@ class AddPotty extends React.Component {
       return;
     }
     this.setState({ open: false });
+    setTimeout(this.reset, 500)
   };
+
+  reset = () => {
+    this.setState({ snackbarMessage: "No student selected."})
+  }
 
   postPotty = id => {
     let today = new Date();
@@ -138,15 +161,20 @@ class AddPotty extends React.Component {
         console.log(resp);
         return resp.json();
       })
-      .then(resp => {console.log("Resp2:",resp)
-      if(resp.errors){
-        if(resp.errors.length>0){
-          if(resp.errors[0].message === "Validation notEmpty on place failed")
-            this.setState({snackbarMessage:"Please select Potty/Diaper/Accident"}, this.handleClickSnackbar())
-          else if(resp.errors[0].message === "Validation notEmpty on type failed")
-            this.setState({snackbarMessage:"Please select BM/Wet/Dry"}, this.handleClickSnackbar())
+      .then(resp => {
+        console.log("Resp2:", resp)
+        if (resp.errors) {
+          if (resp.errors.length > 0) {
+            if (resp.errors[0].message === "Validation notEmpty on place failed")
+              this.setState({ snackbarMessage: "Please select Potty/Diaper/Accident" }, this.handleClickSnackbar())
+            else if (resp.errors[0].message === "Validation notEmpty on type failed")
+              this.setState({ snackbarMessage: "Please select BM/Wet/Dry" }, this.handleClickSnackbar())
+          }
+        } else if (resp) {
+          this.setState({ snackbarMessage: "Potty added." },
+            this.handleClickSnackbar()
+          )
         }
-      }
       });
   };
 
@@ -170,15 +198,16 @@ class AddPotty extends React.Component {
               <Button
                 variant="contained"
                 className="pottyPlace"
-                color='default'
-                onClick={(e) => this.handleClick(e,'pottyPlace', 'Diaper')}
+                color={this.state.diaperColor ? 'primary' : 'default'}
+                onClick={(e) => this.handleClick(e, 'pottyPlace', 'Diaper')}
               >
                 Diaper
               </Button>
               <Button
                 variant="contained"
                 className="pottyPlace"
-                color='default'
+                // color='default'
+                color={this.state.pottyColor ? 'primary' : 'default'}
                 onClick={(e) => this.handleClick(e, 'pottyPlace', 'Potty')}
               >
                 Potty
@@ -186,7 +215,8 @@ class AddPotty extends React.Component {
               <Button
                 variant="contained"
                 className="pottyPlace"
-                color='default'
+                // color='default'
+                color={this.state.accidentColor ? 'primary' : 'default'}
                 onClick={(e) => this.handleClick(e, 'pottyPlace', 'Accident')}
               >
                 Accident
@@ -196,7 +226,8 @@ class AddPotty extends React.Component {
               <Button
                 variant="contained"
                 className="pottyType"
-                color='default'
+                // color={this.state.wetcolor}
+                color={this.state.wetColor ? 'primary' : 'default'}
                 onClick={(e) => this.handleClick(e, 'pottyType', 'Wet')}
               >
                 Wet
@@ -204,7 +235,8 @@ class AddPotty extends React.Component {
               <Button
                 variant="contained"
                 className="pottyType"
-                color='default'
+                // color='default'
+                color={this.state.bmColor ? 'primary' : 'default'}
                 onClick={(e) => this.handleClick(e, 'pottyType', 'BM')}
               >
                 BM
@@ -212,8 +244,9 @@ class AddPotty extends React.Component {
               <Button
                 variant="contained"
                 className="pottyType"
-                color='default'
-                onClick={(e) => this.handleClick('pottyType', 'Dry')}
+                // color='default'
+                color={this.state.dryColor ? 'primary' : 'default'}
+                onClick={(e) => this.handleClick(e, 'pottyType', 'Dry')}
               >
                 Dry
               </Button>
@@ -227,32 +260,32 @@ class AddPotty extends React.Component {
             </Button>
           </div>
           <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
-          }}
-          open={this.state.open}
-          autoHideDuration={6000}
-          onClose={this.handleCloseSnackbar}
-          ContentProps={{
-            "aria-describedby": "message-id"
-          }}
-          message={<span id="message-id">{this.state.snackbarMessage}</span>}
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              className={classes.close}
-              onClick={this.handleCloseSnackbar}
-            >
-              <CloseIcon />
-            </IconButton>
-          ]}
-        />
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left"
+            }}
+            open={this.state.open}
+            autoHideDuration={6000}
+            onClose={this.handleCloseSnackbar}
+            ContentProps={{
+              "aria-describedby": "message-id"
+            }}
+            message={<span id="message-id">{this.state.snackbarMessage}</span>}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                className={classes.close}
+                onClick={this.handleCloseSnackbar}
+              >
+                <CloseIcon />
+              </IconButton>
+            ]}
+          />
         </div>
       );
-    }else if (this.state.loginRejected) {
+    } else if (this.state.loginRejected) {
       return (
         <Redirect
           to={{
@@ -264,7 +297,7 @@ class AddPotty extends React.Component {
           }}
         />
       );
-    }  else {
+    } else {
       return <div />;
     }
   }

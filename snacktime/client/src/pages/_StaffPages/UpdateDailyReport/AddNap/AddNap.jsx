@@ -48,6 +48,7 @@ class AddNap extends React.Component {
     studentIdsToSubmit: [],
     loginRejected: false,
     loggedIn: false,
+    snackbarMessage: "No Student Selected."
   };
 
   timepickerState1 = React.createRef();
@@ -127,7 +128,10 @@ class AddNap extends React.Component {
         console.log(resp);
         return resp.json();
       })
-      .then(resp => console.log(resp));
+      .then(resp => {
+        this.setState({ snackbarMessage: "Nap added." })
+        console.log(resp)
+      });
   };
 
   render() {
@@ -165,36 +169,36 @@ class AddNap extends React.Component {
             <Button
               className={classes.submitbutton}
               onClick={this.handleSubmit}
-              // color='default'
+            // color='default'
             >
               Add Activity
             </Button>
           </div>
 
-            <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
-          }}
-          open={this.state.open}
-          autoHideDuration={6000}
-          onClose={this.handleCloseSnackbar}
-          ContentProps={{
-            "aria-describedby": "message-id"
-          }}
-          message={<span id="message-id">No Student Selected</span>}
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              className={classes.close}
-              onClick={this.handleCloseSnackbar}
-            >
-              <CloseIcon />
-            </IconButton>
-          ]}
-        />
+          <Snackbar
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left"
+            }}
+            open={this.state.open}
+            autoHideDuration={6000}
+            onClose={this.handleCloseSnackbar}
+            ContentProps={{
+              "aria-describedby": "message-id"
+            }}
+            message={<span id="message-id">{this.state.snackbarMessage}</span>}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                className={classes.close}
+                onClick={this.handleCloseSnackbar}
+              >
+                <CloseIcon />
+              </IconButton>
+            ]}
+          />
 
         </div>
       );
@@ -205,7 +209,7 @@ class AddNap extends React.Component {
             pathname: '/notAuthorized',
             state: {
               type: 'Staff',
-              location: '/dailyreport/nap',
+              location: '/dailyreport/addnap',
             },
           }}
         />

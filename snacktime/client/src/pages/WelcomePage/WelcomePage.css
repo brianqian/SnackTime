@@ -24,3 +24,12 @@
 .welcomepage-header-text{
   z-index: 1;
 }
+
+.welcomepage-intro{
+  text-align: left;
+  width: 75vw;
+  margin: 2rem;
+  font-size: 1.2rem;
+  line-height: 1.4;
+
+}

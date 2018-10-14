@@ -171,13 +171,15 @@ export default class SignUp extends React.Component {
                   onChange={this.handleChange}
                   value={this.state.zipCode}
                   id="orgSignup-zipCode"
+                  type="number"
                   name="zipCode"
-                  
+                  onInput={(e)=>{
+                    e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,5)
+                  }}
                   label="Zip"
                   margin="normal"
                   variant="outlined"
                 />
-         
                 
                 <DateTimeSelector
                   //onChange={this.handleChange}

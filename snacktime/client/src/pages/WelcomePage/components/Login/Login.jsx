@@ -139,7 +139,7 @@ class LogIn extends React.Component {
                 type="submit"
                 fullWidth
                 variant="contained"
-                color={this.props.type === 'Staff' ? 'secondary': 'primary'} 
+                color='primary'
                 onClick={this.handleSubmit}
                 className={classes.submit}
               >
