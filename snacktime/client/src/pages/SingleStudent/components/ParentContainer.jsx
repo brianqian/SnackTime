@@ -70,7 +70,6 @@ class ParentContainer extends Component {
     showAddNewParent: true,
     parentName: "",
     parentEmail: "",
-    parentPassword: "testpass",
     parentAddress: "",
     parentPhone: "",
     guardians: [],
@@ -96,7 +95,8 @@ class ParentContainer extends Component {
     noteForStaff: null,
     noteForParents: null,
     highlight: null,
-    validationErrorMssg:""
+    validationErrorMssg:"",
+    guardianValidationErrorMssg:""
   };
 
   componentDidMount() {
@@ -428,9 +428,9 @@ class ParentContainer extends Component {
               status: "Parent Added!",
               parentName: "",
               parentEmail: "",
-              parentPassword: "testpass",
               parentAddress: "",
-              parentPhone: ""
+              parentPhone: "",
+              validationErrorMssg:""
             },
             //() => this.getExistingParent()
           );
@@ -461,7 +461,6 @@ class ParentContainer extends Component {
 
     let newObj = {
       email: this.state.guardianEmail,
-      //password: this.state.guardianPassword,
       address: this.state.guardianAddress,
       phone: this.state.guardianPhone,
       name: this.capitalize(this.state.guardianName)
@@ -477,20 +476,31 @@ class ParentContainer extends Component {
       .then(resp => resp.json())
       .then(resp => {
         console.log(resp);
-        if (resp) {
+        if (resp.id) {
           this.setState(
             {
-              status: "Pickup Added!",
+              status: "Guardian Added!",
               guardianName: "",
               guardianEmail: "",
-              guardianPassword: "testpass",
               guardianAddress: "",
-              guardianPhone: ""
+              guardianPhone: "",
+              guardianValidationErrorMssg:""
             },
-            () => this.getExistingPickup()
+            //() => this.getExistingPickup()
           );
         } else {
-          this.setState({ status: "Pickup not added" });
+          if(resp.errors){
+            if(resp.errors[0].message ==="Validation isEmail on email failed")
+              this.setState({ guardianValidationErrorMssg: "Invalid email address", status:""});
+            else if(resp.errors[0].message ==="Validation notEmpty on name failed")
+              this.setState({ guardianValidationErrorMssg: "Name is required", status:""});
+            else if(resp.errors[0].message ==="Validation len on phone failed")
+              this.setState({ guardianValidationErrorMssg: "Invalid phone number", status:""});
+            else if(resp.errors[0].message ==="Validation notEmpty on address failed")
+              this.setState({ guardianValidationErrorMssg: "Address is required", status:""});
+          }
+          else
+          this.setState({ guardianValidationErrorMssg: "Guardian could not be added, please check the entered values", status: "" });
         }
         this.getExistingPickup();
       });
@@ -705,7 +715,8 @@ class ParentContainer extends Component {
                 variant="outlined"
                 type="text"
               />
-
+              <div>{this.state.status}</div>
+              <div>{this.state.guardianValidationErrorMssg}</div>
               <Button
                 className={classes.submitGuardian}
                 onClick={this.handleSubmitNewGuardian}
