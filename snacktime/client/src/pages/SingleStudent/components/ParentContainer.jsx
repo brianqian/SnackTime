@@ -95,7 +95,8 @@ class ParentContainer extends Component {
     date: "",
     noteForStaff: null,
     noteForParents: null,
-    highlight: null
+    highlight: null,
+    validationErrorMssg:""
   };
 
   componentDidMount() {
@@ -345,16 +346,18 @@ class ParentContainer extends Component {
   };
 
   getExistingParent = () => {
+    console.log("I am here")
     fetch(`/api/student/${this.props.studentId}/parent`)
       .then(resp => resp.json())
       .then(resp => {
         if (resp) {
+          console.log("resp:", resp)
           if (resp === "No parent found") {
             this.setState({ status: "No parents found :(" });
           } else {
             const parents = [];
             resp.Parents.map(parent => parents.push(parent));
-            this.setState({ parents });
+            this.setState({parents:parents});
           }
         }
       });
@@ -370,8 +373,8 @@ class ParentContainer extends Component {
 
   handleSearch = e => {
     e.preventDefault();
-    console.log(this.state.email, "PARENT EMAIL");
-    fetch(`/api/parent/email/${this.state.parentEmail}`)
+    console.log(this.state.searchEmail, "PARENT EMAIL");
+    fetch(`/api/parent/email/${this.state.searchEmail}`)
       .then(resp => resp.json())
       .then(resp => {
         if (resp.name) {
@@ -382,7 +385,7 @@ class ParentContainer extends Component {
             status: `${name}, ${email}, ${phone}, ${address}`
           });
         } else {
-          this.setState({ status: "That email doesn't exist" });
+          this.setState({ status: "That email doesn't exist in our database" });
         }
       });
   };
@@ -402,7 +405,6 @@ class ParentContainer extends Component {
 
     let newObj = {
       email: this.state.parentEmail,
-      password: this.state.parentPassword,
       address: this.state.parentAddress,
       phone: this.state.parentPhone,
       name: this.capitalize(this.state.parentName),
@@ -420,7 +422,7 @@ class ParentContainer extends Component {
       .then(resp => resp.json())
       .then(resp => {
         console.log(resp);
-        if (resp) {
+        if (resp.id) {
           this.setState(
             {
               status: "Parent Added!",
@@ -430,10 +432,23 @@ class ParentContainer extends Component {
               parentAddress: "",
               parentPhone: ""
             },
-            () => this.getExistingParent()
+            //() => this.getExistingParent()
           );
         } else {
-          this.setState({ status: "Parent not added" });
+          if(resp.errors){
+            if(resp.errors[0].message ==="email must be unique")
+              this.setState({ validationErrorMssg: "Email already exists in database", status: "" });
+            else if(resp.errors[0].message ==="Validation isEmail on email failed")
+              this.setState({ validationErrorMssg: "Invalid email address", status: "" });
+            else if(resp.errors[0].message ==="Validation notEmpty on name failed")
+              this.setState({ validationErrorMssg: "Name is required", status: "" });
+            else if(resp.errors[0].message ==="Validation len on phone failed")
+              this.setState({ validationErrorMssg: "Invalid phone number", status: "" });
+            else if(resp.errors[0].message ==="Validation notEmpty on address failed")
+              this.setState({ validationErrorMssg: "Address is required", status: "" });
+          }
+          else
+            this.setState({ validationErrorMssg: "Parent could not be added, please check the entered values", status: "" });
         }
         this.getExistingParent();
       });
@@ -501,6 +516,7 @@ class ParentContainer extends Component {
   };
 
   makeAssociation = e => {
+    console.log("association func")
     e.preventDefault();
     fetch("/api/parentstudent", {
       method: "POST",
@@ -509,7 +525,8 @@ class ParentContainer extends Component {
         parentId: this.state.parentId,
         studentId: this.props.studentId
       })
-    }).then(() => this.getExistingParent());
+    })
+    .then(this.getExistingParent())
   };
 
   deleteAssociation = e => {
@@ -621,7 +638,8 @@ class ParentContainer extends Component {
               </Button>
             </form>
           )}
-          <p>{this.state.status}</p>
+          <div>{this.state.status}</div>
+          <div className="validationerror">{this.state.validationErrorMssg}</div>
           {this.state.existingParent && (
             <Button onClick={this.makeAssociation}>
               Add Existing Parent to Child

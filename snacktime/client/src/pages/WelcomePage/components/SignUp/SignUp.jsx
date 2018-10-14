@@ -10,7 +10,6 @@ import TextField from '@material-ui/core/TextField';
 export default class SignUp extends React.Component {
   state = {
     orgName: '',
-    // orgEmail: '',
     orgPhoneNum: '',
     streetAddress: '',
     city: '',
