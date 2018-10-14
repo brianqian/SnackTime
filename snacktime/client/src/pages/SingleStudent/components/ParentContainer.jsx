@@ -346,7 +346,6 @@ class ParentContainer extends Component {
   };
 
   getExistingParent = () => {
-    console.log("I am here")
     fetch(`/api/student/${this.props.studentId}/parent`)
       .then(resp => resp.json())
       .then(resp => {
@@ -373,6 +372,9 @@ class ParentContainer extends Component {
 
   handleSearch = e => {
     e.preventDefault();
+    if(this.state.searchEmail.trim() === "")
+      this.setState({status:"Email can't be empty"})
+    else{
     console.log(this.state.searchEmail, "PARENT EMAIL");
     fetch(`/api/parent/email/${this.state.searchEmail}`)
       .then(resp => resp.json())
@@ -388,6 +390,7 @@ class ParentContainer extends Component {
           this.setState({ status: "That email doesn't exist in our database" });
         }
       });
+    }
   };
 
   capitalize = name => {
@@ -525,18 +528,17 @@ class ParentContainer extends Component {
     });
   };
 
-  makeAssociation = e => {
+  makeAssociation = async e => {
     console.log("association func")
     e.preventDefault();
-    fetch("/api/parentstudent", {
+    await fetch("/api/parentstudent", {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
         parentId: this.state.parentId,
         studentId: this.props.studentId
       })
-    })
-    .then(this.getExistingParent())
+    }).then(this.getExistingParent());
   };
 
   deleteAssociation = e => {
