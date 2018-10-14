@@ -20,9 +20,9 @@ const styles = theme => ({
     display: "flex",
     flexWrap: "wrap"
   },
-  submitbutton:{
-    marginTop:25,
-    height:10
+  submitbutton: {
+    marginTop: 25,
+    height: 10
   },
   textField: {
     marginLeft: theme.spacing.unit,
@@ -45,7 +45,7 @@ class AddIncident extends React.Component {
     multiline: "Controlled",
     allStudents: [],
     studentIdsToSubmit: [],
-    snackbarMessage:'No student selected'
+    snackbarMessage: 'No student selected'
   };
 
   timepickerState = React.createRef();
@@ -60,7 +60,7 @@ class AddIncident extends React.Component {
   handleSubmit = async event => {
     event.preventDefault();
     const time = this.timepickerState.current.returnTime();
-    await this.setState({time})
+    await this.setState({ time })
     let idArray = [];
     this.state.allStudents.map(student => {
       if (student.selected === true) {
@@ -69,7 +69,7 @@ class AddIncident extends React.Component {
     });
     console.log(idArray);
     await this.setState({ studentIdsToSubmit: idArray });
-    if(this.state.studentIdsToSubmit.length===0)
+    if (this.state.studentIdsToSubmit.length === 0)
       this.handleClickSnackbar();
     else
       this.state.studentIdsToSubmit.map(id => this.postIncident(id));
@@ -99,16 +99,20 @@ class AddIncident extends React.Component {
       })
     })
       .then(resp => {
-        console.log("Resp1:",resp);
+        console.log("Resp1:", resp);
         return resp.json();
       })
-      .then(resp => {console.log("Resp2:",resp)
-      if(resp.errors){
-        if(resp.errors.length>0){
-          if(resp.errors[0].message === "Validation notEmpty on incident failed")
-            this.setState({snackbarMessage:"Please write incident"}, this.handleClickSnackbar())
+      .then(resp => {
+        console.log("Resp2:", resp)
+        if (resp.errors) {
+          if (resp.errors.length > 0) {
+            if (resp.errors[0].message === "Validation notEmpty on incident failed")
+              this.setState({ snackbarMessage: "Please write incident" }, this.handleClickSnackbar())
+          }
+        } else if (resp) {
+          this.setState({ snackbarMessage: "Incident added." },
+            this.handleClickSnackbar())
         }
-      }
       });
   };
 
@@ -134,47 +138,50 @@ class AddIncident extends React.Component {
             updateStudents={this.updateStudents}
           />
 
-          <form className={classes.container} noValidate autoComplete="off">
-            <Timepicker ref={this.timepickerState} setTime={this.setIncidentTime} />
+          <div className="addincident-container">
+            <div className="addincident-item1">
+              <Timepicker ref={this.timepickerState} setTime={this.setIncidentTime} />
+            </div>
 
-            <hr />
-            <TextField
-              required
-              label="Indcident"
-              className={classes.textField}
-              value={this.state.medName}
-              onChange={this.handleChange("incident")}
-              multiline
-              margin="normal"
-              variant="outlined"
-            />
-            <hr />
+            <div className='addincident-item2'>
+              <TextField
+                required
+                label="Indcident"
+                className={classes.textField}
+                value={this.state.medName}
+                onChange={this.handleChange("incident")}
+                multiline
+                rows='4'
+                margin="normal"
+                variant="outlined"
+              />
+            </div>
             <Button className={classes.submitbutton} onClick={this.handleSubmit}>Add Activity</Button>
-          </form>
+          </div>
           <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
-          }}
-          open={this.state.open}
-          autoHideDuration={6000}
-          onClose={this.handleCloseSnackbar}
-          ContentProps={{
-            "aria-describedby": "message-id"
-          }}
-          message={<span id="message-id">{this.state.snackbarMessage}</span>}
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              className={classes.close}
-              onClick={this.handleCloseSnackbar}
-            >
-              <CloseIcon />
-            </IconButton>
-          ]}
-        />
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left"
+            }}
+            open={this.state.open}
+            autoHideDuration={6000}
+            onClose={this.handleCloseSnackbar}
+            ContentProps={{
+              "aria-describedby": "message-id"
+            }}
+            message={<span id="message-id">{this.state.snackbarMessage}</span>}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                className={classes.close}
+                onClick={this.handleCloseSnackbar}
+              >
+                <CloseIcon />
+              </IconButton>
+            ]}
+          />
         </div>
       );
     } else if (this.state.loginRejected) {

@@ -1,4 +1,4 @@
-.welcomepage-header-imagebefore {
+.welcomepage-header-image {
   position: relative;
   background-image: url(./welcomepage-stock1.jpg);
   height: 50vh;
@@ -13,7 +13,7 @@
 
 .welcomepage-header-image:after{
   display:block;
-  /* position: relative; */
+
   content: '';
   height: 100%;
   width: 100%;
@@ -23,4 +23,13 @@
 
 .welcomepage-header-text{
   z-index: 1;
+}
+
+.welcomepage-intro{
+  text-align: left;
+  width: 75vw;
+  margin: 2rem;
+  font-size: 1.2rem;
+  line-height: 1.4;
+
 }

@@ -16,9 +16,8 @@ class StaffHomePage extends Component {
     loginRejected: false
   };
 
-   componentWillMount() {
-     Auth.StaffAuthorize(this);
-
+    componentWillMount() {
+      Auth.StaffAuthorize(this);
   }
 
   render() {
@@ -56,7 +55,7 @@ class StaffHomePage extends Component {
             />
             <DashboardItem
               title="School Schedule"
-              destination="/calendar"
+              destination="/schedule"
               image="/img/calendar.png"
               role="staff"
             />

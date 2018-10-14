@@ -126,4 +126,9 @@ router.route("/removestaff").delete(staffController.removeStaff);
 router.route("/getallstaff").get(staffController.getAllStaff);
 /**********get all staff in org***********/
 
+/**************org schedule*****************/
+router.route("/orgschedule/:day").get(staffController.getOrgScheduleOfDay)
+router.route("/orgschedule").post(staffController.saveschedule);
+/**************org schedule*****************/
+
 module.exports = router;

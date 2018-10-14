@@ -27,19 +27,17 @@ export default class MultiSelectContainer extends Component {
   }
 
   selectStudent = e => {
-    let item = e.target;
+    let item = e.currentTarget;
     console.log(item);
-    console.log(e.target)
+    console.log(e.target.getAttribute('value'))
     let studentArray = this.state.allStudents.slice();
-    console.log('STUDNET ARRAY', studentArray);
+    console.log('STUDENT ARRAY', studentArray);
     if (item.classList.contains("selected")) {
-      studentArray.find(
-        student => student.id === item.getAttribute("value")
-      ).selected = false;
+      let result = studentArray.find(student => student.id == item.getAttribute("value"))
+      result.selected = false;
     } else {
-      studentArray.find(
-        student => student.id === item.getAttribute("value")
-      ).selected = true;
+      let result = studentArray.find(student => student.id == item.getAttribute("value"))
+      result.selected = true;
     }
 
     // this.setState({ allStudents: studentArray });
@@ -60,7 +58,6 @@ export default class MultiSelectContainer extends Component {
 
   render() {
     if (this.state.allStudents.length > 0) {
-      console.log("hello ", this.props);
       return (
         <div>
           <div className="multiselect-container">
@@ -75,7 +72,7 @@ export default class MultiSelectContainer extends Component {
               );
             })}
           </div>
-          <button onClick={this.selectAll}>{`${ this.state.allSelected ? "Unselect All" : "Select All"}`}</button>
+          <button onClick={this.selectAll}>{`${this.state.allSelected ? "Unselect All" : "Select All"}`}</button>
         </div>
       );
     } else {
