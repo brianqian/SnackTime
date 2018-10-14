@@ -161,7 +161,7 @@ class AddMeal extends React.Component {
       if(resp.errors){
         if(resp.errors.length>0){
           if(resp.errors[0].message === "Validation notEmpty on food failed")
-            this.setState({snackbarMessage:"Meal cannot be empty"}, this.handleClickSnackbar())
+            this.setState({snackbarMessage:"Please write meal items"}, this.handleClickSnackbar())
         }
       }
       });

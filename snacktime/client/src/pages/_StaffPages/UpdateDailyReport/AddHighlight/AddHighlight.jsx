@@ -152,7 +152,7 @@ class AddHighlight extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     if(this.state.highlight.length === 0){
-      this.setState({snackbarMessage:"Highlight cannot be empty"}, this.handleClickSnackbar())
+      this.setState({snackbarMessage:"Please write highlight"}, this.handleClickSnackbar())
     }
     else{
       if(this.state.noteExists)

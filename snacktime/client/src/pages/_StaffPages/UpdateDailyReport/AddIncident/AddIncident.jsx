@@ -108,7 +108,7 @@ class AddIncident extends React.Component {
       if(resp.errors){
         if(resp.errors.length>0){
           if(resp.errors[0].message === "Validation notEmpty on incident failed")
-            this.setState({snackbarMessage:"Incident cannot be empty"}, this.handleClickSnackbar())
+            this.setState({snackbarMessage:"Please write incident"}, this.handleClickSnackbar())
         }
       }
       });

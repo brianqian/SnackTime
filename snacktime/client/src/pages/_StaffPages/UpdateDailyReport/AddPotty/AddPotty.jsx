@@ -143,9 +143,9 @@ class AddPotty extends React.Component {
       if(resp.errors){
         if(resp.errors.length>0){
           if(resp.errors[0].message === "Validation notEmpty on place failed")
-            this.setState({snackbarMessage:"Place cannot be empty"}, this.handleClickSnackbar())
+            this.setState({snackbarMessage:"Please select Potty/Diaper/Accident"}, this.handleClickSnackbar())
           else if(resp.errors[0].message === "Validation notEmpty on type failed")
-            this.setState({snackbarMessage:"Type cannot be empty"}, this.handleClickSnackbar())
+            this.setState({snackbarMessage:"Please select BM/Wet/Dry"}, this.handleClickSnackbar())
         }
       }
       });

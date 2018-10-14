@@ -106,7 +106,7 @@ class AddMeds extends React.Component {
       if(resp.errors){
         if(resp.errors.length>0){
           if(resp.errors[0].message === "Validation notEmpty on medName failed")
-            this.setState({snackbarMessage:"Medicine name cannot be empty"}, this.handleClickSnackbar())
+            this.setState({snackbarMessage:"Please write medicine name"}, this.handleClickSnackbar())
         }
       }
       });

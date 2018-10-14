@@ -207,9 +207,9 @@ class AddNote extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     if(this.state.role === "parent" && this.state.noteForStaff.length ===0)
-      this.setState({snackbarMessage:"Note cannot be empty"}, this.handleClickSnackbar())
+      this.setState({snackbarMessage:"Please write a note"}, this.handleClickSnackbar())
     else if(this.state.role === "staff" && this.state.noteForParents.length ===0)
-      this.setState({snackbarMessage:"Note cannot be empty"}, this.handleClickSnackbar())
+      this.setState({snackbarMessage:"Please write a note"}, this.handleClickSnackbar())
     else{
       if(this.state.noteExists)
         this.updateNote()
