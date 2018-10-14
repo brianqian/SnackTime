@@ -48,6 +48,8 @@ class AddMeds extends React.Component {
     multiline: 'Controlled',
     snackbarMessage:'No student selected'
   };
+
+  timepickerState = React.createRef();
   componentWillMount() {
     Auth.StaffAuthorize(this);
   }
@@ -57,13 +59,14 @@ class AddMeds extends React.Component {
   };
   handleSubmit = async event => {
     event.preventDefault();
+    const time = this.timepickerState.current.returnTime();
+    await this.setState({time})
     let idArray = [];
     this.state.allStudents.map(student => {
       if (student.selected === true) {
         idArray.push(student.id);
       }
     });
-    console.log(idArray);
     await this.setState({ studentIdsToSubmit: idArray });
     if (this.state.studentIdsToSubmit.length === 0)
       this.handleClickSnackbar();
@@ -76,9 +79,6 @@ class AddMeds extends React.Component {
     });
   };
 
-  setMedTime = time => {
-    this.setState({ time: time });
-  };
 
   postMeds = id => {
     let today = new Date();
@@ -136,7 +136,7 @@ class AddMeds extends React.Component {
 
           <div className="addmeds-container">
             <div className="addmeds-item1">
-              <Timepicker setTime={this.setMedTime} />
+              <Timepicker ref={this.timepickerState} setTime={this.setMedTime} />
             </div>
             <div className="addmeds-item2">
               <TextField
@@ -186,7 +186,19 @@ class AddMeds extends React.Component {
         />
         </div>
       );
-    } else {
+    } else if (this.state.loginRejected) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/notAuthorized",
+            state: {
+              type: "Staff",
+              location: '/dailyreport/addmeds'
+            }
+          }}
+        />
+      );
+    }else {
       return <div />;
     }
   }

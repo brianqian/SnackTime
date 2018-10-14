@@ -12,9 +12,13 @@ import Auth from '../../../../utils/Auth';
 import MultiSelectContainer from '../MultiSelect/MultiSelectContainer';
 import Timepicker from '../../../../components/TimePicker/TimePicker';
 import './AddMeal.css';
+
+import {Redirect} from 'react-router-dom'
+
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+
 
 const styles = theme => ({
   container: {
@@ -77,6 +81,7 @@ class AddMeal extends React.Component {
     multiline: 'Controlled',
     snackbarMessage:'No student selected'
   };
+  timepickerState = React.createRef();
 
   async componentWillMount() {
     await Auth.StaffAuthorize(this);
@@ -88,8 +93,9 @@ class AddMeal extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
+    const mealTime = this.timepickerState.current.returnTime();
+    this.setState({ time: mealTime });
     let idArray = [];
-
     this.state.allStudents.map(student => {
       if (student.selected === true) {
         console.log('pushing', student.id);
@@ -106,13 +112,6 @@ class AddMeal extends React.Component {
           this.postMeal(id);
         });
     });
-  };
-  logState = () => {
-    console.log(this.state);
-  };
-
-  setMealTime = time => {
-    this.setState({ time: time });
   };
 
   handleChange = name => event => {
@@ -215,16 +214,15 @@ class AddMeal extends React.Component {
                 value={this.state.food}
                 onChange={this.handleChange('food')}
                 multiline
-                rows='5'
+                rows="5"
                 margin="normal"
                 variant="outlined"
               />
-
             </div>
             <Button
               className={classes.submitbutton}
               onClick={this.handleSubmit}
-              color='primary'
+              color="primary"
             >
               Add Activity
             </Button>
@@ -254,6 +252,18 @@ class AddMeal extends React.Component {
           ]}
         />
         </div>
+      );
+    }else if (this.state.loginRejected) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/notAuthorized",
+            state: {
+              type: "Staff",
+              location: '/dailyreport/addmeal'
+            }
+          }}
+        />
       );
     } else {
       return <div />;

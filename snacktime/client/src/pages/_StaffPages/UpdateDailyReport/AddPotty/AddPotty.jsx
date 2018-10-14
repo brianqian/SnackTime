@@ -13,9 +13,14 @@ import Auth from '../../../../utils/Auth';
 import MultiSelectContainer from '../MultiSelect/MultiSelectContainer';
 import Timepicker from '../../../../components/TimePicker/TimePicker';
 import './AddPotty.css';
+
+
+
+
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+
 
 // var bgColors = {
 //   Default: '#81b71a',
@@ -67,11 +72,15 @@ class AddPotty extends React.Component {
     Auth.StaffAuthorize(this);
   }
 
+  timepickerState = React.createRef();
+
   updateStudents = newArray => {
     this.setState({ allStudents: newArray });
   };
   handleSubmit = async event => {
     event.preventDefault();
+    const returnTime = this.timepickerState.current.returnTime();
+    await this.setState({ pottyTime: returnTime });
     let idArray = [];
     this.state.allStudents.map(student => {
       if (student.selected === true) {
@@ -84,24 +93,14 @@ class AddPotty extends React.Component {
       this.handleClickSnackbar();
     else this.state.studentIdsToSubmit.map(id => this.postPotty(id));
   };
-  logState = () => {
-    console.log(this.state);
-  };
 
-  handleClick = (name, value) => {
+  handleClick = async (e, name, value) => {
     this.setState({ [name]: value });
-  };
-
-  // handleSelect = async e => {
-  //   const name = e.target.getAttribute('class');
-  //   console.log('Name', name);
-  //   const prevSelect = document.querySelectorAll(`.${name}`);
-  //   prevSelect.forEach(num => num.classList.remove('active'));
-  //   e.target.classList.add('textPrimary');
-  // };
-
-  setPottyTime = time => {
-    this.setState({ pottyTime: time });
+    console.log(e.currentTarget)
+    const prevSelect = document.querySelectorAll(`.${name}`)
+    prevSelect.forEach(selected=> selected.setAttribute('color', 'default'))
+    e.currentTarget.setAttribute('color', 'primary')
+    
   };
 
   handleClickSnackbar = () => {
@@ -130,8 +129,8 @@ class AddPotty extends React.Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         time: this.state.pottyTime,
-        place: this.state.place,
-        type: this.state.type,
+        place: this.state.pottyPlace,
+        type: this.state.pottyType,
         date: date,
       }),
     })
@@ -165,62 +164,56 @@ class AddPotty extends React.Component {
 
           <div className="addpotty-container">
             <div className="addpotty-item1">
-              <Timepicker setTime={this.setPottyTime} />
+              <Timepicker ref={this.timepickerState} setTime={this.setPottyTime} />
             </div>
             <div className="addpotty-item2">
               <Button
-                className={this.state.clickedDiaper}
-                name="place"
-                color="primary"
-                value="Diaper"
-                onClick={() => this.handleClick('place', 'Diaper')}
+                variant="contained"
+                className="pottyPlace"
+                color='default'
+                onClick={(e) => this.handleClick(e,'pottyPlace', 'Diaper')}
               >
                 Diaper
               </Button>
               <Button
-                className="PottyPlace"
-                name="place"
-                color="primary"
-                value="Potty"
-                onClick={() => this.handleClick('place', 'Potty')}
+                variant="contained"
+                className="pottyPlace"
+                color='default'
+                onClick={(e) => this.handleClick(e, 'pottyPlace', 'Potty')}
               >
                 Potty
               </Button>
               <Button
-                className="PottyPlace"
-                name="place"
-                color="primary"
-                value="Accident"
-                onClick={() => this.handleClick('place', 'Accident')}
+                variant="contained"
+                className="pottyPlace"
+                color='default'
+                onClick={(e) => this.handleClick(e, 'pottyPlace', 'Accident')}
               >
                 Accident
               </Button>
             </div>
             <div className="addpotty-item3">
               <Button
+                variant="contained"
                 className="pottyType"
-                name="type"
-                value="Wet"
-                color="primary"
-                onClick={() => this.handleClick('type', 'Wet')}
+                color='default'
+                onClick={(e) => this.handleClick(e, 'pottyType', 'Wet')}
               >
                 Wet
               </Button>
               <Button
+                variant="contained"
                 className="pottyType"
-                name="type"
-                color="primary"
-                value="BM"
-                onClick={() => this.handleClick('type', 'BM')}
+                color='default'
+                onClick={(e) => this.handleClick(e, 'pottyType', 'BM')}
               >
                 BM
               </Button>
               <Button
+                variant="contained"
                 className="pottyType"
-                name="type"
-                color="primary"
-                value="Dry"
-                onClick={() => this.handleClick('type', 'Dry')}
+                color='default'
+                onClick={(e) => this.handleClick('pottyType', 'Dry')}
               >
                 Dry
               </Button>
@@ -228,7 +221,7 @@ class AddPotty extends React.Component {
             <Button
               className={classes.submitbutton}
               onClick={this.handleSubmit}
-              color='primary'
+              color='default'
             >
               Add Activity
             </Button>
@@ -259,7 +252,19 @@ class AddPotty extends React.Component {
         />
         </div>
       );
-    } else {
+    }else if (this.state.loginRejected) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/notAuthorized",
+            state: {
+              type: "Staff",
+              location: '/dailyreport/addpotty'
+            }
+          }}
+        />
+      );
+    }  else {
       return <div />;
     }
   }

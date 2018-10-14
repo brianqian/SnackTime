@@ -13,7 +13,6 @@ class TimePicker extends Component {
     hide: false,
   };
   componentWillMount() {
-    console.log('HOUR', moment().hours())
     let now = moment().format('LT');
     now = now.split(':');
     now = [now[0], ...now[1].split(' ')];
@@ -60,11 +59,11 @@ class TimePicker extends Component {
     const value = e.target.getAttribute('value');
     const name = e.target.getAttribute('class');
     console.log(value, name);
-    const prevSelect = document.querySelectorAll(`.${name}`);
+    const parent = e.target.parentElement;
+    const prevSelect = parent.querySelectorAll(`.${name}`);
     prevSelect.forEach(num => num.classList.remove('timepicker__selected'));
     e.target.classList.add('timepicker__selected');
-    await this.setState({ [name]: value });
-    this.props.setTime(this.returnTime());
+    this.setState({ [name]: value });
   };
   render() {
     return (

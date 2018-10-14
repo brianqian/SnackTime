@@ -1,13 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-//import classNames from "classnames";
+
 import { withStyles } from "@material-ui/core/styles";
-//import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import HeaderBar from "../../../../components/HeaderBar/HeaderBar";
-// import Label from '@material-ui/core/Label';
-// import DateTimeSelector from "../../../../components/DateTimeSelector/DateTimeSelector";
+
 import { Redirect } from "react-router-dom";
 import Auth from "../../../../utils/Auth";
 import MultiSelectContainer from "../MultiSelect/MultiSelectContainer";
@@ -15,6 +13,7 @@ import Timepicker from "../../../../components/TimePicker/TimePicker";
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import './AddIncident.css'
 
 const styles = theme => ({
   container: {
@@ -49,6 +48,8 @@ class AddIncident extends React.Component {
     snackbarMessage:'No student selected'
   };
 
+  timepickerState = React.createRef();
+
   async componentWillMount() {
     Auth.StaffAuthorize(this);
     console.log("hello");
@@ -58,6 +59,8 @@ class AddIncident extends React.Component {
   };
   handleSubmit = async event => {
     event.preventDefault();
+    const time = this.timepickerState.current.returnTime();
+    await this.setState({time})
     let idArray = [];
     this.state.allStudents.map(student => {
       if (student.selected === true) {
@@ -77,11 +80,6 @@ class AddIncident extends React.Component {
       [name]: event.target.value
     });
   };
-
-  setIncidentTime = time => {
-    this.setState({ time: time });
-  };
-
   postIncident = id => {
     let today = new Date();
     let date =
@@ -137,7 +135,7 @@ class AddIncident extends React.Component {
           />
 
           <form className={classes.container} noValidate autoComplete="off">
-            <Timepicker setTime={this.setIncidentTime} />
+            <Timepicker ref={this.timepickerState} setTime={this.setIncidentTime} />
 
             <hr />
             <TextField
@@ -186,7 +184,7 @@ class AddIncident extends React.Component {
             pathname: "/notAuthorized",
             state: {
               type: "Staff",
-              location: "/addincident"
+              location: "/dailyreport/addincident"
             }
           }}
         />
