@@ -17,7 +17,6 @@ export default class SingleStudent extends Component {
     studentId: '',
     medication: '',
     name: '',
-    name: '',
     notes: '',
     updatedAt: '',
     orgUserCheck: true,

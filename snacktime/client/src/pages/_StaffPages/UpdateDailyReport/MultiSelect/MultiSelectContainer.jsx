@@ -34,11 +34,11 @@ export default class MultiSelectContainer extends Component {
     console.log('STUDNET ARRAY', studentArray);
     if (item.classList.contains("selected")) {
       studentArray.find(
-        student => student.id == item.getAttribute("value")
+        student => student.id === item.getAttribute("value")
       ).selected = false;
     } else {
       studentArray.find(
-        student => student.id == item.getAttribute("value")
+        student => student.id === item.getAttribute("value")
       ).selected = true;
     }
 

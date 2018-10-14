@@ -1,27 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+//import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
+// import MenuItem from '@material-ui/core/MenuItem';
+// import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import HeaderBar from '../../../../components/HeaderBar/HeaderBar';
 // import Label from '@material-ui/core/Label';
-import DateTimeSelector from '../../../../components/DateTimeSelector/DateTimeSelector';
-import { Redirect } from 'react-router-dom';
+// import DateTimeSelector from '../../../../components/DateTimeSelector/DateTimeSelector';
+// import { Redirect } from 'react-router-dom';
 import Auth from '../../../../utils/Auth';
 import MultiSelectContainer from '../MultiSelect/MultiSelectContainer';
 import Timepicker from '../../../../components/TimePicker/TimePicker';
 import './AddPotty.css';
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 
-var bgColors = {
-  Default: '#81b71a',
-  Blue: '#00B1E1',
-  Cyan: '#37BC9B',
-  Green: '#8CC152',
-  Red: '#E9573F',
-  Yellow: '#F6BB42',
-};
+// var bgColors = {
+//   Default: '#81b71a',
+//   Blue: '#00B1E1',
+//   Cyan: '#37BC9B',
+//   Green: '#8CC152',
+//   Red: '#E9573F',
+//   Yellow: '#F6BB42',
+// };
 
 const styles = theme => ({
   container: {
@@ -57,6 +60,7 @@ class AddPotty extends React.Component {
     clickedDiaper: 'classes.notclickked',
     clickedPotty: 'classes.notclicked',
     clickedAccident: 'classes.notclicked',
+    snackbarMessage:'No student selected'
   };
 
   async componentWillMount() {
@@ -77,7 +81,7 @@ class AddPotty extends React.Component {
     console.log(idArray);
     await this.setState({ studentIdsToSubmit: idArray });
     if (this.state.studentIdsToSubmit.length === 0)
-      alert('No student selected');
+      this.handleClickSnackbar();
     else this.state.studentIdsToSubmit.map(id => this.postPotty(id));
   };
   logState = () => {
@@ -98,6 +102,16 @@ class AddPotty extends React.Component {
 
   setPottyTime = time => {
     this.setState({ pottyTime: time });
+  };
+
+  handleClickSnackbar = () => {
+    this.setState({ open: true });
+  };
+  handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ open: false });
   };
 
   postPotty = id => {
@@ -125,7 +139,16 @@ class AddPotty extends React.Component {
         console.log(resp);
         return resp.json();
       })
-      .then(resp => console.log(resp));
+      .then(resp => {console.log("Resp2:",resp)
+      if(resp.errors){
+        if(resp.errors.length>0){
+          if(resp.errors[0].message === "Validation notEmpty on place failed")
+            this.setState({snackbarMessage:"Please select Potty/Diaper/Accident"}, this.handleClickSnackbar())
+          else if(resp.errors[0].message === "Validation notEmpty on type failed")
+            this.setState({snackbarMessage:"Please select BM/Wet/Dry"}, this.handleClickSnackbar())
+        }
+      }
+      });
   };
 
   render() {
@@ -210,6 +233,30 @@ class AddPotty extends React.Component {
               Add Activity
             </Button>
           </div>
+          <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={this.state.open}
+          autoHideDuration={6000}
+          onClose={this.handleCloseSnackbar}
+          ContentProps={{
+            "aria-describedby": "message-id"
+          }}
+          message={<span id="message-id">{this.state.snackbarMessage}</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={this.handleCloseSnackbar}
+            >
+              <CloseIcon />
+            </IconButton>
+          ]}
+        />
         </div>
       );
     } else {
