@@ -77,12 +77,11 @@ class OutlinedTextFields extends React.Component {
     const { classes } = this.props;
     return (
       <div>
-        {/* <HeaderBar type={this.state.userType} /> */}
         <form className={classes.container} noValidate autoComplete="off">
           <TextField
             required
             id="outlined-firstname"
-            label="firstName"
+            label="First Name"
             name="firstName"
             className={classes.textField}
             value={this.state.firstName}
@@ -93,7 +92,7 @@ class OutlinedTextFields extends React.Component {
           <TextField
             required
             id="outlined-lastname"
-            label="lastName"
+            label="Last Name"
             name="lastName"
             className={classes.textField}
             value={this.state.lastName}

@@ -132,11 +132,11 @@ class AddNap extends React.Component {
         .then(resp => {
           this.setState({ snackbarMessage: "Nap added." },this.handleClickSnackbar())
         });
-    }
-    else{
-      await this.setState({ snackbarMessage: "End Time should be greater than Start Time" })
-      this.handleClickSnackbar();
-    }
+      }
+      else{
+        await this.setState({ snackbarMessage: "End Time should be greater than Start Time" })
+        this.handleClickSnackbar();
+      }
     
   };
 

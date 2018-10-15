@@ -106,7 +106,7 @@ class SingleStudentCard extends React.Component {
         <div className="singlestudent-card-icons">
           <DashboardItem
             destination="/addnote"
-            title="Note to Parents"
+            title="Notes"
             image="/img/message.png"
             id={this.props.studentId}
             name={this.props.name}
@@ -114,7 +114,7 @@ class SingleStudentCard extends React.Component {
           />
           <DashboardItem
             destination="/addhighlight"
-            title="Today's Highlight"
+            title="Highlights"
             image="/img/highlight.png"
             id={this.props.studentId}
             name={this.props.name}
@@ -127,7 +127,7 @@ class SingleStudentCard extends React.Component {
         <div className="singlestudent-card-icons">
           <DashboardItem
             destination="/addnote"
-            title="Note to Staff"
+            title="Notes"
             image="/img/message.png"
             id={this.props.studentId}
             name={this.props.name}

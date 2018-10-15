@@ -26,13 +26,17 @@ class TimePicker extends Component {
   }
 
   returnTime = () => {
+    let selectedHour = parseInt(this.state.selectedHour);
+    let selectedMin = parseInt(this.state.selectedMin);
+
     if (this.state.selectedAmpm === 'AM') {
-      return `${this.state.selectedHour}:${this.state.selectedMin}:00`;
+      if (selectedHour === 12)
+        selectedHour = '00';
+      return `${selectedHour}:${selectedMin}:00`;
     } else {
-      let hour = parseInt(this.state.selectedHour);
-      hour += 12;
-      if (hour===24) hour = '00';
-      return `${hour}:${this.state.selectedMin}:00`;
+      let hour = parseInt(selectedHour);
+      if (hour!== 12) hour += 12;
+      return `${hour}:${selectedMin}:00`;
     }
   };
 
@@ -44,7 +48,7 @@ class TimePicker extends Component {
       if (num.length === 1) num = '0' + num;
       hourArray.push(num);
     }
-    for (let i = 0; i < 60; i+=10) {
+    for (let i = 0; i < 60; i += 10) {
       let num = i + '';
       if (num.length === 1) num = '0' + num;
       minArray.push(num);
@@ -76,7 +80,7 @@ class TimePicker extends Component {
         <div
           className={`${
             this.state.hide ? 'timepicker__hidden' : ''
-          } timepicker timepicker-Hour`}
+            } timepicker timepicker-Hour`}
         >
           {this.state.hours.map(hour => {
             return (
@@ -93,7 +97,7 @@ class TimePicker extends Component {
         <div
           className={`${
             this.state.hide ? 'timepicker__hidden' : ''
-          }  timepicker timepicker-Min`}
+            }  timepicker timepicker-Min`}
         >
           {this.state.minutes.map(minute => {
             return (
@@ -110,7 +114,7 @@ class TimePicker extends Component {
         <div
           className={`${
             this.state.hide ? 'timepicker__hidden' : ''
-          } timepicker timepicker-Ampm`}
+            } timepicker timepicker-Ampm`}
         >
           {this.state.ampm.map(ampm => {
             return (

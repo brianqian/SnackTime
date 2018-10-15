@@ -97,7 +97,12 @@ export default class SignUp extends React.Component {
   render() {
     return (
       <div>
-        <Button onClick={this.handleClickOpen}>Create a snacktime account for your organization!</Button>
+        <Button 
+          onClick={this.handleClickOpen}
+          variant="outlined"
+        >
+          Create a snacktime account for your organization!
+        </Button>
           <Dialog
             open={this.state.open}
             onClose={this.handleClose}

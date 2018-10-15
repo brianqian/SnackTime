@@ -42,8 +42,8 @@ const styles = theme => ({
 class AddNote extends React.Component {
   state = {
     time: '',
-    noteForStaff: '',
-    noteForParents: '',
+    noteForStaff: null,
+    noteForParents: null,
     id: this.props.location.state.id,
     name:this.props.location.state.name,
     role:this.props.location.state.role,
@@ -214,9 +214,9 @@ class AddNote extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    if(this.state.role === "parent" && this.state.noteForStaff.length ===0)
+    if(this.state.role === "parent" && this.state.noteForStaff.trim() ==="")
       this.setState({snackbarMessage:"Please write a note"}, this.handleClickSnackbar())
-    else if(this.state.role === "staff" && this.state.noteForParents.length ===0)
+    else if(this.state.role === "staff" && this.state.noteForParents.trim() ==="")
       this.setState({snackbarMessage:"Please write a note"}, this.handleClickSnackbar())
     else{
       if(this.state.noteExists)

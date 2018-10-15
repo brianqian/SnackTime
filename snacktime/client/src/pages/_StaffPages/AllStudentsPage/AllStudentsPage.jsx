@@ -6,6 +6,7 @@ import FaceIcon from '@material-ui/icons/Face';
 import './AllStudentsPage.css';
 import HeaderBar from '../../../components/HeaderBar/HeaderBar';
 import Auth from '../../../utils/Auth';
+import Avatar from '@material-ui/core/Avatar';
 // import DashboardItem from '../../components/DashboardItem/DashboardItem';
 
 export default class AllStudentsPage extends Component {
@@ -17,6 +18,7 @@ export default class AllStudentsPage extends Component {
     loggedIn: false,
     loginRejected: false,
     allStudents: [],
+    loadingMessage: "Loading..."
   };
 
   async componentWillMount() {
@@ -50,7 +52,10 @@ export default class AllStudentsPage extends Component {
       .then(resp => resp.json())
       .then(resp => {
         console.log(resp);
-        this.setState({ allStudents: resp });
+        if (resp.length > 0)
+          this.setState({ allStudents: resp });
+        else
+          this.setState({ loadingMessage: "No students to display" });
       })
       .catch(err => console.log(err));
   };
@@ -65,10 +70,14 @@ export default class AllStudentsPage extends Component {
             ? this.state.allStudents.map(student => (
               <Link key={student.id} to={{ pathname: `/allstudentspage/${student.id}`, state: { role: this.state.userType } }}>
                 <Chip
-                  studentId={student.id}
-                  avatar={<FaceIcon />}
+                  // studentId={student.id}
+                  avatar={
+                    <Avatar>
+                      <FaceIcon />
+                    </Avatar> 
+                  }
                   label={student.name}
-                  clickable
+                  // clickable
                   variant="outlined"
                   color="primary"
                   className="student__item"
@@ -77,7 +86,7 @@ export default class AllStudentsPage extends Component {
                 />
               </Link>
             ))
-            : 'No students to display'}
+            : <div>{this.state.loadingMessage}</div>}
         </div>
       );
     }
