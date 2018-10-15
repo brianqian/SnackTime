@@ -101,8 +101,7 @@ class LogIn extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <React.Fragment >
-        <CssBaseline />
+
         <main className={classes.layout}>
           <Paper className={classes.paper}>
             <Avatar className={classes.avatar}>
@@ -149,7 +148,6 @@ class LogIn extends React.Component {
             </form>
           </Paper>
         </main>
-      </React.Fragment>
     );
   }
 }
