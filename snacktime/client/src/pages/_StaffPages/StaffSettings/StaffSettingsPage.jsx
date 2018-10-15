@@ -23,7 +23,7 @@ import Auth from '../../../utils/Auth'
 
 function TabContainer({ children, dir }) {
   return (
-    <Typography component="div" dir={dir} style={{ padding: 8 * 3 }}>
+    <Typography component="div" dir={dir} style={{ padding: 0 }}>
       {children}
     </Typography>
   );

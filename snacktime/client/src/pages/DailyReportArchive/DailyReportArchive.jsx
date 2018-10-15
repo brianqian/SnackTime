@@ -133,7 +133,6 @@ class DailyReportArchive extends Component {
       incidentRow.push(moment(incident.time, "HH:mm:ss").format("hh:mm A"), incident.incident);
       allincidents.push(incidentRow);
     });
-    const { classes } = this.props;
     if (this.state.report.Incidents.length === 0) {
       return <div />;
     } else {
@@ -152,7 +151,6 @@ class DailyReportArchive extends Component {
       medicineRow.push(moment(medicine.time, "HH:mm:ss").format("hh:mm A"), medicine.medName);
       allmedicines.push(medicineRow);
     });
-    const { classes } = this.props;
     if (this.state.report.Medicines.length === 0) {
       return <div />;
     } else {
@@ -171,7 +169,6 @@ class DailyReportArchive extends Component {
       napRow.push(moment(nap.startTime, "HH:mm:ss").format("hh:mm A"), moment(nap.endTime, "HH:mm:ss").format("hh:mm: A"));
       allnaps.push(napRow);
     });
-    const { classes } = this.props;
     if (this.state.report.Naps.length === 0) {
       return <div />;
     } else {
@@ -190,7 +187,6 @@ class DailyReportArchive extends Component {
       mealRow.push(moment(meal.time, "HH:mm:ss").format("hh:mm A"), meal.type, meal.food);
       allMeals.push(mealRow);
     });
-    const { classes } = this.props;
     if (this.state.report.Meals.length === 0) {
       return <div />;
     } else {
@@ -209,7 +205,6 @@ class DailyReportArchive extends Component {
       diaperingRow.push(moment(diapering.time, "HH:mm:ss").format("hh:mm A"), diapering.place, diapering.type);
       allDiaperings.push(diaperingRow);
     });
-    const { classes } = this.props;
     if (this.state.report.Diaperings.length === 0) {
       return <div />;
     } else {
@@ -226,7 +221,6 @@ class DailyReportArchive extends Component {
     if(this.state.report.Reports.length >0 && this.state.report.Reports[0].noteForStaff)
       noteForstaff.push([this.state.report.Reports[0].noteForStaff]);
 
-    const { classes } = this.props;
     if (this.state.report.Reports.length > 0 && this.state.report.Reports[0].noteForStaff) {
       return (<div>
           <ResponsiveTable title="Note For Staff" columns={["Note"]} data={noteForstaff} />
@@ -243,7 +237,6 @@ class DailyReportArchive extends Component {
     if (this.state.report.Reports.length > 0 && this.state.report.Reports[0].noteForParents)
       noteForparent.push([this.state.report.Reports[0].noteForParents])
 
-    const { classes } = this.props;
     if (this.state.report.Reports.length > 0 && this.state.report.Reports[0].noteForParents) {
       return (<div>
           <ResponsiveTable title="Note For Parents" columns={["Note"]} data={noteForparent} />
@@ -260,7 +253,6 @@ class DailyReportArchive extends Component {
     if (this.state.report.Reports.length > 0 && this.state.report.Reports[0].highlight)
       highlight.push([this.state.report.Reports[0].highlight])
 
-    const { classes } = this.props;
     if (this.state.report.Reports.length > 0 && this.state.report.Reports[0].highlight) {
       return (<div>
           <ResponsiveTable title="Highlight of the day" columns={["Highlight"]} data={highlight} />

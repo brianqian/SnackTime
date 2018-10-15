@@ -42,7 +42,7 @@ const styles = theme => ({
 class AddHighlight extends React.Component {
   state = {
     time: '',
-    highlight: '',
+    highlight: null,
     id: this.props.location.state.id,
     name:this.props.location.state.name,
     role:this.props.location.state.role,

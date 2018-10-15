@@ -161,9 +161,9 @@ class AddPotty extends React.Component {
         console.log("Resp2:", resp)
         if (resp.errors) {
           if (resp.errors.length > 0) {
-            if (resp.errors[0].message === "Validation notEmpty on place failed")
+            if (resp.errors[0].message === "Diapering.place cannot be null")
               this.setState({ snackbarMessage: "Please select Potty/Diaper/Accident" }, this.handleClickSnackbar())
-            else if (resp.errors[0].message === "Validation notEmpty on type failed")
+            else if (resp.errors[0].message === "Diapering.type cannot be null")
               this.setState({ snackbarMessage: "Please select BM/Wet/Dry" }, this.handleClickSnackbar())
           }
         } else if (resp) {

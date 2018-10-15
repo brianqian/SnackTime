@@ -16,7 +16,6 @@ import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import TimePicker from "../../components/TimePicker/TimePicker";
 import Auth from '../../utils/Auth';
 import DaySchedule from "./components/DaySchedule"
-import DayScheduleForm from "./components/DayScheduleForm"
 
 const styles = theme => ({
   root: {
@@ -64,8 +63,7 @@ class Schedule extends Component {
     days:["Monday","Tuesday","Wednesday","Thursday","Friday"]
   };
 
-  timepickerState1 = React.createRef();
-  timepickerState2 = React.createRef();
+  refreshInfo = React.createRef();
 
   async componentWillMount() {
     let data = await (await fetch('/auth/loggedin')).json();
@@ -80,16 +78,20 @@ class Schedule extends Component {
     }   
   }
 
-  renderActivityInput = day =>{
-    if(this.state.userType === "staff"){
-    
-      return(
-        <DayScheduleForm day={day} orgId={this.state.orgId} />
-      )
-    }
-    else if(this.state.userType === "staff")
-        return (<div></div>)
+  refreshInfoFunc=()=>{
+    this.refreshInfo.current.renderInfo();
   }
+
+  // renderActivityInput = day =>{
+  //   if(this.state.userType === "staff"){
+    
+  //     return(
+  //       <DayScheduleForm refreshFunc={this.refreshInfoFunc} day={day} orgId={this.state.orgId} />
+  //     )
+  //   }
+  //   else if(this.state.userType === "parent")
+  //       return (<div></div>)
+  // }
 
   render() {
     const { classes } = this.props;
@@ -107,9 +109,9 @@ class Schedule extends Component {
                   </Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                  <DaySchedule day={day} orgId={this.state.orgId} />
+                  <DaySchedule day={day} ref={this.refreshInfo} orgId={this.state.orgId} role={this.state.userType} />
                 </ExpansionPanelDetails>
-                {this.renderActivityInput(day)}
+                {/* {this.renderActivityInput(day)} */}
               </ExpansionPanel>)              
             })}
           </div>

@@ -19,8 +19,7 @@ var sessionChecker = (req, res, next) => {
           }
         ]
       }).then(staff => {
-        // console.log("session checked");
-        // console.log(staff.dataValues.Organization.dataValues.name);
+
         const returnObj = {
           userId: staff.dataValues.id,
           userType: staff.dataValues.role,
@@ -43,8 +42,7 @@ var sessionChecker = (req, res, next) => {
         ]
       }).then(parent => {
         console.log("SESSION CHECKER PARENT ", parent);
-        // console.log("session checked");
-        // console.log("STUDNET DATAVALUES",parent.dataValues.Student.dataValues);
+
         const returnObj = {
           userId: parent.dataValues.id,
           userType: parent.dataValues.role,
@@ -61,10 +59,6 @@ var sessionChecker = (req, res, next) => {
   }
 }
 
-// route for Home-Page
-// router.get('/', sessionChecker, (req, res) => {
-//   res.send('test');
-// });
 
 // route for checking currently logged in user
 router.route("/loggedin").get(sessionChecker, (req, res) => {
@@ -163,8 +157,7 @@ router
     db[role]
       .findOne({ where: { email: email } })
       .then(function (user) {
-        // console.log("validate function", staff.validPassword(password));
-        // console.log(staff);
+
         console.log("logging in", user);
         if (!user) {
           res.send("Email does not exist in our database");
@@ -178,15 +171,7 @@ router
         }
       });
   });
-// route for staff logout
-// router.get("/logout/staff", (req, res) => {
-//   if (req.session.staff && req.cookies.user_sid) {
-//     res.clearCookie("user_sid");
-//     res.redirect("/");
-//   } else {
-//     res.redirect("/login");
-//   }
-// });
+
 
 // route for parent signup
 router.route("/signup/parent").post((req, res) => {
@@ -207,29 +192,6 @@ router.route("/signup/parent").post((req, res) => {
     });
 });
 
-// route for parent Login
-// router
-//   .route("/login/parent")
-//   .get(sessionChecker, (req, res) => {
-//     res.send("go to parent login");
-//   })
-//   .post((req, res) => {
-//     var email = req.body.email,
-//       password = req.body.password;
-
-//     db.Parent.findOne({ where: { email: email } })
-//       .then(function (parent) {
-//         if (!parent) {
-//           res.redirect("/login");
-//         } else if (!parent.validPassword(password)) {
-//           res.redirect("/login");
-//         } else {
-//           req.session.parent = parent.dataValues;
-//           res.send("parent logged in");
-//         }
-//       })
-//       .catch(err => console.log(err));
-//   });
 
 // logout
 router.get("/logout", (req, res) => {
@@ -371,25 +333,23 @@ function changedPassword(name, email, role, baseUrl, passResetKey) {
 }
 
 router.post("/changepass", (req, res) => {
-  console.log("route hit");
+  // console.log("Change pass");
   let { password, newPassword, baseUrl } = req.body;
-  let passResetKey = shortid.generate();
-  let passKeyExpires = new Date().getTime() + 20 * 60 * 1000;
+
   if (req.session) {
-    if (req.session.user.role === "Staff") {
+    // console.log(req.session.user, "REQ.SESSION.USER")
+    if (req.session.user.role === "staff") {
       if (req.session.user.email) {
-        let email = req.session.user.email;
+        let useremail = req.session.user.email;
         db.Staff.findOne({
           where: {
-            email: email
+            email: useremail
           }
         }).then(staff => {
           if (staff.validPassword(password)) {
+            // console.log("Change email, staff", staff)
             staff.getHash(newPassword);
-            staff.update({
-              passResetKey: passResetKey,
-              passKeyExpires: passKeyExpires
-            });
+
           } else {
             return res.json("Invalid password");
           }
@@ -408,12 +368,10 @@ router.post("/changepass", (req, res) => {
           }
           return res.json("Password successfully changed!");
         });
-        // .catch(err => {
-        //   res.json("Something went wrong, please relog to try again.");
-        // })
+
       }
     }
-    if (req.session.user.role === "Parent") {
+    if (req.session.user.role === "parent") {
       if (req.session.user.email === email) {
         let email = req.session.user.email;
         db.Parent.findOne({
@@ -422,10 +380,7 @@ router.post("/changepass", (req, res) => {
           }
         }).then(parent => {
           parent.getHash(newPassword);
-          parent.update({
-            passResetKey: passResetKey,
-            passKeyExpires: passKeyExpires
-          });
+
           try {
             console.log("trying to email");
             changedPassword(
@@ -485,7 +440,7 @@ router.post("/changeemail", (req, res) => {
   // let passResetKey = shortid.generate();
   // let passKeyExpires = new Date().getTime() + 20 * 60 * 1000;
   if (req.session) {
-    if (req.session.user.role === "Staff") {
+    if (req.session.user.role === "staff") {
       if (req.session.user.email) {
         let email = req.session.user.email;
         db.Staff.findOne({
@@ -503,13 +458,7 @@ router.post("/changeemail", (req, res) => {
           }
           try {
             console.log("trying to email");
-            // changedPassword(
-            //   staff.name,
-            //   staff.email,
-            //   "Staff",
-            //   baseUrl,
-            //   passResetKey
-            // );
+
             changedEmail(staff.name, staff.email, newEmail);
           } catch (error) {
             console.log(error);
@@ -522,7 +471,7 @@ router.post("/changeemail", (req, res) => {
         // })
       }
     }
-    if (req.session.user.role === "Parent") {
+    if (req.session.user.role === "parent") {
       if (req.session.user.email === email) {
         let email = req.session.user.email;
         db.Parent.findOne({
