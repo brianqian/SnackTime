@@ -106,7 +106,7 @@ class AddNap extends React.Component {
     this.setState({ open: false });
   };
 
-  postNap = id => {
+  postNap = async id => {
     let today = new Date();
     let date =
       today.getFullYear() +
@@ -115,23 +115,29 @@ class AddNap extends React.Component {
       '-' +
       today.getDate();
     console.log(date);
-    fetch(`/api/student/${id}/nap`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        napStart: this.state.napStart,
-        napEnd: this.state.napEnd,
-        date: date,
-      }),
-    })
-      .then(resp => {
-        console.log(resp);
-        return resp.json();
+    if(this.state.napStart < this.state.napEnd){
+      fetch(`/api/student/${id}/nap`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          napStart: this.state.napStart,
+          napEnd: this.state.napEnd,
+          date: date,
+        }),
       })
-      .then(resp => {
-        this.setState({ snackbarMessage: "Nap added." })
-        console.log(resp)
-      });
+        .then(resp => {
+          console.log(resp);
+          return resp.json();
+        })
+        .then(resp => {
+          this.setState({ snackbarMessage: "Nap added." },this.handleClickSnackbar())
+        });
+    }
+    else{
+      await this.setState({ snackbarMessage: "End Time should be greater than Start Time" })
+      this.handleClickSnackbar();
+    }
+    
   };
 
   render() {
