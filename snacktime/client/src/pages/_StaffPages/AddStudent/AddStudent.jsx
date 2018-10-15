@@ -13,6 +13,9 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 
 const styles = theme => ({
+  root: {
+    color: '#FFFFFF'
+  },
   container: {
     display: "grid",
     gridTemplateColumns: "repeat(4, 1fr)",
@@ -156,12 +159,12 @@ class OutlinedTextFields extends React.Component {
 
     return (
       <div className={classes.center}>
-        <HeaderBar type={this.state.userType} />
+        <HeaderBar type='staff' />
         <form className={classes.container} noValidate autoComplete="off">
           <TextField
             required
             id="outlined-name"
-            label="firstName"
+            label="First Name"
             name="firstName"
             className={`${classes.textField} ${classes.one}`}
             value={this.state.firstName}
@@ -172,7 +175,7 @@ class OutlinedTextFields extends React.Component {
           <TextField
             required
             id="outlined-name"
-            label="lastName"
+            label="Last Name"
             name="lastName"
             className={`${classes.textField} ${classes.one}`}
             value={this.state.lastName}
