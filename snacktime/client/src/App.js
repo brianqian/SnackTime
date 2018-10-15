@@ -29,7 +29,7 @@ import AddHighlight from './pages/_StaffPages/UpdateDailyReport/AddHighlight/Add
 import DailyReportArchive from './pages/DailyReportArchive/DailyReportArchive';
 import ParentSettings from './pages/_ParentPages/ParentHomePage/components/ParentSettings';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import NavBar from './pages/WelcomePage/components/NavBar/NavBar'
+import NavBar from './pages/WelcomePage/components/NavBar/NavBar';
 
 const theme = createMuiTheme({
   palette: {
@@ -90,6 +90,7 @@ class App extends Component {
             <Route exact path="/updatecalendar" component={UpdateCalendar} />
             <Route exact path="/archive" component={DailyReportArchive} />
             <Route exact path="/parentsettings" component={ParentSettings} />
+            <Route exact path="/schedule" component={Schedule} />
             <Route component={notFound} />
           </Switch>
         </Router>

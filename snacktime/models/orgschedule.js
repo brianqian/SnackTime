@@ -40,6 +40,14 @@ module.exports = function(sequelize, DataTypes) {
         defaultValue: false,
       },
     });
+
+    OrgSchedule.associate = function(models) {
+      models.OrgSchedule.belongsTo(models.Organization, {
+        foreignKey: {
+          allowNull: false,
+        },
+      });
+  }
   
     return OrgSchedule;
   };

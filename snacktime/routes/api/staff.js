@@ -127,7 +127,7 @@ router.route("/getallstaff").get(staffController.getAllStaff);
 /**********get all staff in org***********/
 
 /**************org schedule*****************/
-router.route("/orgschedule/:day").get(staffController.getOrgScheduleOfDay)
+router.route("/orgschedule/:orgId/day/:day").get(staffController.getOrgScheduleOfDay)
 router.route("/orgschedule").post(staffController.saveschedule);
 /**************org schedule*****************/
 
