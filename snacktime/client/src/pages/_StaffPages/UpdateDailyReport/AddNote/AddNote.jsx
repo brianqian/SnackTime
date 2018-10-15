@@ -144,7 +144,9 @@ class AddNote extends React.Component {
         console.log(resp);
         return resp.json();
       })
-      .then(resp => console.log(resp));
+      .then(resp => {
+        this.setState({snackbarMessage:"Note added"},this.handleClickSnackbar())
+      });
     }
     else if(this.state.role === "parent"){
       fetch(`/api/parent/student/${this.state.id}/report`, {
@@ -160,7 +162,9 @@ class AddNote extends React.Component {
           console.log(resp);
           return resp.json();
         })
-        .then(resp => console.log(resp));
+        .then(resp => {
+          this.setState({snackbarMessage:"Note added"},this.handleClickSnackbar())
+        });
       }
   };
 
@@ -185,7 +189,9 @@ class AddNote extends React.Component {
         console.log(resp);
         return resp.json();
       })
-      .then(resp => console.log(resp));
+      .then(resp => {
+        this.setState({snackbarMessage:"Note added"},this.handleClickSnackbar())
+      });
     }
     else if (this.state.role === "parent"){
       console.log("inside update note parent")
@@ -199,7 +205,9 @@ class AddNote extends React.Component {
         console.log(resp);
         return resp.json();
       })
-      .then(resp => console.log(resp));
+      .then(resp => {
+        this.setState({snackbarMessage:"Note added"},this.handleClickSnackbar())
+      });
     }
   };
 
@@ -232,7 +240,7 @@ class AddNote extends React.Component {
           margin="normal"
           variant="outlined"  
         />
-        <hr/>
+
       </div>)
     else if(this.state.role==="parent")
     return(<div>
@@ -246,7 +254,7 @@ class AddNote extends React.Component {
         margin="normal"
         variant="outlined"  
       />
-      <hr/>
+
     </div>)
   }
   render() {
