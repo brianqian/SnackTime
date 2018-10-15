@@ -1,0 +1,7 @@
+.create-new-parent-account {
+    display: flex;
+};
+
+.validationerror {
+    color:red;
+}
