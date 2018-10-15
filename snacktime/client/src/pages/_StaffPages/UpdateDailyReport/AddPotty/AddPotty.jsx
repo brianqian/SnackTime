@@ -91,7 +91,7 @@ class AddPotty extends React.Component {
     else this.state.studentIdsToSubmit.map(id => this.postPotty(id));
   };
 
-  handleClick = async (e, name, value) => {
+  handleClick = async (name, value) => {
     switch (value) {
       case 'Diaper':
         this.setState({ diaperColor: true, pottyColor: false, accidentColor: false });
@@ -113,10 +113,6 @@ class AddPotty extends React.Component {
         break;
     }
     this.setState({ [name]: value });
-    console.log(e.currentTarget)
-    const prevSelect = document.querySelectorAll(`.${name}`)
-    prevSelect.forEach(selected => selected.setAttribute('color', 'default'))
-    e.currentTarget.setAttribute('color', 'primary')
 
   };
 
@@ -199,7 +195,7 @@ class AddPotty extends React.Component {
                 variant="contained"
                 className="pottyPlace"
                 color={this.state.diaperColor ? 'primary' : 'default'}
-                onClick={(e) => this.handleClick(e, 'pottyPlace', 'Diaper')}
+                onClick={() => this.handleClick('pottyPlace', 'Diaper')}
               >
                 Diaper
               </Button>
@@ -208,7 +204,7 @@ class AddPotty extends React.Component {
                 className="pottyPlace"
                 // color='default'
                 color={this.state.pottyColor ? 'primary' : 'default'}
-                onClick={(e) => this.handleClick(e, 'pottyPlace', 'Potty')}
+                onClick={() => this.handleClick( 'pottyPlace', 'Potty')}
               >
                 Potty
               </Button>
@@ -217,7 +213,7 @@ class AddPotty extends React.Component {
                 className="pottyPlace"
                 // color='default'
                 color={this.state.accidentColor ? 'primary' : 'default'}
-                onClick={(e) => this.handleClick(e, 'pottyPlace', 'Accident')}
+                onClick={() => this.handleClick( 'pottyPlace', 'Accident')}
               >
                 Accident
               </Button>
@@ -228,7 +224,7 @@ class AddPotty extends React.Component {
                 className="pottyType"
                 // color={this.state.wetcolor}
                 color={this.state.wetColor ? 'primary' : 'default'}
-                onClick={(e) => this.handleClick(e, 'pottyType', 'Wet')}
+                onClick={() => this.handleClick( 'pottyType', 'Wet')}
               >
                 Wet
               </Button>
@@ -237,7 +233,7 @@ class AddPotty extends React.Component {
                 className="pottyType"
                 // color='default'
                 color={this.state.bmColor ? 'primary' : 'default'}
-                onClick={(e) => this.handleClick(e, 'pottyType', 'BM')}
+                onClick={() => this.handleClick( 'pottyType', 'BM')}
               >
                 BM
               </Button>
@@ -246,7 +242,7 @@ class AddPotty extends React.Component {
                 className="pottyType"
                 // color='default'
                 color={this.state.dryColor ? 'primary' : 'default'}
-                onClick={(e) => this.handleClick(e, 'pottyType', 'Dry')}
+                onClick={() => this.handleClick('pottyType', 'Dry')}
               >
                 Dry
               </Button>

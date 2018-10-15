@@ -1,4 +1,7 @@
-.dashboard__item > img {
-    height: 50px;
-    width: 50px;
+.dashboard__picture {
+    max-height: 70px;
+    max-width: 70px;
+    height: 100%;
+    width: 100%;
+    /* display:none; */
 }
