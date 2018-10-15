@@ -181,7 +181,7 @@ router.get("/logout/parent", (req, res) => {
 });
 
 router.post("/forgot/:role", (req, res) => {
-  let role = req.params.role
+  let role = req.params.role;
   console.log(role);
   let { email, baseUrl } = req.body; // same as let email = req.body.email
   console.log(role);
@@ -202,12 +202,16 @@ router.post("/forgot/:role", (req, res) => {
         .then(() => {
           var transporter = nodemailer.createTransport({
             service: "gmail",
-            type: "SMTP",
-            host: "smtp.gmail.com",
-            secure: true,
+            // type: "SMTP",
+            // host: "smtp.gmail.com",
+            // secure: true,
             auth: {
-              user: "snacktimeemail@gmail.com",
-              pass: "$$SnackTime33"
+              XOAuth2: {
+                user: "snacktimeemail@gmail.com",
+                clientId: process.env.CLIENT_ID,
+                clientSecret: process.env.CLIENT_SECRET,
+                refreshToken: process.env.REFRESH_TOKEN
+              }
             }
           });
           let mailOptions = {
