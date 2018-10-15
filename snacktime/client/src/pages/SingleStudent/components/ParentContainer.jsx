@@ -290,7 +290,7 @@ class ParentContainer extends Component {
         if (resp) {
           if (resp !== "No Notes") {
             console.log(resp);
-            this.setState({ noteForStaff: resp.noteForStaff });
+            this.setState({ noteForStaff: [[resp.noteForStaff]] });
           }
         }
       });
@@ -318,8 +318,8 @@ class ParentContainer extends Component {
           } else {
             console.log(resp);
             this.setState({
-              noteForParents: resp.noteForParents,
-              highlight: resp.highlight
+              noteForParents: [[resp.noteForParents]],
+              highlight: [[resp.highlight]]
             });
           }
         }
@@ -335,8 +335,8 @@ class ParentContainer extends Component {
           orgName: resp.name,
           orgAddress: resp.address,
           orgPhone: resp.phone,
-          orgOpenTime: resp.openTime,
-          orgCloseTime: resp.closeTime
+          orgOpenTime: moment(resp.openTime,"HH:mm:ss").format("hh:mm A"),
+          orgCloseTime: moment(resp.closeTime,"HH:mm:ss").format("hh:mm A"),
         })
       );
   };
@@ -350,9 +350,13 @@ class ParentContainer extends Component {
           if (resp === "No staffs found") {
             this.setState({ status: "No staffs found :(" });
           } else {
-            const staffs = [];
-            resp.map(staff => staffs.push(staff));
-            this.setState({ staffs });
+            let allStaffs = [];
+            resp.map(staff => {
+              let staffRow=[];
+              staffRow.push(staff.name, staff.email)
+              allStaffs.push(staffRow)
+            });
+            this.setState({ staffs:allStaffs });
           }
         }
       });
@@ -366,9 +370,13 @@ class ParentContainer extends Component {
           if (resp === "No pickup found") {
             this.setState({ status: "No pickup found :(" });
           } else {
-            const guardians = [];
-            resp.Pickups.map(guardian => guardians.push(guardian));
-            this.setState({ guardians });
+            let allGuardians = [];
+            resp.Pickups.map(guardian => {
+              let guardianRow =[];
+              guardianRow.push(guardian.name, guardian.phone, guardian.email, guardian.address)
+              allGuardians.push(guardianRow)
+            });
+            this.setState({ guardians:allGuardians });
           }
         }
       });
@@ -383,9 +391,13 @@ class ParentContainer extends Component {
           if (resp === "No parent found") {
             this.setState({ status: "No parents found :(" });
           } else {
-            const parents = [];
-            resp.Parents.map(parent => parents.push(parent));
-            this.setState({ parents: parents });
+            let allParents = [];
+            resp.Parents.map(parent => {
+              let parentRow=[];
+              parentRow.push(parent.name,parent.phone,parent.email,parent.address)
+              allParents.push(parentRow);
+            });
+            this.setState({ parents: allParents });
           }
         }
       });
@@ -776,29 +788,10 @@ class ParentContainer extends Component {
             <Typography className={classes.heading}>School</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <Paper className={classes.root}>
-              <Table className={classes.table}>
-                <TableHead>
-                  <TableRow key="header">
-                    <CustomTableCell>Name</CustomTableCell>
-                    <CustomTableCell>Phone</CustomTableCell>
-                    <CustomTableCell>Address</CustomTableCell>
-                    <CustomTableCell>Open Time</CustomTableCell>
-                    <CustomTableCell>Close Time</CustomTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow key={this.state.orgName}>
-                    <CustomTableCell>{this.state.orgName}</CustomTableCell>
-                    <CustomTableCell>{this.state.orgPhone}</CustomTableCell>
-                    <CustomTableCell>{this.state.orgAddress}</CustomTableCell>
-                    <CustomTableCell>{moment(this.state.orgOpenTime, "HH:mm:ss").format("hh:mm A")}</CustomTableCell>
-                    <CustomTableCell>{moment(this.state.orgCloseTime, "HH:mm:ss").format("hh:mm A")}</CustomTableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </Paper>
-          </ExpansionPanelDetails>
+        <div>
+          <ResponsiveTable title="School Information" columns={["Name", "Phone", "Address", "Open Time", "Close Time"]} data={[[this.state.orgName, this.state.orgPhone, this.state.orgAddress, this.state.orgOpenTime, this.state.orgCloseTime]]} />
+        </div>
+        </ExpansionPanelDetails>
         </ExpansionPanel>
       );
   }
@@ -812,26 +805,9 @@ class ParentContainer extends Component {
             <Typography className={classes.heading}>Staff</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <Paper className={classes.root}>
-              <Table className={classes.table}>
-                <TableHead>
-                  <TableRow key="header">
-                    <CustomTableCell>Name</CustomTableCell>
-                    <CustomTableCell>Email</CustomTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {this.state.staffs.map(staff => {
-                    return (
-                      <TableRow key={staff.id}>
-                        <CustomTableCell>{staff.name}</CustomTableCell>
-                        <CustomTableCell>{staff.email}</CustomTableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </Paper>
+            <div>
+              <ResponsiveTable title="Staff" columns={["Name", "Email"]} data={this.state.staffs} />
+            </div>
           </ExpansionPanelDetails>
         </ExpansionPanel>
       );
@@ -915,88 +891,27 @@ class ParentContainer extends Component {
       if (this.state.noteForParents && this.state.highlight) {
         return (
           <div>
-            <br />
-            <strong>Note for Parents</strong>
-            <Paper className={classes.root}>
-              <Table className={classes.table}>
-                <TableHead>
-                  <TableRow key="header">
-                    <CustomTableCell>Note</CustomTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow key="noteForParents">
-                    <CustomTableCell>
-                      {this.state.noteForParents}
-                    </CustomTableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </Paper>
-            <br />
-            <strong>Highlight</strong>
-            <Paper className={classes.root}>
-              <Table className={classes.table}>
-                <TableHead>
-                  <TableRow key="header">
-                    <CustomTableCell>Highlight</CustomTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow key="highlight">
-                    <CustomTableCell>{this.state.highlight}</CustomTableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </Paper>
-            <br />
+            <div>
+              <ResponsiveTable title="Note for Parents" columns={["Note"]} data={this.state.noteForParents} />
+            </div>
+            <div>
+              <ResponsiveTable title="Highlight of the day" columns={["Highlight"]} data={this.state.highlight} />
+            </div>
           </div>
         );
       }
       if (this.state.highlight) {
         return (
           <div>
-            <strong>Highlight</strong>
-            <Paper className={classes.root}>
-              <Table className={classes.table}>
-                <TableHead>
-                  <TableRow key="header">
-                    <CustomTableCell>Highlight</CustomTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow key="highlight">
-                    <CustomTableCell>{this.state.highlight}</CustomTableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </Paper>
-            <br />
-          </div>
+              <ResponsiveTable title="Highlight of the day" columns={["Highlight"]} data={this.state.highlight} />
+            </div>
         );
       }
       if (this.state.noteForParents) {
         return (
           <div>
-            <strong>Note for Parents</strong>
-            <Paper className={classes.root}>
-              <Table className={classes.table}>
-                <TableHead>
-                  <TableRow key="header">
-                    <CustomTableCell>Note</CustomTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow key="noteForParents">
-                    <CustomTableCell>
-                      {this.state.noteForParents}
-                    </CustomTableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </Paper>
-            <br />
-          </div>
+              <ResponsiveTable title="Note for Parents" columns={["Note"]} data={this.state.noteForParents} />
+            </div>
         );
       }
     }
@@ -1010,24 +925,8 @@ class ParentContainer extends Component {
       } else {
         return (
           <div>
-            <br />
-            <strong>Note from Parents</strong>
-            <Paper className={classes.root}>
-              <Table className={classes.table}>
-                <TableHead>
-                  <TableRow key="header">
-                    <CustomTableCell>Note</CustomTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow key="noteForStaff">
-                    <CustomTableCell>{this.state.noteForStaff}</CustomTableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </Paper>
-            <br />
-          </div>
+          <ResponsiveTable title="Note for Staff" columns={["Note"]} data={this.state.noteForStaff} />
+        </div>
         );
       }
     }
@@ -1037,30 +936,9 @@ class ParentContainer extends Component {
     const { classes } = this.props;
     if (this.state.guardians.length > 0) {
       return (
-        <Paper className={classes.root}>
-          <Table className={classes.table}>
-            <TableHead>
-              <TableRow key="header">
-                <CustomTableCell>Name</CustomTableCell>
-                <CustomTableCell>Phone</CustomTableCell>
-                <CustomTableCell>Email</CustomTableCell>
-                <CustomTableCell>Address</CustomTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.state.guardians.map(guardian => {
-                return (
-                  <TableRow key={guardian.id}>
-                    <CustomTableCell>{guardian.name}</CustomTableCell>
-                    <CustomTableCell>{guardian.phone}</CustomTableCell>
-                    <CustomTableCell>{guardian.email}</CustomTableCell>
-                    <CustomTableCell>{guardian.address}</CustomTableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </Paper>
+        <div>
+          <ResponsiveTable title="Guardians" columns={["Name", "Phone", "Email","Address"]} data={this.state.guardians} />
+       </div>
       );
     } else {
       return <div>No Guardian added</div>;
@@ -1071,30 +949,9 @@ class ParentContainer extends Component {
     const { classes } = this.props;
     if (this.state.parents.length > 0) {
       return (
-        <Paper className={classes.root}>
-          <Table className={classes.table}>
-            <TableHead>
-              <TableRow key="header">
-                <CustomTableCell>Name</CustomTableCell>
-                <CustomTableCell>Phone</CustomTableCell>
-                <CustomTableCell>Email</CustomTableCell>
-                <CustomTableCell>Address</CustomTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.state.parents.map(parent => {
-                return (
-                  <TableRow key={parent.id}>
-                    <CustomTableCell>{parent.name}</CustomTableCell>
-                    <CustomTableCell>{parent.phone}</CustomTableCell>
-                    <CustomTableCell>{parent.email}</CustomTableCell>
-                    <CustomTableCell>{parent.address}</CustomTableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </Paper>
+       <div>
+          <ResponsiveTable title="Parents" columns={["Name", "Phone", "Email","Address"]} data={this.state.parents} />
+       </div>
       );
     } else {
       return <div>No Parents added</div>;
@@ -1132,30 +989,11 @@ class ParentContainer extends Component {
               </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <Paper className={classes.root}>
-                <Table className={classes.table}>
-                  <TableHead>
-                    <TableRow key="header">
-                      <CustomTableCell>Address</CustomTableCell>
-                      <CustomTableCell>DOB</CustomTableCell>
-                      <CustomTableCell>Allergies</CustomTableCell>
-                      <CustomTableCell>Medications</CustomTableCell>
-                      <CustomTableCell>Note</CustomTableCell>
-                      <CustomTableCell>Doctor</CustomTableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow key={this.props.studentId}>
-                      <CustomTableCell>{this.props.address}</CustomTableCell>
-                      <CustomTableCell>{this.props.dob}</CustomTableCell>
-                      <CustomTableCell>{this.props.allergies}</CustomTableCell>
-                      <CustomTableCell>{this.props.medication}</CustomTableCell>
-                      <CustomTableCell>{this.props.notes}</CustomTableCell>
-                      <CustomTableCell>{this.props.doctor}</CustomTableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </Paper>
+        
+              <div>
+                <ResponsiveTable title="Student Information" columns={["Address", "DOB", "Allergies", "Medications", "Note", "Doctor"]} data={[[this.props.address, this.props.dob, this.props.allergies, this.props.medication, this.props.notes, this.props.doctor]]} />
+              </div>
+    
             </ExpansionPanelDetails>
           </ExpansionPanel>
           <ExpansionPanel>

@@ -224,7 +224,7 @@ class DailyReportArchive extends Component {
   renderNotesForStaff() {
     let noteForstaff =[];
     if(this.state.report.Reports.length >0 && this.state.report.Reports[0].noteForStaff)
-      noteForstaff.push(this.state.report.Reports[0].noteForStaff);
+      noteForstaff.push([this.state.report.Reports[0].noteForStaff]);
 
     const { classes } = this.props;
     if (this.state.report.Reports.length > 0 && this.state.report.Reports[0].noteForStaff) {
@@ -239,26 +239,15 @@ class DailyReportArchive extends Component {
   }
 
   renderNotesForParents() {
+    let noteForparent =[];
+    if (this.state.report.Reports.length > 0 && this.state.report.Reports[0].noteForParents)
+      noteForparent.push([this.state.report.Reports[0].noteForParents])
+
     const { classes } = this.props;
     if (this.state.report.Reports.length > 0 && this.state.report.Reports[0].noteForParents) {
       return (<div>
-        <br />
-        <strong>Notes For Parents</strong>
-        <Paper className={classes.root}>
-          <Table className={classes.table}>
-            <TableHead>
-              <TableRow key="header">
-                <CustomTableCell>Note</CustomTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow>
-                <CustomTableCell>{this.state.report.Reports[0].noteForParents}</CustomTableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </Paper>
-      </div>)
+          <ResponsiveTable title="Note For Parents" columns={["Note"]} data={noteForparent} />
+        </div>)
     } else {
       return (
         <div></div>
@@ -267,26 +256,15 @@ class DailyReportArchive extends Component {
   }
 
   renderHighlight() {
+    let highlight =[];
+    if (this.state.report.Reports.length > 0 && this.state.report.Reports[0].highlight)
+      highlight.push([this.state.report.Reports[0].highlight])
+
     const { classes } = this.props;
     if (this.state.report.Reports.length > 0 && this.state.report.Reports[0].highlight) {
       return (<div>
-        <br />
-        <strong>Highlight</strong>
-        <Paper className={classes.root}>
-          <Table className={classes.table}>
-            <TableHead>
-              <TableRow key="header">
-                <CustomTableCell>Highlight</CustomTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow>
-                <CustomTableCell>{this.state.report.Reports[0].highlight}</CustomTableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </Paper>
-      </div>)
+          <ResponsiveTable title="Highlight of the day" columns={["Highlight"]} data={highlight} />
+        </div>)
     } else {
       return (
         <div></div>
@@ -302,7 +280,7 @@ class DailyReportArchive extends Component {
     else {
       return (
         <div>
-          {/* {this.renderNotesForStaff()} */}
+          {this.renderNotesForStaff()}
           {this.renderNotesForParents()}
           {this.renderHighlight()}
           {this.renderDiaperings()}
