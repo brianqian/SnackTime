@@ -688,8 +688,10 @@ module.exports = {
   getOrgScheduleOfDay: function(req,res){
     db.OrgSchedule.findAll({
       where:{
-        day:req.params.day
-      }
+        day:req.params.day,
+        OrganizationId:req.params.orgId
+      },
+      order:[['activityStartTime','ASC']]
     })
     .then(schedule => res.json(schedule))
     .catch(err => res.status(422).json(err))
@@ -701,10 +703,12 @@ module.exports = {
       activityStartTime: req.body.startTime,
       activityEndTime: req.body.endTime,
       activityName:req.body.description,
-      activityCategory:req.body.category
+      activityCategory:req.body.category,
+      OrganizationId: req.body.orgId
     }).then(dbSchedule => res.json(dbSchedule))
     .catch(err => res.status(422).json(err));
 
-  }
+  },
+
   /***************org schedule by day************/
 };

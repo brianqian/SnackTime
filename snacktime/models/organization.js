@@ -41,6 +41,9 @@ module.exports = function(sequelize, DataTypes) {
     models.Organization.hasMany(models.Student, {
       onDelete: 'cascade',
     });
+    models.Organization.hasMany(models.OrgSchedule, {
+      onDelete: 'cascade',
+    });
   };
   return Organization;
 };
