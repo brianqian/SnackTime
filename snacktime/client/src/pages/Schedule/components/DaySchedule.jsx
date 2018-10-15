@@ -224,7 +224,56 @@ const CustomTableCell = withStyles(theme => ({
               </div>  
             );
           } else {
-            return <div>No Scheduled Activities!</div>;
+            return <div><div>No Scheduled Activities!</div>
+            {this.state.role=== 'staff'&& <div className="add-daily-activity">
+                  <form>
+                    <InputLabel htmlFor="activity-category">Category</InputLabel>
+                    <Select
+                      value={this.state.category}
+                      onChange={this.handleChange}
+                      inputProps={{
+                        name: 'category',
+                        id: 'category-simple',
+                      }}
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value={"Snack"}>Snack</MenuItem>
+                      <MenuItem value={"Nap"}>Nap</MenuItem>
+                      <MenuItem value={"Recreation"}>Recreation</MenuItem>
+                      <MenuItem value={"Education"}>Education</MenuItem>
+                    </Select>
+
+                    <div className="addactivity-starttime">
+                      <TimePicker ref={this.timepickerState1} setTime={this.setstartTime} />
+                    </div>
+
+                    <div className="addactivity-endtime">
+                      <TimePicker ref={this.timepickerState2} setTime={this.setendTime} />
+                    </div>
+
+                    <TextField
+                      name="description"
+                      onChange={this.handleChange}
+                      value={this.state.description}
+                      id="description"
+                      label="Activity Description"
+                      margin="normal"
+                      variant="outlined"
+                      type="text"
+                    />
+
+                    <Button
+                      className={classes.submitActivity}
+                      onClick={(e) => {this.handleSubmitNewActivity(e, this.state.day)}}
+                      type="submit"
+                    >
+                      Add Activity to Schedule
+                    </Button>
+                  </form>
+                </div>
+              }</div>;
           }
   }
   }
