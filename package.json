@@ -11,7 +11,7 @@
     "seed": "node scripts/seedDB.js",
     "install": "cd client && yarn install",
     "build": "cd client && npm run build",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "cd client && yarn install --only=dev && yarn install && yarn run build"
   },
   "author": "",
   "license": "ISC",
@@ -35,5 +35,8 @@
     "react-swipeable-views": "^0.13.0",
     "sequelize": "^4.39.0",
     "shortid": "^2.2.13"
+  },
+  "engines":{
+    "node": "10.2.1"
   }
 }
