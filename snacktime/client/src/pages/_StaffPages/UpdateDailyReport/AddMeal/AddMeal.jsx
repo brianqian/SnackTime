@@ -135,8 +135,7 @@ class AddMeal extends React.Component {
     }
     this.setState({ open: false });
     this.setState({
-      studentIdsToSubmit: [],
-      food: "",
+      studentIdsToSubmit: []
     })
   };
 
