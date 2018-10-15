@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './DashboardItem.css'
 
 const DashboardItem = props => {
   // if (props.notifications) {
@@ -30,8 +31,8 @@ const DashboardItem = props => {
           alt={props.title}
           className="dashboard__picture"
           src={props.image}
-          width="70"
-          height="70"
+          // width="70"
+          // height="70"
         />
       </Link>
       <div className="dashboard__title">
