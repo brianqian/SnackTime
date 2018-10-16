@@ -2,7 +2,14 @@
   "name": "snacktime",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3001",
+  "proxy": {
+    "/api": {
+      "target": "http://localhost:3001"
+    },
+    "/auth": {
+      "target": "http://localhost:3001"
+    }
+  },
   "dependencies": {
     "@material-ui/core": "^3.1.2",
     "@material-ui/icons": "^3.0.1",
@@ -19,7 +26,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "heroku-postbuild": "cd client && yarn install && yarn run build"
+    "heroku-postbuild": "cd client && `yarn install && yarn run build"
 
   },
   "eslintConfig": {
