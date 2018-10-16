@@ -111,7 +111,7 @@ class AddHighlight extends React.Component {
       body: JSON.stringify({
         studentId: this.state.id,
         highlight: this.state.highlight,
-        noteForParents:'',
+        noteForParents:null,
         date: date
       })
     })
