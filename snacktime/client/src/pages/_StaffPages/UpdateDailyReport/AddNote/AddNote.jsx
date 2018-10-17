@@ -136,7 +136,7 @@ class AddNote extends React.Component {
       body: JSON.stringify({
         studentId: this.state.id,
         noteForParents: this.state.noteForParents,
-        highlight:'',
+        highlight:null,
         date: date
       })
     })

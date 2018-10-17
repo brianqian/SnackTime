@@ -96,9 +96,9 @@ class ParentContainer extends Component {
     medicines: [],
     incidents: [],
     date: "",
-    noteForStaff: null,
-    noteForParents: null,
-    highlight: null,
+    noteForStaff: [[null]],
+    noteForParents: [[null]],
+    highlight: [[null]],
     validationErrorMssg: "",
     guardianValidationErrorMssg: ""
   };
@@ -883,12 +883,13 @@ class ParentContainer extends Component {
   }
 
   renderNoteForParents() {
+    
     if (this.props.role === "parent") {
-      
-      if (!this.state.noteForParents && !this.state.highlight) {
+
+      if (!this.state.noteForParents[0][0] && !this.state.highlight[0][0]) {
         return <div />;
       }
-      if (this.state.noteForParents && this.state.highlight) {
+      if (this.state.noteForParents[0][0] && this.state.highlight[0][0]) {
         return (
           <div>
             <div>
@@ -900,14 +901,14 @@ class ParentContainer extends Component {
           </div>
         );
       }
-      if (this.state.highlight) {
+      if (this.state.highlight[0][0]) {
         return (
           <div>
               <ResponsiveTable title="Highlight of the day" columns={["Highlight"]} data={this.state.highlight} />
             </div>
         );
       }
-      if (this.state.noteForParents) {
+      if (this.state.noteForParents[0][0]) {
         return (
           <div>
               <ResponsiveTable title="Note for Parents" columns={["Note"]} data={this.state.noteForParents} />
@@ -919,8 +920,8 @@ class ParentContainer extends Component {
 
   renderNoteForStaff() {
     if (this.props.role === "staff") {
-      
-      if (!this.state.noteForStaff) {
+
+      if (!this.state.noteForStaff[0][0]) {
         return <div />;
       } else {
         return (
