@@ -59,7 +59,7 @@ export default {
     } else if (data.userId) {
       console.log('USER AUTHORIZED');
       console.log(data.userType)
-      page.setState({
+      await page.setState({
         userName: data.name,
         userId: data.userId,
         userType: data.userType,

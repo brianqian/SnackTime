@@ -99,7 +99,7 @@ class Schedule extends Component {
     if(this.state.loggedIn){
     return (
       <div>
-        <HeaderBar />  
+        <HeaderBar type={this.state.userType} />
           <div className={classes.root}>
             {this.state.days.map(day=>{
               return(<ExpansionPanel key={day}>

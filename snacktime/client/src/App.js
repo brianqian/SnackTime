@@ -30,6 +30,7 @@ import DailyReportArchive from './pages/DailyReportArchive/DailyReportArchive';
 import ParentSettings from './pages/_ParentPages/ParentHomePage/components/ParentSettings';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import NavBar from './pages/WelcomePage/components/NavBar/NavBar';
+import AllOrgSchedule from './pages/_ParentPages/AllOrgSchedule/AllOrgSchedule';
 
 const theme = createMuiTheme({
   palette: {
@@ -76,11 +77,11 @@ class App extends Component {
             <Route exact path="/dailyreport/addmeal" component={AddMeal} />
             <Route exact path="/addnote" component={AddNote} />
             <Route exact path="/addhighlight" component={AddHighlight} />
-            <Route exact path="/dailyreport/addincident" component={AddIncident}
-            />
+            <Route exact path="/dailyreport/addincident" component={AddIncident}/>
             <Route exact path="/notauthorized" component={notAuthorized} />
             <Route exact path="/addstudent" component={AddStudent} />
             <Route exact path="/allstudentspage" component={AllStudents} />
+            <Route exact path="/allorgschedule" component={AllOrgSchedule} />
             <Route exact path="/forgotpassword" component={ForgotPassword} />
             <Route path="/resetpassword/:key" component={ResetPassword} />
             <Route path="/allstudentspage/:student" component={SingleStudent} />

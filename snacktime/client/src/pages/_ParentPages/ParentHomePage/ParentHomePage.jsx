@@ -40,8 +40,8 @@ class ParentHomePage extends Component {
               // notifications={this.state.studentNotifications}
             />
             <DashboardItem
-              title="Student Schedule"
-              destination=""
+              title="My Kids Schedule"
+              destination="/allorgschedule"
               image="/img/calendar.png"
               role="parent"
             />
