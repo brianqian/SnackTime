@@ -41,5 +41,8 @@ router.route('/parent/orgstaff/:orgId')
 
 router.route('/parent/org/:orgId')
     .get(parentController.getChildOrg)  //get org info of child
+
+router.route('/parent/allstudentorg/:parentId')
+    .get(parentController.getAllStudentOrgs) //get all orgs info all kids
 /**************Organization & Staff*****************/
 module.exports = router;

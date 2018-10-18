@@ -138,5 +138,24 @@ saveReport: function(req, res) {
       .then(dbReport => res.json(dbReport))
       .catch(err => res.status(422).json(err));
   },
+
+  getAllStudentOrgs: function(req,res){
+      db.Organization.findAll({
+        attributes:["id","name"],
+        include : [{
+            model: db.Student,
+            attributes:["id"],
+            include:[{
+                model:db.Parent,
+                attributes:["id"],
+                where:{
+                    id:req.params.parentId
+                }
+            }]
+        }],
+      })
+      .then(dbOrgs => res.json(dbOrgs))
+      .catch(err => res.status(422).json(err));
+  }
   
 };
