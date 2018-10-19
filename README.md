@@ -86,7 +86,7 @@ Parents can maintain a history of all reports for their kids from their respecti
 
 ## Models
 
-![Models and Relationships](snacktime/client/public/img/models.png)
+![Models and Relationships](snacktime/client/public/img/Models.png)
 
 ## Code snippets
 
