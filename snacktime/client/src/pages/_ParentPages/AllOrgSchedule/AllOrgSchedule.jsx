@@ -67,25 +67,6 @@ class SimpleTabs extends React.Component {
       .catch(err => console.log(err))
   };
 
-  renderOrgSchdule(day,id) {
-    const { classes } = this.props;
-    console.log("OrgId:",id)
-    console.log("Day:", day)
-    return(
-        <div>
-            <ExpansionPanel key={day}>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography className={classes.heading}>
-                        {day}
-                    </Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                    <DaySchedule day={day} orgId={id} role="parent" />
-                </ExpansionPanelDetails>
-            </ExpansionPanel>
-        </div>)              
-  }
-
   handleChange = (event, value) => {
     this.setState({ value });
     console.log(value)

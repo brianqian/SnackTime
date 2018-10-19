@@ -22,33 +22,32 @@ Parents can maintain a history of all reports for their kids from their respecti
 
 ### Welcome Page
 
-<!-- Taylor please image here -->
-
-![Welcome Page]()
+![Welcome Page](snacktime/client/public/img/welcome.png)
 
 ### Parent HomePage
 
-<!-- Taylor please image here -->
-
-![Parent Home Page]()
+![Parent Home Page](snacktime/client/public/img/parenthome.png)
 
 ### Staff HomePage
 
-<!-- Taylor please image here -->
-
-![Staff Home Page]()
+![Staff Home Page](snacktime/client/public/img/staffhome.png)
 
 ### Student Page
 
-<!-- Taylor please add image here -->
-
-![Student Page]()
+![Student Page](snacktime/client/public/img/singlestudent.png)
 
 ### Student Report Archive
 
-<!-- Taylor please image here -->
+![Report Archive](snacktime/client/public/img/reportarchive.png)
 
-![Report Archive]()
+### Org Schedule
+
+![Organization Schedule](snacktime/client/public/img/orgschedule.png)
+
+### Add Activity to report
+
+![Add Activity](snacktime/client/public/img/addactivity.png)
+
 
 ## Technologies used
 
@@ -61,38 +60,37 @@ Parents can maintain a history of all reports for their kids from their respecti
 
 ## Node/React Packages/Libraries used
 
-<!-- Bryan, please list server side dependencies here -->
-
 ### Server Side
 
-1. [Nodemailer](https://nodemailer.com/about/)
+1. [nodemailer](https://nodemailer.com/about/)
 2. [bcrypt-nodejs](https://www.npmjs.com/package/bcrypt-nodejs)
-3. [Express.js](https://expressjs.com/)
-4. [Express-Router](https://www.npmjs.com/package/express-router)
-5. [Express-Session](https://www.npmjs.com/package/express-session)
-6. [.ENV](https://www.npmjs.com/package/dotenv)
-7. [Moment.js](https://momentjs.com/)
+3. [express.js](https://expressjs.com/)
+4. [express-router](https://www.npmjs.com/package/express-router)
+5. [express-session](https://www.npmjs.com/package/express-session)
+6. [.env](https://www.npmjs.com/package/dotenv)
+7. [moment.js](https://momentjs.com/)
 8. [Sequelize](http://docs.sequelizejs.com/)
 9. [shortid](https://www.npmjs.com/package/shortid)
 
-<!-- Brian, please list client side dependencies here -->
 
 ### Client Side
 
-1. @material-ui/core
-2.
+1. [@material-ui/core](https://material-ui.com/)
+2. [react](https://reactjs.org/docs/react-api.html)
+3. [react-calendar](https://www.npmjs.com/package/react-calendar)
+4. [react-dom](https://reactjs.org/docs/react-dom.html)
+5. [react-scripts](https://www.npmjs.com/package/react-scripts)
+6. [mui-datatables](https://www.npmjs.com/package/mui-datatables)
+7. [@material-ui/icons](https://material-ui.com/style/icons/)
+8. [moment.js](https://momentjs.com/)
 
 ## Models
 
-<!-- Ajita Will add model image here -->
-
-![Models and Relationships]()
+![Models and Relationships](snacktime/client/public/img/Models.png)
 
 ## Code snippets
 
 ### server
-
-<!-- Bryan please add code snippets from server.js-->
 
 The code below is how we set up some of the variables used in our server.
 
@@ -134,7 +132,91 @@ db.sequelize.sync({ force: false }).then(function() {
 ### view
 
 <!-- Ajita Start-->
+Report Archive page is used by both parents and staffs. React's modularity allowed us to reuse this particluar page.
 
+As the user changes the date in calendar, below function is triggered.
+```js
+onChange = date => {
+    this.setState({ date }, function () {
+      let date =
+        this.state.date.getFullYear() +
+        '-' +
+        (this.state.date.getMonth() + 1) +
+        '-' +
+        this.state.date.getDate();
+      console.log("Date: ", date);
+      fetch(`api/student/${this.state.studentId}/reportconsolidated/${date}`)
+        .then(res => res.json())
+        .then(res => this.setState({ report: res }, function () {
+          if (res.Meals.length > 0 || res.Diaperings.length > 0 || res.Incidents.length > 0 || res.Medicines.length > 0 || res.Naps.length > 0 || res.Reports.length > 0)
+            this.setState({ reportExists: true })
+          else
+            this.setState({ reportExists: false })
+        }))
+    })
+  }
+```
+
+Rendering the report sections on the page once the date is picked on calendar by user.
+```js
+  renderFullReport = () => {
+    if (!this.state.reportExists)
+      return (<div><p>No report available for selected date</p></div>)
+    else {
+      return (
+        <div>
+          {this.renderNotesForStaff()}
+          {this.renderNotesForParents()}
+          {this.renderHighlight()}
+          {this.renderDiaperings()}
+          {this.renderMeals()}
+          {this.renderNaps()}
+          {this.renderMeds()}
+          {this.renderIncidents()}
+        </div>
+      )
+    }
+  }
+```
+
+For organization schedule, a parent needs to see schedules for all the orgs his kids go to. For this purpose, there are tabs for all relavant organizations. On click of each tab, it shows weekly schedule of the selected organization.
+
+```js
+render() {
+    const { classes } = this.props;
+    const { value } = this.state;
+
+    if (this.state.loggedIn && this.state.hasOrgs) {
+    return (
+      <div className={classes.root}>
+      <HeaderBar type="parent"/>
+        <AppBar position="static">
+          <Tabs value={value} onChange={this.handleChange}>
+          {this.state.allOrgs.map(org=> <Tab label={org.name} />)}
+          </Tabs>
+        </AppBar>
+        {this.state.allOrgs.map((org,index)=>{
+            if(value === index)
+                return(
+                <TabContainer>
+                    {this.state.days.map(day=>
+                        <ExpansionPanel key={day}>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                            <Typography className={classes.heading}>
+                                {day}
+                            </Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                            <DaySchedule day={day} orgId={org.id} role="parent" />
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                    )}
+                </TabContainer>
+                )
+        })}
+        </div>
+        )}
+```
 <!--Ajita End-->
 <!-- Taylor Start-->
 
@@ -143,7 +225,6 @@ db.sequelize.sync({ force: false }).then(function() {
 
 <!--Brian End-->
 <!-- Bryan Start-->
-
 React allowed us to build one page out of many smaller components. This allowed us to all work on different components and use them else where on our application. For example, we have this responsive table from [MUI-datatables](https://www.npmjs.com/package/mui-datatables).
 
 We can pass in the data that fills the table as props from the component that holds the tables. This allows us to reuse this table on any page we need to display a table.
@@ -212,19 +293,148 @@ Components allow us to do something like this. Each table takes in a different p
   columns={["Start Time", "End Time"]}
 />
 ```
-
 <!--Bryan End-->
 
-### controller
+### Controller
 
-<!-- Ajita will add staff and parent controller functions -->
-<!--Ajita Start-->
+Below are few of the controller functions used in this app. Three major sections in these apps are: Staff functions, Parent functions and authorization functions.
 
-<!--Ajita End-->
-<!-- Bryan will add auth controller functions -->
-<!--Bryan Start-->
+#### Staff and Parent Controller functions
 
-### Authentication
+The function below gets us all parents' emails belonging to an organization. This means finding parents whose kids belong the given organization.
+
+```js
+  getAllParentsEmail: function (req, res) {
+    db.Parent.findAll({
+      attributes: ["email"],
+      include: [
+        {
+          model: db.Student,
+          where: { OrganizationId: req.params.orgId },
+          attributes: ["id"]
+        }
+      ]
+    }).then(dbStudents => {
+      console.log(dbStudents);
+      res.json(dbStudents);
+    });
+  },
+```
+
+Below given function will give us back a consolidated report of a student for a particular date.
+
+```js
+getReportConsolidated: function (req, res) {
+    console.log("Req ", req.params);
+    db.Student.findOne({
+      where: {
+        id: req.params.studentId
+      },
+      include: [{
+        model: db.Meal,
+        required: false,
+        as: 'Meals',
+        where: { date: req.params.date }
+      },
+      {
+        model: db.Diapering,
+        required: false,
+        as: 'Diaperings',
+        where: { date: req.params.date }
+      },
+      {
+        model: db.Nap,
+        required: false,
+        as: 'Naps',
+        where: { date: req.params.date }
+      },
+      {
+        model: db.Incident,
+        required: false,
+        as: 'Incidents',
+        where: { date: req.params.date }
+      },
+      {
+        model: db.Medicine,
+        required: false,
+        as: 'Medicines',
+        where: { date: req.params.date }
+      },
+      {
+        model: db.Report,
+        required: false,
+        as: "Reports",
+        where: { date: req.params.date }
+      }]
+    })
+      .then(dbStudent => {
+        console.log("DB STUDENT", dbStudent);
+        res.json(dbStudent);
+      })
+      .catch(err => res.status(422).json(err));
+  },
+```
+
+Below code is executed in order to send mass emails to parents of the organization.
+```js
+emailParents: function (req, res) {
+    try {
+      var transporter = nodemailer.createTransport({
+        service: "gmail",
+        type: "SMTP",
+        host: "smtp.gmail.com",
+        secure: true,
+        auth: {
+          user: "snacktimeemail@gmail.com",
+          pass: process.env.EMAIL_PASSWORD
+        }
+      });
+      let mailOptions = {
+        subject: `Snack Time | ${req.body.subject}`,
+        bcc: req.body.emails,
+        from: `Snack Time <snacktimeemail@gmail.com>`,
+        html: `
+          <h4>Greetings Parent!</h4>
+          <p>${req.body.body}</p>
+          <h4>Thanks! Snack Time Team</h4>`
+      };
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("Email sent: " + info.response);
+          res.json("Please check your email.");
+        }
+      });
+    } catch (error) {
+      console.log("email failed");
+    }
+  },
+```
+
+Below code is used to find all different organizations a parent's kids go to.
+```js
+getAllStudentOrgs: function(req,res){
+      db.Organization.findAll({
+        attributes:["id","name"],
+        include : [{
+            model: db.Student,
+            attributes:["id"],
+            include:[{
+                model:db.Parent,
+                attributes:["id"],
+                where:{
+                    id:req.params.parentId
+                }
+            }]
+        }],
+      })
+      .then(dbOrgs => res.json(dbOrgs))
+      .catch(err => res.status(422).json(err));
+  }
+```
+
+#### Authentication controller functions
 
 The code below is the route we would hit when we sign up a new staff. The front end will do a post call with the required data, then we would create a new staff model in the database and store the new user in the express session.
 
@@ -322,8 +532,6 @@ router.post("/forgot/:role", (req, res) => {
 });
 ```
 
-<!--Bryan End-->
-
 ## Learning points
 
 1. Creating a full stack web application.
@@ -343,7 +551,7 @@ router.post("/forgot/:role", (req, res) => {
 - [Taylor Skeels Github](https://github.com/skeeis) | [Taylor Skeels Portfolio](https://skeeis.github.io/Personal-Portfolio/)
   <!-- Brian please add your info -->
 - [Brian Qian Github]() | [Brian Qian Portfolio]()
-  <!-- Bryan please add your info -->
+
 - [Bryan Liang Github](https://github.com/liangbryan2) | [Bryan Liang Portfolio](https://liangbryan2.github.io/Portfolio/)
 
 ## License
