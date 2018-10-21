@@ -140,6 +140,10 @@ class OutlinedTextFields extends React.Component {
         console.log(result);
         if (result.name !== "SequelizeValidationError") {
           this.handleClick();
+          setTimeout(function(){
+            window.location.href='/staffhomepage'
+          },1000)
+          
         }
       });
   };
