@@ -66,9 +66,11 @@ const CustomTableCell = withStyles(theme => ({
   class DaySchedule extends React.Component {
     state = { 
       day: this.props.day,
-      activities:[[null]],
+      activityData:[[null]],
       orgId:this.props.orgId,
-      role:this.props.role
+      role:this.props.role,
+      showform:false,
+      activities:[]
     };
 
         timepickerState1 = React.createRef();
@@ -89,7 +91,7 @@ const CustomTableCell = withStyles(theme => ({
           activityRow.push(moment(activity.activityStartTime, "HH:mm:ss").format("hh:mm A"),moment(activity.activityEndTime, "HH:mm:ss").format("hh:mm A"), activity.activityCategory, activity.activityName);
           allActivities.push(activityRow);
         });
-        this.setState({ activityData: allActivities})})
+        this.setState({ activityData: allActivities, activities:resp})})
     }
 
     handleChange = e =>{
@@ -104,6 +106,7 @@ const CustomTableCell = withStyles(theme => ({
       e.preventDefault();
       let startTime = this.timepickerState1.current.returnTime();
       let endTime = this.timepickerState2.current.returnTime();
+
       console.log('START AND END', startTime, endTime);
       await this.setState({startTime: startTime, endTime: endTime})
       let url = window.location.href;
@@ -119,6 +122,7 @@ const CustomTableCell = withStyles(theme => ({
       };
       console.log(newObj);
       await this.setState({ addActivity: newObj });
+      
       fetch(`/api/orgschedule`, {
         method: "POST",
         headers: { "Content-type": "application/json" },
@@ -144,16 +148,22 @@ const CustomTableCell = withStyles(theme => ({
         });
     };
 
+    handleShowForm = e => {
+      e.preventDefault();
+      this.setState({showform:true})
+
+    }
+
     render() {
         const {classes} = this.props
         console.log(this.props.orgId)
-        if (this.state.activities.length > 0) {
+        if (this.state.activities.length>0) {
             return (
               <div>
                 <div>
                   <ResponsiveTable title="Schedule" columns={["Start Time", "End Time", "Category","Activity"]} data={this.state.activityData} />
                 </div>
-                {this.state.role=== 'staff'&& <div className="add-daily-activity">
+                {this.state.showform && <div className="add-daily-activity">
                   <form>
                     <InputLabel htmlFor="activity-category">Category</InputLabel>
                     <Select
@@ -200,13 +210,16 @@ const CustomTableCell = withStyles(theme => ({
                       Add Activity to Schedule
                     </Button>
                   </form>
+                </div>}
+                {this.state.role=== 'staff'&& !this.state.showform && <div>
+                  <Button onClick={this.handleShowForm}>Add Activity</Button>
                 </div>
-              }
+                }
               </div>  
             );
           } else {
             return <div><div>No Scheduled Activities!</div>
-            {this.state.role=== 'staff'&& <div className="add-daily-activity">
+            {this.state.showform && <div className="add-daily-activity">
                   <form>
                     <InputLabel htmlFor="activity-category">Category</InputLabel>
                     <Select
@@ -253,7 +266,10 @@ const CustomTableCell = withStyles(theme => ({
                       Add Activity to Schedule
                     </Button>
                   </form>
-                </div>
+                </div>}
+            {this.state.role=== 'staff'&& !this.state.showform && <div>
+              <Button onClick={this.handleShowForm}>Add Activity</Button>
+            </div>
               }</div>;
           }
   }
