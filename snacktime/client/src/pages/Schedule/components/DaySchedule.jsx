@@ -20,6 +20,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from "@material-ui/core/Button";
 import TimePicker from "../../../components/TimePicker/TimePicker";
 import TextField from "@material-ui/core/TextField";
+import ResponsiveTable from "../../SingleStudent/components/ResponsiveTable"
 
 const CustomTableCell = withStyles(theme => ({
     head: {
@@ -65,7 +66,7 @@ const CustomTableCell = withStyles(theme => ({
   class DaySchedule extends React.Component {
     state = { 
       day: this.props.day,
-      activities:[],
+      activities:[[null]],
       orgId:this.props.orgId,
       role:this.props.role
     };
@@ -78,14 +79,17 @@ const CustomTableCell = withStyles(theme => ({
         
     }
     renderInfo = async ()=>{
-      console.log(this.props)
       await this.setState({orgId: this.props.orgId})
-      console.log(this.state)
-      console.log(`/api/orgschedule/${this.state.orgId}/day/${this.state.day}`)
       fetch(`/api/orgschedule/${this.state.orgId}/day/${this.state.day}`)
       .then(res=>res.json())
       .then(resp =>{
-          this.setState({activities: resp})})
+        let allActivities = [];
+        resp.forEach(activity => {
+          let activityRow = [];
+          activityRow.push(moment(activity.activityStartTime, "HH:mm:ss").format("hh:mm A"),moment(activity.activityEndTime, "HH:mm:ss").format("hh:mm A"), activity.activityCategory, activity.activityName);
+          allActivities.push(activityRow);
+        });
+        this.setState({ activityData: allActivities})})
     }
 
     handleChange = e =>{
@@ -147,30 +151,7 @@ const CustomTableCell = withStyles(theme => ({
             return (
               <div>
                 <div>
-                  <Paper className={classes.root}>
-                    <Table className={classes.table}>
-                      <TableHead>
-                        <TableRow key="header">
-                          <CustomTableCell>Start Time</CustomTableCell>
-                          <CustomTableCell>End Time</CustomTableCell>
-                          <CustomTableCell>Activity</CustomTableCell>
-                          <CustomTableCell>Category</CustomTableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {this.state.activities.map(activity => {
-                          return (
-                            <TableRow key={activity.id}>
-                              <CustomTableCell>{moment(activity.activityStartTime,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
-                              <CustomTableCell>{moment(activity.activityEndTime,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
-                              <CustomTableCell>{activity.activityName}</CustomTableCell>
-                              <CustomTableCell>{activity.activityCategory}</CustomTableCell>
-                            </TableRow>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
-                  </Paper>
+                  <ResponsiveTable title="Schedule" columns={["Start Time", "End Time", "Category","Activity"]} data={this.state.activityData} />
                 </div>
                 {this.state.role=== 'staff'&& <div className="add-daily-activity">
                   <form>
