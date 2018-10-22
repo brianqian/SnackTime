@@ -144,9 +144,11 @@ saveReport: function(req, res) {
         attributes:["id","name"],
         include : [{
             model: db.Student,
+            required:true,
             attributes:["id"],
             include:[{
                 model:db.Parent,
+                required:true,
                 attributes:["id"],
                 where:{
                     id:req.params.parentId
