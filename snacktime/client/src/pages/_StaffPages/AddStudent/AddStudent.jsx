@@ -132,7 +132,8 @@ class OutlinedTextFields extends React.Component {
         allergies: this.state.allergies,
         medication: this.state.meds,
         doctor: this.capitalize(this.state.doctor),
-        orgId: this.state.orgId
+        orgId: this.state.orgId,
+        image:this.state.image
       })
     })
       .then(res => res.json())
@@ -157,6 +158,28 @@ class OutlinedTextFields extends React.Component {
     }
     this.setState({ open: false });
   };
+
+  handleFileChange = async (e) =>{
+    e.preventDefault();
+    console.log(e.target.files[0])
+    let myFile = e.target.files[0]
+    var reader = new FileReader();
+    var fileByteArray = [];
+    let that = this;
+    reader.readAsArrayBuffer(myFile);
+    reader.onloadend = function (evt) {
+        if (evt.target.readyState == FileReader.DONE) {
+          var arrayBuffer = evt.target.result,
+              array = new Uint8Array(arrayBuffer);
+          for (var i = 0; i < array.length; i++) {
+              fileByteArray.push(array[i]);
+            }
+            console.log(fileByteArray)
+            that.setState({image:fileByteArray})
+        }
+}
+
+  }
 
   render() {
     const { classes } = this.props;
@@ -280,21 +303,7 @@ class OutlinedTextFields extends React.Component {
             margin="normal"
             variant="outlined"
           />
-          {/* <InputLabel htmlFor="age-simple">Staff</InputLabel>
-          <Select
-            native
-            name='staff'
-            value=""
-            //onChange={this.handleChange}
-            inputProps={{
-              name: 'staff',
-              id: 'age-simple',
-            }}
-          >
-          <option value=""></option>
-          <option></option>
-
-          </Select> */}
+          <input type="file" onChange= {this.handleFileChange}/>
           <Button
             variant="contained"
             size="small"

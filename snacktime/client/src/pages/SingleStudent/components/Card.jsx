@@ -39,8 +39,9 @@ const styles = theme => ({
   expandOpen: {
     transform: 'rotate(180deg)',
   },
-  avatar: {
-    backgroundColor: red[500],
+  bigAvatar: {
+    width: 180,
+    height: 180,
   },
   root: {
     width: '100%',
@@ -143,6 +144,13 @@ class SingleStudentCard extends React.Component {
       return (
         <Card className={classes.card}>
           <CardHeader
+           avatar={
+            <Avatar
+                alt={this.props.name}
+                src={`data:image/png;base64,${this.props.image}`}
+                className={classes.bigAvatar}
+            />
+          }
             action={this.renderNoteButton()}
             classes={{
               title: classes.title,

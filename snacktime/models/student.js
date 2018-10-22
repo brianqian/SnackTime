@@ -33,6 +33,9 @@ module.exports = function(sequelize, DataTypes) {
     doctor: {
       type: DataTypes.STRING,
     },
+    image:{
+      type:DataTypes.BLOB('long')
+    }
   });
   Student.associate = function(models) {
     models.Student.hasMany(models.Pickup, {
