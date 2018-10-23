@@ -38,7 +38,8 @@ module.exports = {
       allergies: req.body.allergies,
       medication: req.body.medication,
       doctor: req.body.doctor,
-      OrganizationId: req.body.orgId
+      OrganizationId: req.body.orgId,
+      image: req.body.image
     })
       .then(dbStudent => res.json(dbStudent))
       .catch(err => res.status(422).json(err));

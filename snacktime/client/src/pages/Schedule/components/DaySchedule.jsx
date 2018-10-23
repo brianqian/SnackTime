@@ -20,6 +20,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from "@material-ui/core/Button";
 import TimePicker from "../../../components/TimePicker/TimePicker";
 import TextField from "@material-ui/core/TextField";
+import ResponsiveTable from "../../SingleStudent/components/ResponsiveTable"
 
 const CustomTableCell = withStyles(theme => ({
     head: {
@@ -65,9 +66,11 @@ const CustomTableCell = withStyles(theme => ({
   class DaySchedule extends React.Component {
     state = { 
       day: this.props.day,
-      activities:[],
+      activityData:[[null]],
       orgId:this.props.orgId,
-      role:this.props.role
+      role:this.props.role,
+      showform:false,
+      activities:[]
     };
 
         timepickerState1 = React.createRef();
@@ -78,14 +81,17 @@ const CustomTableCell = withStyles(theme => ({
         
     }
     renderInfo = async ()=>{
-      console.log(this.props)
       await this.setState({orgId: this.props.orgId})
-      console.log(this.state)
-      console.log(`/api/orgschedule/${this.state.orgId}/day/${this.state.day}`)
       fetch(`/api/orgschedule/${this.state.orgId}/day/${this.state.day}`)
       .then(res=>res.json())
       .then(resp =>{
-          this.setState({activities: resp})})
+        let allActivities = [];
+        resp.forEach(activity => {
+          let activityRow = [];
+          activityRow.push(moment(activity.activityStartTime, "HH:mm:ss").format("hh:mm A"),moment(activity.activityEndTime, "HH:mm:ss").format("hh:mm A"), activity.activityCategory, activity.activityName);
+          allActivities.push(activityRow);
+        });
+        this.setState({ activityData: allActivities, activities:resp})})
     }
 
     handleChange = e =>{
@@ -100,6 +106,7 @@ const CustomTableCell = withStyles(theme => ({
       e.preventDefault();
       let startTime = this.timepickerState1.current.returnTime();
       let endTime = this.timepickerState2.current.returnTime();
+
       console.log('START AND END', startTime, endTime);
       await this.setState({startTime: startTime, endTime: endTime})
       let url = window.location.href;
@@ -115,6 +122,7 @@ const CustomTableCell = withStyles(theme => ({
       };
       console.log(newObj);
       await this.setState({ addActivity: newObj });
+      
       fetch(`/api/orgschedule`, {
         method: "POST",
         headers: { "Content-type": "application/json" },
@@ -140,39 +148,22 @@ const CustomTableCell = withStyles(theme => ({
         });
     };
 
+    handleShowForm = e => {
+      e.preventDefault();
+      this.setState({showform:true})
+
+    }
+
     render() {
         const {classes} = this.props
         console.log(this.props.orgId)
-        if (this.state.activities.length > 0) {
+        if (this.state.activities.length>0) {
             return (
               <div>
                 <div>
-                  <Paper className={classes.root}>
-                    <Table className={classes.table}>
-                      <TableHead>
-                        <TableRow key="header">
-                          <CustomTableCell>Start Time</CustomTableCell>
-                          <CustomTableCell>End Time</CustomTableCell>
-                          <CustomTableCell>Activity</CustomTableCell>
-                          <CustomTableCell>Category</CustomTableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {this.state.activities.map(activity => {
-                          return (
-                            <TableRow key={activity.id}>
-                              <CustomTableCell>{moment(activity.activityStartTime,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
-                              <CustomTableCell>{moment(activity.activityEndTime,"HH:mm:ss").format("hh:mm A")}</CustomTableCell>
-                              <CustomTableCell>{activity.activityName}</CustomTableCell>
-                              <CustomTableCell>{activity.activityCategory}</CustomTableCell>
-                            </TableRow>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
-                  </Paper>
+                  <ResponsiveTable title="Schedule" columns={["Start Time", "End Time", "Category","Activity"]} data={this.state.activityData} />
                 </div>
-                {this.state.role=== 'staff'&& <div className="add-daily-activity">
+                {this.state.showform && <div className="add-daily-activity">
                   <form>
                     <InputLabel htmlFor="activity-category">Category</InputLabel>
                     <Select
@@ -219,13 +210,16 @@ const CustomTableCell = withStyles(theme => ({
                       Add Activity to Schedule
                     </Button>
                   </form>
+                </div>}
+                {this.state.role=== 'staff'&& !this.state.showform && <div>
+                  <Button onClick={this.handleShowForm}>Add Activity</Button>
                 </div>
-              }
+                }
               </div>  
             );
           } else {
             return <div><div>No Scheduled Activities!</div>
-            {this.state.role=== 'staff'&& <div className="add-daily-activity">
+            {this.state.showform && <div className="add-daily-activity">
                   <form>
                     <InputLabel htmlFor="activity-category">Category</InputLabel>
                     <Select
@@ -272,7 +266,10 @@ const CustomTableCell = withStyles(theme => ({
                       Add Activity to Schedule
                     </Button>
                   </form>
-                </div>
+                </div>}
+            {this.state.role=== 'staff'&& !this.state.showform && <div>
+              <Button onClick={this.handleShowForm}>Add Activity</Button>
+            </div>
               }</div>;
           }
   }
