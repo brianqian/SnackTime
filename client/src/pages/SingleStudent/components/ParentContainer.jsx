@@ -18,7 +18,7 @@ import TableCell from "@material-ui/core/TableCell";
 import indigo from "@material-ui/core/colors/indigo";
 import moment from "moment";
 import { Link } from "react-router-dom";
-import ResponsiveTable from "./ResponsiveTable"
+import ResponsiveTable from "./ResponsiveTable";
 
 // const CustomTableCell = withStyles(theme => ({
 //   head: {
@@ -140,7 +140,11 @@ class ParentContainer extends Component {
             let allDiaperings = [];
             resp.forEach(diapering => {
               let diaperingRow = [];
-              diaperingRow.push(moment(diapering.time, "HH:mm:ss").format("hh:mm A"), diapering.place, diapering.type);
+              diaperingRow.push(
+                moment(diapering.time, "HH:mm:ss").format("hh:mm A"),
+                diapering.place,
+                diapering.type
+              );
               allDiaperings.push(diaperingRow);
             });
             this.setState({ diaperingData: allDiaperings, diaperings: resp });
@@ -170,7 +174,11 @@ class ParentContainer extends Component {
             let allMeals = [];
             resp.forEach(meal => {
               let mealRow = [];
-              mealRow.push(moment(meal.time, "HH:mm:ss").format("hh:mm A"), meal.type, meal.food);
+              mealRow.push(
+                moment(meal.time, "HH:mm:ss").format("hh:mm A"),
+                meal.type,
+                meal.food
+              );
               allMeals.push(mealRow);
             });
             this.setState({ mealData: allMeals, meals: resp });
@@ -200,7 +208,10 @@ class ParentContainer extends Component {
             let allnaps = [];
             resp.forEach(nap => {
               let napRow = [];
-              napRow.push(moment(nap.startTime, "HH:mm:ss").format("hh:mm A"), moment(nap.endTime, "HH:mm:ss").format("hh:mm: A"));
+              napRow.push(
+                moment(nap.startTime, "HH:mm:ss").format("hh:mm A"),
+                moment(nap.endTime, "HH:mm:ss").format("hh:mm: A")
+              );
               allnaps.push(napRow);
             });
             this.setState({ napData: allnaps, naps: resp });
@@ -231,7 +242,10 @@ class ParentContainer extends Component {
             let allmedicines = [];
             resp.forEach(medicine => {
               let medicineRow = [];
-              medicineRow.push(moment(medicine.time, "HH:mm:ss").format("hh:mm A"), medicine.medName);
+              medicineRow.push(
+                moment(medicine.time, "HH:mm:ss").format("hh:mm A"),
+                medicine.medName
+              );
               allmedicines.push(medicineRow);
             });
             this.setState({ medicineData: allmedicines, medicines: resp });
@@ -262,7 +276,10 @@ class ParentContainer extends Component {
             let allincidents = [];
             resp.forEach(incident => {
               let incidentRow = [];
-              incidentRow.push(moment(incident.time, "HH:mm:ss").format("hh:mm A"), incident.incident);
+              incidentRow.push(
+                moment(incident.time, "HH:mm:ss").format("hh:mm A"),
+                incident.incident
+              );
               allincidents.push(incidentRow);
             });
             this.setState({ incidentData: allincidents, incidents: resp });
@@ -335,8 +352,8 @@ class ParentContainer extends Component {
           orgName: resp.name,
           orgAddress: resp.address,
           orgPhone: resp.phone,
-          orgOpenTime: moment(resp.openTime,"HH:mm:ss").format("hh:mm A"),
-          orgCloseTime: moment(resp.closeTime,"HH:mm:ss").format("hh:mm A"),
+          orgOpenTime: moment(resp.openTime, "HH:mm:ss").format("hh:mm A"),
+          orgCloseTime: moment(resp.closeTime, "HH:mm:ss").format("hh:mm A")
         })
       );
   };
@@ -352,11 +369,11 @@ class ParentContainer extends Component {
           } else {
             let allStaffs = [];
             resp.forEach(staff => {
-              let staffRow=[];
-              staffRow.push(staff.name, staff.email)
-              allStaffs.push(staffRow)
+              let staffRow = [];
+              staffRow.push(staff.name, staff.email);
+              allStaffs.push(staffRow);
             });
-            this.setState({ staffs:allStaffs });
+            this.setState({ staffs: allStaffs });
           }
         }
       });
@@ -372,11 +389,16 @@ class ParentContainer extends Component {
           } else {
             let allGuardians = [];
             resp.Pickups.forEach(guardian => {
-              let guardianRow =[];
-              guardianRow.push(guardian.name, guardian.phone, guardian.email, guardian.address)
-              allGuardians.push(guardianRow)
+              let guardianRow = [];
+              guardianRow.push(
+                guardian.name,
+                guardian.phone,
+                guardian.email,
+                guardian.address
+              );
+              allGuardians.push(guardianRow);
             });
-            this.setState({ guardians:allGuardians });
+            this.setState({ guardians: allGuardians });
           }
         }
       });
@@ -387,14 +409,19 @@ class ParentContainer extends Component {
       .then(resp => resp.json())
       .then(resp => {
         if (resp) {
-          console.log("resp:", resp)
+          console.log("resp:", resp);
           if (resp === "No parent found") {
             this.setState({ status: "No parents found :(" });
           } else {
             let allParents = [];
             resp.Parents.forEach(parent => {
-              let parentRow=[];
-              parentRow.push(parent.name,parent.phone,parent.email,parent.address)
+              let parentRow = [];
+              parentRow.push(
+                parent.name,
+                parent.phone,
+                parent.email,
+                parent.address
+              );
               allParents.push(parentRow);
             });
             this.setState({ parents: allParents });
@@ -414,7 +441,7 @@ class ParentContainer extends Component {
   handleSearch = e => {
     e.preventDefault();
     if (this.state.searchEmail.trim() === "")
-      this.setState({ status: "Email can't be empty" })
+      this.setState({ status: "Email can't be empty" });
     else {
       console.log(this.state.searchEmail, "PARENT EMAIL");
       fetch(`/api/parent/email/${this.state.searchEmail}`)
@@ -422,13 +449,21 @@ class ParentContainer extends Component {
         .then(resp => {
           if (resp.name) {
             this.setState({ existingParent: resp });
-            const { name, email, phone, address, id } = this.state.existingParent;
+            const {
+              name,
+              email,
+              phone,
+              address,
+              id
+            } = this.state.existingParent;
             this.setState({
               parentId: id,
               status: `${name}, ${email}, ${phone}, ${address}`
             });
           } else {
-            this.setState({ status: "That email doesn't exist in our database" });
+            this.setState({
+              status: "That email doesn't exist in our database"
+            });
           }
         });
     }
@@ -475,24 +510,50 @@ class ParentContainer extends Component {
               parentAddress: "",
               parentPhone: "",
               validationErrorMssg: ""
-            },
+            }
             //() => this.getExistingParent()
           );
         } else {
           if (resp.errors) {
             if (resp.errors[0].message === "email must be unique")
-              this.setState({ validationErrorMssg: "Email already exists in database", status: "" });
-            else if (resp.errors[0].message === "Validation isEmail on email failed")
-              this.setState({ validationErrorMssg: "Invalid email address", status: "" });
-            else if (resp.errors[0].message === "Validation notEmpty on name failed")
-              this.setState({ validationErrorMssg: "Name is required", status: "" });
-            else if (resp.errors[0].message === "Validation len on phone failed")
-              this.setState({ validationErrorMssg: "Invalid phone number", status: "" });
-            else if (resp.errors[0].message === "Validation notEmpty on address failed")
-              this.setState({ validationErrorMssg: "Address is required", status: "" });
-          }
-          else
-            this.setState({ validationErrorMssg: "Parent could not be added, please check the entered values", status: "" });
+              this.setState({
+                validationErrorMssg: "Email already exists in database",
+                status: ""
+              });
+            else if (
+              resp.errors[0].message === "Validation isEmail on email failed"
+            )
+              this.setState({
+                validationErrorMssg: "Invalid email address",
+                status: ""
+              });
+            else if (
+              resp.errors[0].message === "Validation notEmpty on name failed"
+            )
+              this.setState({
+                validationErrorMssg: "Name is required",
+                status: ""
+              });
+            else if (
+              resp.errors[0].message === "Validation len on phone failed"
+            )
+              this.setState({
+                validationErrorMssg: "Invalid phone number",
+                status: ""
+              });
+            else if (
+              resp.errors[0].message === "Validation notEmpty on address failed"
+            )
+              this.setState({
+                validationErrorMssg: "Address is required",
+                status: ""
+              });
+          } else
+            this.setState({
+              validationErrorMssg:
+                "Parent could not be added, please check the entered values",
+              status: ""
+            });
         }
         this.getExistingParent();
       });
@@ -529,22 +590,43 @@ class ParentContainer extends Component {
               guardianAddress: "",
               guardianPhone: "",
               guardianValidationErrorMssg: ""
-            },
+            }
             //() => this.getExistingPickup()
           );
         } else {
           if (resp.errors) {
             if (resp.errors[0].message === "Validation isEmail on email failed")
-              this.setState({ guardianValidationErrorMssg: "Invalid email address", status: "" });
-            else if (resp.errors[0].message === "Validation notEmpty on name failed")
-              this.setState({ guardianValidationErrorMssg: "Name is required", status: "" });
-            else if (resp.errors[0].message === "Validation len on phone failed")
-              this.setState({ guardianValidationErrorMssg: "Invalid phone number", status: "" });
-            else if (resp.errors[0].message === "Validation notEmpty on address failed")
-              this.setState({ guardianValidationErrorMssg: "Address is required", status: "" });
-          }
-          else
-            this.setState({ guardianValidationErrorMssg: "Guardian could not be added, please check the entered values", status: "" });
+              this.setState({
+                guardianValidationErrorMssg: "Invalid email address",
+                status: ""
+              });
+            else if (
+              resp.errors[0].message === "Validation notEmpty on name failed"
+            )
+              this.setState({
+                guardianValidationErrorMssg: "Name is required",
+                status: ""
+              });
+            else if (
+              resp.errors[0].message === "Validation len on phone failed"
+            )
+              this.setState({
+                guardianValidationErrorMssg: "Invalid phone number",
+                status: ""
+              });
+            else if (
+              resp.errors[0].message === "Validation notEmpty on address failed"
+            )
+              this.setState({
+                guardianValidationErrorMssg: "Address is required",
+                status: ""
+              });
+          } else
+            this.setState({
+              guardianValidationErrorMssg:
+                "Guardian could not be added, please check the entered values",
+              status: ""
+            });
         }
         this.getExistingPickup();
       });
@@ -570,7 +652,7 @@ class ParentContainer extends Component {
   };
 
   makeAssociation = async e => {
-    console.log("association func")
+    console.log("association func");
     e.preventDefault();
     await fetch("/api/parentstudent", {
       method: "POST",
@@ -692,7 +774,9 @@ class ParentContainer extends Component {
             </form>
           )}
           <div>{this.state.status}</div>
-          <div className="validationerror">{this.state.validationErrorMssg}</div>
+          <div className="validationerror">
+            {this.state.validationErrorMssg}
+          </div>
           {this.state.existingParent && (
             <Button onClick={this.makeAssociation}>
               Add Existing Parent to Child
@@ -788,10 +872,28 @@ class ParentContainer extends Component {
             <Typography className={classes.heading}>School</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-        <div>
-          <ResponsiveTable title="School Information" columns={["Name", "Phone", "Address", "Open Time", "Close Time"]} data={[[this.state.orgName, this.state.orgPhone, this.state.orgAddress, this.state.orgOpenTime, this.state.orgCloseTime]]} />
-        </div>
-        </ExpansionPanelDetails>
+            <div>
+              <ResponsiveTable
+                title="School Information"
+                columns={[
+                  "Name",
+                  "Phone",
+                  "Address",
+                  "Open Time",
+                  "Close Time"
+                ]}
+                data={[
+                  [
+                    this.state.orgName,
+                    this.state.orgPhone,
+                    this.state.orgAddress,
+                    this.state.orgOpenTime,
+                    this.state.orgCloseTime
+                  ]
+                ]}
+              />
+            </div>
+          </ExpansionPanelDetails>
         </ExpansionPanel>
       );
   }
@@ -806,7 +908,11 @@ class ParentContainer extends Component {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <div>
-              <ResponsiveTable title="Staff" columns={["Name", "Email"]} data={this.state.staffs} />
+              <ResponsiveTable
+                title="Staff"
+                columns={["Name", "Email"]}
+                data={this.state.staffs}
+              />
             </div>
           </ExpansionPanelDetails>
         </ExpansionPanel>
@@ -814,46 +920,54 @@ class ParentContainer extends Component {
   }
 
   renderIncidents() {
-    
     if (this.state.incidents.length === 0) {
       return <div />;
     } else {
       return (
         <div>
-          <ResponsiveTable title="Incidents" columns={["Time", "Incident"]} data={this.state.incidentData} />
+          <ResponsiveTable
+            title="Incidents"
+            columns={["Time", "Incident"]}
+            data={this.state.incidentData}
+          />
         </div>
       );
     }
   }
 
   renderMeds() {
-    
     if (this.state.medicines.length === 0) {
       return <div />;
     } else {
       return (
         <div>
-          <ResponsiveTable title="Medicines Administered" data={this.state.medicineData} columns={["Time", "Medicine"]} />
+          <ResponsiveTable
+            title="Medicines Administered"
+            data={this.state.medicineData}
+            columns={["Time", "Medicine"]}
+          />
         </div>
       );
     }
   }
 
   renderNaps() {
-    
     if (this.state.naps.length === 0) {
       return <div />;
     } else {
       return (
         <div>
-          <ResponsiveTable title="Naps" data={this.state.napData} columns={["Start Time", "End Time"]} />
+          <ResponsiveTable
+            title="Naps"
+            data={this.state.napData}
+            columns={["Start Time", "End Time"]}
+          />
         </div>
       );
     }
   }
 
   renderMeals() {
-    
     if (this.state.meals.length === 0) {
       return <div />;
     } else {
@@ -870,22 +984,23 @@ class ParentContainer extends Component {
   }
 
   renderDiaperings() {
-    
     if (this.state.diaperings.length === 0) {
       return <div />;
     } else {
       return (
         <div>
-          <ResponsiveTable title="Diaper/Toilet" columns={["Time", "Place", "Type"]} data={this.state.diaperingData} />
+          <ResponsiveTable
+            title="Diaper/Toilet"
+            columns={["Time", "Place", "Type"]}
+            data={this.state.diaperingData}
+          />
         </div>
       );
     }
   }
 
   renderNoteForParents() {
-    
     if (this.props.role === "parent") {
-
       if (!this.state.noteForParents[0][0] && !this.state.highlight[0][0]) {
         return <div />;
       }
@@ -893,10 +1008,18 @@ class ParentContainer extends Component {
         return (
           <div>
             <div>
-              <ResponsiveTable title="Note for Parents" columns={["Note"]} data={this.state.noteForParents} />
+              <ResponsiveTable
+                title="Note for Parents"
+                columns={["Note"]}
+                data={this.state.noteForParents}
+              />
             </div>
             <div>
-              <ResponsiveTable title="Highlight of the day" columns={["Highlight"]} data={this.state.highlight} />
+              <ResponsiveTable
+                title="Highlight of the day"
+                columns={["Highlight"]}
+                data={this.state.highlight}
+              />
             </div>
           </div>
         );
@@ -904,15 +1027,23 @@ class ParentContainer extends Component {
       if (this.state.highlight[0][0]) {
         return (
           <div>
-              <ResponsiveTable title="Highlight of the day" columns={["Highlight"]} data={this.state.highlight} />
-            </div>
+            <ResponsiveTable
+              title="Highlight of the day"
+              columns={["Highlight"]}
+              data={this.state.highlight}
+            />
+          </div>
         );
       }
       if (this.state.noteForParents[0][0]) {
         return (
           <div>
-              <ResponsiveTable title="Note for Parents" columns={["Note"]} data={this.state.noteForParents} />
-            </div>
+            <ResponsiveTable
+              title="Note for Parents"
+              columns={["Note"]}
+              data={this.state.noteForParents}
+            />
+          </div>
         );
       }
     }
@@ -920,26 +1051,32 @@ class ParentContainer extends Component {
 
   renderNoteForStaff() {
     if (this.props.role === "staff") {
-
       if (!this.state.noteForStaff[0][0]) {
         return <div />;
       } else {
         return (
           <div>
-          <ResponsiveTable title="Note for Staff" columns={["Note"]} data={this.state.noteForStaff} />
-        </div>
+            <ResponsiveTable
+              title="Note for Staff"
+              columns={["Note"]}
+              data={this.state.noteForStaff}
+            />
+          </div>
         );
       }
     }
   }
 
   renderGuardianTable() {
-    
     if (this.state.guardians.length > 0) {
       return (
         <div>
-          <ResponsiveTable title="Guardians" columns={["Name", "Phone", "Email","Address"]} data={this.state.guardians} />
-       </div>
+          <ResponsiveTable
+            title="Guardians"
+            columns={["Name", "Phone", "Email", "Address"]}
+            data={this.state.guardians}
+          />
+        </div>
       );
     } else {
       return <div>No Guardian added</div>;
@@ -947,12 +1084,15 @@ class ParentContainer extends Component {
   }
 
   renderParentTable() {
-    
     if (this.state.parents.length > 0) {
       return (
-       <div>
-          <ResponsiveTable title="Parents" columns={["Name", "Phone", "Email","Address"]} data={this.state.parents} />
-       </div>
+        <div>
+          <ResponsiveTable
+            title="Parents"
+            columns={["Name", "Phone", "Email", "Address"]}
+            data={this.state.parents}
+          />
+        </div>
       );
     } else {
       return <div>No Parents added</div>;
@@ -990,11 +1130,29 @@ class ParentContainer extends Component {
               </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails className={classes.block}>
-        
               <div>
-                <ResponsiveTable title="Student Information" columns={["Address", "DOB", "Allergies", "Medications", "Note", "Doctor"]} data={[[this.props.address, this.props.dob, this.props.allergies, this.props.medication, this.props.notes, this.props.doctor]]} />
+                <ResponsiveTable
+                  title="Student Information"
+                  columns={[
+                    "Address",
+                    "DOB",
+                    "Allergies",
+                    "Medications",
+                    "Note",
+                    "Doctor"
+                  ]}
+                  data={[
+                    [
+                      this.props.address,
+                      this.props.dob,
+                      this.props.allergies,
+                      this.props.medication,
+                      this.props.notes,
+                      this.props.doctor
+                    ]
+                  ]}
+                />
               </div>
-    
             </ExpansionPanelDetails>
           </ExpansionPanel>
           <ExpansionPanel>
@@ -1026,7 +1184,19 @@ class ParentContainer extends Component {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails className={classes.block}>
               <div>
-                <Link to={{ pathname: '/archive', state: { studentId: this.props.studentId, role: this.props.role, name: this.props.name } }}>Click here to see {this.props.name}'s report archive </Link>
+                <Link
+                  to={{
+                    pathname: "/archive",
+                    state: {
+                      studentId: this.props.studentId,
+                      role: this.props.role,
+                      name: this.props.name
+                    }
+                  }}
+                >
+                  Click here to see {this.props.name}
+                  's report archive{" "}
+                </Link>
               </div>
             </ExpansionPanelDetails>
           </ExpansionPanel>

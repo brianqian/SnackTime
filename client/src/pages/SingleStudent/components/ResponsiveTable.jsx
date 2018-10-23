@@ -11,7 +11,7 @@ function mobileCheck() {
 }
 
 const options = {
-  search: false, 
+  search: false,
   download: false,
   pagination: false,
   selectableRows: false,
@@ -22,11 +22,6 @@ class ResponsiveTable extends React.Component {
   getMuiTheme = () =>
     createMuiTheme({
       overrides: {
-        MUIDataTableBodyCell: {
-          root: {
-            // backgroundColor: "#FF0000"
-          }
-        },
         MUIDataTableToolbar: {
           root: {
             backgroundColor: "#3f51b5",
@@ -42,7 +37,6 @@ class ResponsiveTable extends React.Component {
         MuiTableRow: {
           root: {
             "& td:last-child": {
-              // backgroundColor: "#3f51b5"
               paddingRight: "56px"
             }
           }

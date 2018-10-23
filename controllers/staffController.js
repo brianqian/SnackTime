@@ -114,7 +114,7 @@ module.exports = {
       name: req.body.name,
       address: req.body.address,
       email: req.body.email,
-      password: "test",
+      password: tempPass,
       phone: req.body.phone
     })
       .then(parent => {

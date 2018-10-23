@@ -372,15 +372,18 @@ router.post("/changepass", (req, res) => {
       }
     }
     if (req.session.user.role === "parent") {
-      if (req.session.user.email === email) {
-        let email = req.session.user.email;
+      if (req.session.user.email) {
+        let useremail = req.session.user.email;
         db.Parent.findOne({
           where: {
-            email: email
+            email: useremail
           }
         }).then(parent => {
-          parent.getHash(newPassword);
-
+          if (parent.validPassword(password)) {
+            parent.getHash(newPassword);
+          } else {
+            return res.json("Invalid password");
+          }
           try {
             console.log("trying to email");
             changedPassword(

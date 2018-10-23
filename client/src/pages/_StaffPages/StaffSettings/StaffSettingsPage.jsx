@@ -80,7 +80,6 @@ class Settings extends React.Component {
     });
   };
 
-
   handleTab = (event, value) => {
     this.setState({ value });
   };
