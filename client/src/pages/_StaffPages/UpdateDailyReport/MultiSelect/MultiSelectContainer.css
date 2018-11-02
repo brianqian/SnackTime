@@ -1,0 +1,24 @@
+.multiselect-container{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 200px));
+  /* grid-auto-flow: column; */
+  background-color: rgba(213, 217, 247, 0.5); 
+  padding: 1rem;
+  justify-content: center;
+  overflow: auto;
+  grid-row-gap: 4px;
+}
+
+.multi-item {
+  border: 1px rgba(80, 1, 104, 0.4) solid;
+  border-radius: 10px;
+  width: auto;
+  padding: 7px;
+  margin: auto;
+  color: #444;
+}
+
+.selected {
+  color: white;
+  background-color: rgb(65, 176, 245);
+}
