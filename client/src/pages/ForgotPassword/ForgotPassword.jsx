@@ -58,7 +58,6 @@ class ForgotPassword extends Component {
 
   componentDidMount() {
     let url = window.location.href;
-    url = url.substring(0, url.length - 14);
     this.setState({ baseUrl: url });
   }
 

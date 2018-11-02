@@ -1,0 +1,14 @@
+.fluid {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.container {
+    /* display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-rows: repeat(2, 100px); */
+}
+
+.one {
+    /* grid-column: span 1; */
+}

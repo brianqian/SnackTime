@@ -11,42 +11,40 @@ import Auth from "../../../utils/Auth";
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import "./AddStudent.css";
 
 const styles = theme => ({
   root: {
-    color: '#FFFFFF'
+    color: "#FFFFFF"
   },
   container: {
-    display: "grid",
-    gridTemplateColumns: "repeat(4, 1fr)",
-    gridTemplateRows: "repeat(4, 1fr)",
-    padding: "0 10px",
-    width: "75vw",
-    margin: "auto"
+    // display: "grid",
+    // gridTemplateColumns: "repeat(4, 1fr)",
+    // gridTemplateRows: "repeat(4, 1fr)",
+    // padding: "0 10px",
+    // width: "75vw",
+    // margin: "auto"
   },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit
   },
   one: {
-
-    gridRow: 1
+    // gridRow: 1
   },
   two: {
-    gridColumnEnd: "4",
-    gridRow: 1
+    // gridColumnEnd: "4",
+    // gridRow: 1
   },
   rowTwo: {
-
-    gridRow: 2
+    // gridRow: 2
   },
   rowThree: {
-
-    gridRow: 3
+    // gridRow: 3
   },
   button: {
-    gridRow: 4,
-    gridColumn: "2/4",
+    // gridRow: 4,
+    // gridColumn: "2/4",
     background: "transparent",
     boxShadow: "0 0 0"
   },
@@ -59,9 +57,7 @@ const styles = theme => ({
   close: {
     padding: theme.spacing.unit / 2
   },
-  center: {
-  
-  }
+  center: {}
 });
 
 class OutlinedTextFields extends React.Component {
@@ -126,14 +122,16 @@ class OutlinedTextFields extends React.Component {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name: this.capitalize(this.state.firstName + " " + this.state.lastName),
-        address: `${this.state.address},  ${this.state.city}, ${this.state.state} ${this.state.zip}`,
+        address: `${this.state.address},  ${this.state.city}, ${
+          this.state.state
+        } ${this.state.zip}`,
         dob: `${this.state.month}, ${this.state.day}, ${this.state.year}`,
         notes: this.state.notes,
         allergies: this.state.allergies,
         medication: this.state.meds,
         doctor: this.capitalize(this.state.doctor),
         orgId: this.state.orgId,
-        image:this.state.image
+        image: this.state.image
       })
     })
       .then(res => res.json())
@@ -141,10 +139,9 @@ class OutlinedTextFields extends React.Component {
         console.log(result);
         if (result.name !== "SequelizeValidationError") {
           this.handleClick();
-          setTimeout(function(){
-            window.location.href='/staffhomepage'
-          },1000)
-          
+          setTimeout(function() {
+            window.location.href = "/staffhomepage";
+          }, 1000);
         }
       });
   };
@@ -159,41 +156,40 @@ class OutlinedTextFields extends React.Component {
     this.setState({ open: false });
   };
 
-  handleFileChange = async (e) =>{
+  handleFileChange = async e => {
     e.preventDefault();
-    console.log(e.target.files[0])
-    let myFile = e.target.files[0]
+    console.log(e.target.files[0]);
+    let myFile = e.target.files[0];
     var reader = new FileReader();
     var fileByteArray = [];
     let that = this;
     reader.readAsArrayBuffer(myFile);
-    reader.onloadend = function (evt) {
-        if (evt.target.readyState == FileReader.DONE) {
-          var arrayBuffer = evt.target.result,
-              array = new Uint8Array(arrayBuffer);
-          for (var i = 0; i < array.length; i++) {
-              fileByteArray.push(array[i]);
-            }
-            console.log(fileByteArray)
-            that.setState({image:fileByteArray})
+    reader.onloadend = function(evt) {
+      if (evt.target.readyState == FileReader.DONE) {
+        var arrayBuffer = evt.target.result,
+          array = new Uint8Array(arrayBuffer);
+        for (var i = 0; i < array.length; i++) {
+          fileByteArray.push(array[i]);
         }
-}
-
-  }
+        console.log(fileByteArray);
+        that.setState({ image: fileByteArray });
+      }
+    };
+  };
 
   render() {
     const { classes } = this.props;
 
     return (
-      <div className={classes.center}>
-        <HeaderBar type='staff' />
-        <form className={classes.container} noValidate autoComplete="off">
+      <div className="fluid">
+        <HeaderBar type="staff" />
+        <form className="container" noValidate autoComplete="off">
           <TextField
             required
             id="outlined-name"
             label="First Name"
             name="firstName"
-            className={`${classes.textField} ${classes.one}`}
+            className={`${classes.textField} one`}
             value={this.state.firstName}
             onChange={this.handleChange("firstName")}
             margin="normal"
@@ -204,7 +200,7 @@ class OutlinedTextFields extends React.Component {
             id="outlined-name"
             label="Last Name"
             name="lastName"
-            className={`${classes.textField} ${classes.one}`}
+            className={`${classes.textField} one`}
             value={this.state.lastName}
             onChange={this.handleChange("lastName")}
             margin="normal"
@@ -214,7 +210,7 @@ class OutlinedTextFields extends React.Component {
             required
             id="outlined-birthday"
             label="DOB"
-            className={`${classes.textField} ${classes.two}`}
+            className={`${classes.textField} one`}
             value={this.state.dob}
             onChange={this.handleSelectorChange}
             margin="normal"
@@ -224,7 +220,7 @@ class OutlinedTextFields extends React.Component {
             id="outlined-notes"
             label="Notes"
             defaultValue=""
-            className={`${classes.textField} ${classes.rowTwo}`}
+            className={`${classes.textField} one`}
             value={this.state.notes}
             onChange={this.handleChange("notes")}
             multiline
@@ -235,7 +231,7 @@ class OutlinedTextFields extends React.Component {
             id="outlined-allergies"
             label="Allergies"
             defaultValue=""
-            className={`${classes.textField} ${classes.rowTwo}`}
+            className={`${classes.textField} one`}
             value={this.state.allergies}
             onChange={this.handleChange("allergies")}
             multiline
@@ -246,7 +242,7 @@ class OutlinedTextFields extends React.Component {
             id="outlined-meds"
             label="Medications"
             defaultValue=""
-            className={`${classes.textField} ${classes.rowTwo}`}
+            className={`${classes.textField} one`}
             value={this.state.meds}
             onChange={this.handleChange("meds")}
             multiline
@@ -257,7 +253,7 @@ class OutlinedTextFields extends React.Component {
             id="outlined-doctor"
             label="Doctor"
             defaultValue=""
-            className={`${classes.textField} ${classes.rowTwo}`}
+            className={`${classes.textField} one`}
             value={this.state.doctor}
             onChange={this.handleChange("doctor")}
             margin="normal"
@@ -267,7 +263,7 @@ class OutlinedTextFields extends React.Component {
             id="outlined-address"
             label="Address"
             defaultValue=""
-            className={`${classes.textField} ${classes.rowThree}`}
+            className={`${classes.textField} one`}
             value={this.state.address}
             onChange={this.handleChange("address")}
             margin="normal"
@@ -277,7 +273,7 @@ class OutlinedTextFields extends React.Component {
             id="outlined-city"
             label="City"
             defaultValue=""
-            className={`${classes.textField} ${classes.rowThree}`}
+            className={`${classes.textField} one`}
             value={this.state.city}
             onChange={this.handleChange("city")}
             margin="normal"
@@ -287,7 +283,7 @@ class OutlinedTextFields extends React.Component {
             id="outlined-city"
             label="State"
             defaultValue=""
-            className={`${classes.textField} ${classes.rowThree}`}
+            className={`${classes.textField} one`}
             value={this.state.state}
             onChange={this.handleChange("state")}
             margin="normal"
@@ -297,18 +293,19 @@ class OutlinedTextFields extends React.Component {
             id="outlined-zip"
             label="Zip / Postal Code"
             defaultValue=""
-            className={`${classes.textField} ${classes.rowThree}`}
+            className={`${classes.textField} one`}
             value={this.state.zip}
             onChange={this.handleChange("zip")}
             margin="normal"
             variant="outlined"
           />
-          <input type="file" onChange= {this.handleFileChange}/>
+          <input type="file" onChange={this.handleFileChange} 
+          className="one"/>
           <Button
             variant="contained"
             size="small"
             onClick={this.handleSubmit}
-            className={`${classes.button}`}
+            className={`${classes.button} one`}
           >
             <SaveIcon
               className={classNames(classes.leftIcon, classes.iconSmall)}
