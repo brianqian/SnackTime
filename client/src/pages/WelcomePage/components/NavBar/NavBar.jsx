@@ -44,7 +44,7 @@ class SimpleTabs extends React.Component {
     return (
       <div className={classes.root}>
         <AppBar position="static">
-          <Tabs value={value} onChange={this.handleChange}>
+          <Tabs value={value} onChange={this.handleChange} fullWidth>
             <Tab label="Snack Time" />
             <Tab label="Parent Login" />
             <Tab label="Admin Login" />
