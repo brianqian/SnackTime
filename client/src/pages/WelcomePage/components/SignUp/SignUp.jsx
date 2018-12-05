@@ -89,9 +89,6 @@ export default class SignUp extends React.Component {
     e.preventDefault();
     console.log(this.state);
     //const { name, email, password, orgName } = this.state;
-    this.setState({
-      orgPhoneNum: this.state.textmask.replace(/\D+/g, "")
-    });
     fetch("/auth/organization", {
       method: "POST",
       headers: {
