@@ -35,5 +35,8 @@
     "react-swipeable-views": "^0.13.0",
     "sequelize": "^4.39.0",
     "shortid": "^2.2.13"
+  },
+  "resolutions": {
+    "**/event-stream": "^4.0.1"
   }
 }
