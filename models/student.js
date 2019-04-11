@@ -15,10 +15,10 @@ module.exports = function(sequelize, DataTypes) {
       },
     },
     notes: {
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
     },
     dob: {
-      type: DataTypes.STRING, 
+      type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: true,
@@ -33,9 +33,6 @@ module.exports = function(sequelize, DataTypes) {
     doctor: {
       type: DataTypes.STRING,
     },
-    image:{
-      type:DataTypes.BLOB('long')
-    }
   });
   Student.associate = function(models) {
     models.Student.hasMany(models.Pickup, {
@@ -47,30 +44,19 @@ module.exports = function(sequelize, DataTypes) {
     models.Student.hasMany(models.Report, {
       onDelete: 'cascade',
     });
-    models.Student.hasMany(models.Incident,{as: 'Incidents',
-      onDelete: 'cascade',
-    });
-    models.Student.hasMany(models.Medicine,{as: 'Medicines',
-      onDelete: 'cascade',
-    });
-    models.Student.hasMany(models.Nap,{as: 'Naps',
-      onDelete: 'cascade',
-    });
-    models.Student.hasMany(models.Diapering, {as: 'Diaperings',
-      onDelete: 'cascade',
-    });
-    models.Student.hasMany(models.Meal, {as: 'Meals',
-      onDelete: 'cascade',
-    });
+    models.Student.hasMany(models.Incident, { as: 'Incidents', onDelete: 'cascade' });
+    models.Student.hasMany(models.Medicine, { as: 'Medicines', onDelete: 'cascade' });
+    models.Student.hasMany(models.Nap, { as: 'Naps', onDelete: 'cascade' });
+    models.Student.hasMany(models.Diapering, { as: 'Diaperings', onDelete: 'cascade' });
+    models.Student.hasMany(models.Meal, { as: 'Meals', onDelete: 'cascade' });
     models.Student.belongsTo(models.Organization, {
       foreignKey: {
         allowNull: false,
       },
     });
     models.Student.belongsToMany(models.Parent, {
-      through: "ParentStudent"
+      through: 'ParentStudent',
     });
-
   };
 
   return Student;
